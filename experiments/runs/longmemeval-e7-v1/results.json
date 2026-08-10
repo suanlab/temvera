@@ -1,0 +1,108 @@
+{
+  "backbone": {
+    "embed_model": "text-embedding-3-small",
+    "llm_model": "gpt-4o-mini",
+    "system": "mem0"
+  },
+  "by_question_type": {
+    "knowledge-update": {
+      "gold_present_rate": 0.3333333333333333,
+      "instances": 6,
+      "mean_token_recall": 0.8088235294117648
+    },
+    "temporal-reasoning": {
+      "gold_present_rate": 0.0,
+      "instances": 6,
+      "mean_token_recall": 0.1875
+    }
+  },
+  "dataset": "longmemeval_oracle.json",
+  "instances": 12,
+  "per_instance": [
+    {
+      "gold_present": true,
+      "question_id": "01493427",
+      "question_type": "knowledge-update",
+      "sessions": 2,
+      "token_recall": 1.0
+    },
+    {
+      "gold_present": false,
+      "question_id": "031748ae",
+      "question_type": "knowledge-update",
+      "sessions": 2,
+      "token_recall": 0.353
+    },
+    {
+      "gold_present": false,
+      "question_id": "031748ae_abs",
+      "question_type": "knowledge-update",
+      "sessions": 2,
+      "token_recall": 0.5
+    },
+    {
+      "gold_present": true,
+      "question_id": "06db6396",
+      "question_type": "knowledge-update",
+      "sessions": 2,
+      "token_recall": 1.0
+    },
+    {
+      "gold_present": false,
+      "question_id": "07741c44",
+      "question_type": "knowledge-update",
+      "sessions": 2,
+      "token_recall": 1.0
+    },
+    {
+      "gold_present": false,
+      "question_id": "07741c45",
+      "question_type": "knowledge-update",
+      "sessions": 2,
+      "token_recall": 1.0
+    },
+    {
+      "gold_present": false,
+      "question_id": "08f4fc43",
+      "question_type": "temporal-reasoning",
+      "sessions": 2,
+      "token_recall": 0.125
+    },
+    {
+      "gold_present": false,
+      "question_id": "0bb5a684",
+      "question_type": "temporal-reasoning",
+      "sessions": 2,
+      "token_recall": 0.25
+    },
+    {
+      "gold_present": false,
+      "question_id": "0bc8ad92",
+      "question_type": "temporal-reasoning",
+      "sessions": 3,
+      "token_recall": 0.0
+    },
+    {
+      "gold_present": false,
+      "question_id": "0bc8ad93",
+      "question_type": "temporal-reasoning",
+      "sessions": 3,
+      "token_recall": 0.5
+    },
+    {
+      "gold_present": false,
+      "question_id": "0db4c65d",
+      "question_type": "temporal-reasoning",
+      "sessions": 2,
+      "token_recall": 0.125
+    },
+    {
+      "gold_present": false,
+      "question_id": "2a1811e2",
+      "question_type": "temporal-reasoning",
+      "sessions": 2,
+      "token_recall": 0.125
+    }
+  ],
+  "scorer": "deterministic gold substring + token recall over retrieved memories; NOT LongMemEval official GPT-4o QA judge (E-036)"
+}

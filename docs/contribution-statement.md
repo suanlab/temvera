@@ -23,10 +23,38 @@ memory system.
   repair; Mem2ActBench already joins memory evolution and tool use.
 - A-MemGuard and MemIncept provide current poisoning defense and adaptive
   injection baselines.
+- **Bitemporal agent memory is itself prior art (2026).** A graph-native
+  bitemporal memory store (arXiv:2607.26520) keeps explicit valid- and
+  transaction-time intervals with point-in-time retrieval, and TOKI
+  (arXiv:2606.06240) defines a bitemporal operator algebra over a dual-row
+  schema with released code (E-059).
+- **Deterministic supersession and the stale-fact-rate metric are prior art.**
+  MemStrata (arXiv:2606.26511) keeps a bi-temporal ledger, retires stale values
+  with a deterministic (subject, relation, object) rule without an LLM call, and
+  reports stale-fact-error rate as its headline metric (E-060).
+- **Selective forgetting is already an evaluated benchmark competency** in
+  MemoryAgentBench (arXiv:2507.05257, E-061).
 
 ## Measurable delta
 
-The prototype's defensible unit is the combination of:
+Given E-059 through E-061, bitemporal modelling, deterministic supersession, the
+stale-fact metric, and forgetting evaluation are all claimed elsewhere. What
+remains defensible is **measurement of deployed systems and deletion
+completeness**, not the temporal model itself:
+
+- **A.** an identical-history comparison of released systems under
+  forward-checkpoint transaction-time replay, showing two distinct failure modes
+  — Mem0 consolidates to current state (E-053) while Graphiti retains edges
+  without temporally filtering them, a ceiling that neither its own valid-time
+  filter nor a stronger extractor lifts (E-057, E-058);
+- **B.** a residual scan showing purged payloads survive in both systems'
+  retrieval-reachable stores, while Temvera's rebuildable projections are clean
+  and its only residual sits in an append-only ledger no query path reads
+  (E-056) — the closest prior systems report deletion features but no
+  cross-store residual measurement.
+
+Supporting mechanism results, which are contributions of rigour rather than
+novelty:
 
 1. an operation-level lifecycle model with separate valid and transaction
    times, checked against an independent SQLite oracle;

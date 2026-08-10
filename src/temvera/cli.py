@@ -76,6 +76,9 @@ def main() -> None:
     external_graphiti = subparsers.add_parser("external-graphiti")
     external_graphiti.add_argument("config")
     external_graphiti.add_argument("output")
+    longmemeval = subparsers.add_parser("longmemeval-eval")
+    longmemeval.add_argument("config")
+    longmemeval.add_argument("output")
     purge_residual = subparsers.add_parser("purge-residual")
     purge_residual.add_argument("config")
     purge_residual.add_argument("output")
@@ -402,6 +405,26 @@ def main() -> None:
         result = run_graphiti_comparison(config)
         _write_external_run(output, config, result, "external-graphiti", arguments)
         print(json.dumps(result, sort_keys=True))
+    elif arguments.command == "longmemeval-eval":
+        from pathlib import Path
+
+        from .longmemeval_eval import run_longmemeval
+
+        config = json.loads(Path(arguments.config).read_text(encoding="utf-8"))
+        output = Path(arguments.output)
+        if output.exists():
+            raise SystemExit(f"refusing to overwrite: {output}")
+        output.mkdir(parents=True)
+        result = run_longmemeval(config, output / "progress.jsonl")
+        (output / "results.json").write_text(
+            json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        seal_run(
+            output,
+            config={**config, "backbone": result["backbone"]},
+            command=f"temvera longmemeval-eval {arguments.config} {arguments.output}",
+        )
+        print(json.dumps({k: v for k, v in result.items() if k != "per_instance"}, sort_keys=True))
     elif arguments.command == "purge-residual":
         import tempfile
         from pathlib import Path

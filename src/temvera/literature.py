@@ -41,10 +41,14 @@ def freeze_review(review_dir: Path, ledger_path: Path, output: Path) -> dict[str
         key=lambda value: hashlib.sha256(value.encode()).hexdigest(),
     )[:sample_size]
     completed_rescreens = {row["study_id"] for row in rescreens}
-    if completed_rescreens != set(rescreen_ids):
+    # The deterministic sample must be covered. Extra rescreens are allowed:
+    # adding studies reshuffles the sample, and requiring exact equality would
+    # force deleting completed rescreen records, destroying review provenance.
+    uncovered = sorted(set(rescreen_ids) - completed_rescreens)
+    if uncovered:
         raise ValueError(
-            "rescreen log must exactly cover deterministic sample: "
-            f"expected {rescreen_ids}, got {sorted(completed_rescreens)}"
+            "rescreen log must cover the deterministic sample: "
+            f"expected {rescreen_ids}, missing {uncovered}"
         )
     files = (studies_path, search_path, exclusions_path, ledger_path)
     manifest: dict[str, object] = {

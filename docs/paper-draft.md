@@ -160,9 +160,16 @@ vs 0.0 for the alias-table-only hashing channel (E-050). Calibrated fusion gave
 no held-out gain over fixed RRF (E-022); state-level decay did not dominate
 rank-level decay (E-014).
 
-### 5.4 External validity — **PENDING E2/E7 (D-010)**
-LoCoMo / LongMemEval subset, separating deterministic retrieval from GPT-4o-judged
-QA (E-036).
+### 5.4 External validity
+On human-written LongMemEval conversations the same asymmetry appears: Mem0
+retrieves the evidence for `knowledge-update` questions (current value after a
+change) far better than for `temporal-reasoning` questions — gold-token recall
+0.809 versus 0.188 (E-063). This supports the *characterisation* drawn from
+synthetic histories, not any accuracy figure: scoring here is deterministic
+substring/token presence over retrieved memories, deliberately separate from
+LongMemEval's GPT-4o-judged QA metric (E-036), and the sample is 6 instances per
+type. Mem0 also logged internal `UPDATE` failures during ingestion, which biases
+against the knowledge-update side, so the real gap may be wider.
 
 ### 5.5 Provenance security
 Signed, tenant-scoped gating blocked 0/4 activations while accepting 3/4 attacks

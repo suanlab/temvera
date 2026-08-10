@@ -35,6 +35,8 @@ experiments/runs/*
 !experiments/runs/external-graphiti-filtered-v2/
 !experiments/runs/external-graphiti-filtered-gpt4o-v1/
 !experiments/runs/external-graphiti-filtered-gpt4o-v2/
+!experiments/runs/external-graphiti-scale-v1/
+!experiments/runs/longmemeval-e7-v1/
 
 .env
 .env.*
