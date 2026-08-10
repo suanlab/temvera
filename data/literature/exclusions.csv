@@ -1,0 +1,3 @@
+exclusion_id,citation,source,reason,screened_at,notes
+X001,Make Agent Defeat Agent: Automatic Detection of Taint-Style Vulnerabilities in LLM-based Agents,https://www.usenix.org/conference/usenixsecurity25/presentation/liu-fengyu,"General agent taint vulnerability detection; retrieved record does not center persistent external-memory lifecycle",2026-07-16,"Retain for security citation chaining"
+X002,Lethe: Purifying Backdoored Large Language Models with Knowledge Dilution,https://www.usenix.org/conference/usenixsecurity26/presentation/chen-chen,"Primary target is parametric model backdoors rather than mutable external agent memory",2026-07-16,"Name collision with ForgetEval host project is unrelated to inclusion"

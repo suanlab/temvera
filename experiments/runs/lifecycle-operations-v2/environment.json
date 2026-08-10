@@ -1,0 +1,8 @@
+{
+  "command": "temvera lifecycle-operation-suite experiments/configs/lifecycle-operation-suite.json experiments/runs/lifecycle-operations-v2",
+  "created_at": "2026-07-16T04:32:39.006491+00:00",
+  "git_revision": null,
+  "platform": "Linux-6.8.0-101-generic-x86_64-with-glibc2.35",
+  "python": "3.11.15 (main, Jun 23 2026, 15:19:43) [Clang 22.1.3 ]",
+  "source_sha256": "9bbb2fc37605856f4e183ab759e5f985cac62894b29bff94fb17e3bd846d6a7b"
+}

@@ -1,0 +1,5 @@
+{
+  "model": "BAAI/bge-small-en-v1.5",
+  "model_license": "MIT",
+  "model_url": "https://huggingface.co/BAAI/bge-small-en-v1.5"
+}

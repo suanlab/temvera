@@ -1,0 +1,18 @@
+{
+  "ages_days": [0, 7, 30, 90, 180, 365],
+  "half_lives_days": [7.0, 30.0, 90.0, 180.0],
+  "metrics": [
+    "relevant_selected",
+    "stale_selected",
+    "abstained"
+  ],
+  "methods": [
+    "rank_only",
+    "state_level"
+  ],
+  "scenarios": [
+    "changed_fact",
+    "stable_old_fact"
+  ],
+  "thresholds": [0.125, 0.25, 0.5, 0.75]
+}

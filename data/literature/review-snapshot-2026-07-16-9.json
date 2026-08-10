@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "exclusions": 2,
+    "rescreens": 2,
+    "searches": 18,
+    "studies": 17
+  },
+  "rescreen_sample_ids": [
+    "LME1",
+    "HIN1"
+  ],
+  "rescreened_ids": [
+    "HIN1",
+    "LME1"
+  ],
+  "schema_version": 1,
+  "sha256": {
+    "data/literature/exclusions.csv": "3339a197a7172402280db4984418e5d81518ee8e56542ab00eab474bce1845a1",
+    "data/literature/rescreen-log.csv": "d67886a9df42f9fb8c93ee17e6abe6a94a765008b4e505ef8c73ed7cc687d8c8",
+    "data/literature/search-log.csv": "b8a6376ec978e2f6ab93bf405aee160a9638573a1bff126e95bbbcdf9f20d0e9",
+    "data/literature/studies.csv": "cab6d811a76fd814a947b92432b1260037f022d452899d1d25d1ed35f1cbb844",
+    "docs/evidence-ledger.md": "edd0786dbd3ed592e0ce11e721c7dc2809e65e337d122226e9b61d07d2f94851"
+  },
+  "single_screened": 17
+}

@@ -1,0 +1,152 @@
+[
+  {
+    "category": "exact_identifier",
+    "recalled": true,
+    "removed_channel": null
+  },
+  {
+    "category": "exact_identifier",
+    "recalled": false,
+    "removed_channel": "exact"
+  },
+  {
+    "category": "exact_identifier",
+    "recalled": true,
+    "removed_channel": "lexical"
+  },
+  {
+    "category": "exact_identifier",
+    "recalled": true,
+    "removed_channel": "vector"
+  },
+  {
+    "category": "exact_identifier",
+    "recalled": true,
+    "removed_channel": "temporal"
+  },
+  {
+    "category": "exact_identifier",
+    "recalled": true,
+    "removed_channel": "graph"
+  },
+  {
+    "category": "lexical_code",
+    "recalled": true,
+    "removed_channel": null
+  },
+  {
+    "category": "lexical_code",
+    "recalled": true,
+    "removed_channel": "exact"
+  },
+  {
+    "category": "lexical_code",
+    "recalled": false,
+    "removed_channel": "lexical"
+  },
+  {
+    "category": "lexical_code",
+    "recalled": true,
+    "removed_channel": "vector"
+  },
+  {
+    "category": "lexical_code",
+    "recalled": true,
+    "removed_channel": "temporal"
+  },
+  {
+    "category": "lexical_code",
+    "recalled": true,
+    "removed_channel": "graph"
+  },
+  {
+    "category": "vector_synonym",
+    "recalled": true,
+    "removed_channel": null
+  },
+  {
+    "category": "vector_synonym",
+    "recalled": true,
+    "removed_channel": "exact"
+  },
+  {
+    "category": "vector_synonym",
+    "recalled": true,
+    "removed_channel": "lexical"
+  },
+  {
+    "category": "vector_synonym",
+    "recalled": false,
+    "removed_channel": "vector"
+  },
+  {
+    "category": "vector_synonym",
+    "recalled": true,
+    "removed_channel": "temporal"
+  },
+  {
+    "category": "vector_synonym",
+    "recalled": true,
+    "removed_channel": "graph"
+  },
+  {
+    "category": "temporal_version",
+    "recalled": true,
+    "removed_channel": null
+  },
+  {
+    "category": "temporal_version",
+    "recalled": true,
+    "removed_channel": "exact"
+  },
+  {
+    "category": "temporal_version",
+    "recalled": true,
+    "removed_channel": "lexical"
+  },
+  {
+    "category": "temporal_version",
+    "recalled": true,
+    "removed_channel": "vector"
+  },
+  {
+    "category": "temporal_version",
+    "recalled": false,
+    "removed_channel": "temporal"
+  },
+  {
+    "category": "temporal_version",
+    "recalled": true,
+    "removed_channel": "graph"
+  },
+  {
+    "category": "graph_derivation",
+    "recalled": true,
+    "removed_channel": null
+  },
+  {
+    "category": "graph_derivation",
+    "recalled": true,
+    "removed_channel": "exact"
+  },
+  {
+    "category": "graph_derivation",
+    "recalled": true,
+    "removed_channel": "lexical"
+  },
+  {
+    "category": "graph_derivation",
+    "recalled": true,
+    "removed_channel": "vector"
+  },
+  {
+    "category": "graph_derivation",
+    "recalled": true,
+    "removed_channel": "temporal"
+  },
+  {
+    "category": "graph_derivation",
+    "recalled": false,
+    "removed_channel": "graph"
+  }
+]

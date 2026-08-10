@@ -1,0 +1,63 @@
+[
+  {
+    "cases": 48,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "evidence_recall_at_k": 1.0
+  },
+  {
+    "cases": 48,
+    "channels": [
+      "lexical",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "evidence_recall_at_k": 1.0
+  },
+  {
+    "cases": 48,
+    "channels": [
+      "exact",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "evidence_recall_at_k": 1.0
+  },
+  {
+    "cases": 48,
+    "channels": [
+      "exact",
+      "lexical",
+      "temporal",
+      "graph"
+    ],
+    "evidence_recall_at_k": 1.0
+  },
+  {
+    "cases": 48,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "graph"
+    ],
+    "evidence_recall_at_k": 0.7916666666666666
+  },
+  {
+    "cases": 48,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "temporal"
+    ],
+    "evidence_recall_at_k": 1.0
+  }
+]

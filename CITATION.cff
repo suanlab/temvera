@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+title: "Temvera: Temporal, provenance-aware memory for AI agents"
+message: "Please cite the archived release associated with the experiment."
+type: software
+version: 0.0.1
+date-released: 2026-07-15
+license: "Apache-2.0"

@@ -1,0 +1,15 @@
+{
+  "accepted_runs": [
+    "channel-ablation-v0",
+    "decay-sweep-v0",
+    "efficiency-local-v0",
+    "forgeteval-temvera-lexical-seed42",
+    "fusion-comparison-v0",
+    "hard-channel-ablation-v0",
+    "lifecycle-dd14d8b3be5b",
+    "lifecycle-grid-v4",
+    "lifecycle-operations-v2",
+    "security-evaluation-v0"
+  ],
+  "schema_version": 1
+}

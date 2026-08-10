@@ -1,0 +1,6 @@
+{
+  "hashing_recall_at_1": 0.0,
+  "learned_recall_at_1": 1.0,
+  "model": "BAAI/bge-small-en-v1.5",
+  "queries": 10
+}

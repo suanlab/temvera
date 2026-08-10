@@ -1,0 +1,8 @@
+{
+  "command": "temvera external-mem0 experiments/configs/external-mem0-smoke.json experiments/runs/external-mem0-smoke-v2",
+  "created_at": "2026-07-16T14:41:20.795492+00:00",
+  "git_revision": null,
+  "platform": "Linux-6.8.0-101-generic-x86_64-with-glibc2.35",
+  "python": "3.11.15 (main, Jun 23 2026, 15:19:43) [Clang 22.1.3 ]",
+  "source_sha256": "a6caefc52d241c3b3cd79ff05f819e75b378a8b9b300bcdf26d04f3e90f52658"
+}

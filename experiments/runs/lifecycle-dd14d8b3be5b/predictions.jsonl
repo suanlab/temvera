@@ -1,0 +1,138 @@
+{"case_id": "case-000000", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "oracle"}
+{"case_id": "case-000000", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "append_only"}
+{"case_id": "case-000000", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "full_context"}
+{"case_id": "case-000000", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "recent_context"}
+{"case_id": "case-000000", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "bm25_at_1"}
+{"case_id": "case-000000", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "last_write_wins"}
+{"case_id": "case-000001", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "oracle"}
+{"case_id": "case-000001", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "append_only"}
+{"case_id": "case-000001", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-000"], "system": "full_context"}
+{"case_id": "case-000001", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-002"], "system": "recent_context"}
+{"case_id": "case-000001", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-002"], "system": "bm25_at_1"}
+{"case_id": "case-000001", "expected_ids": ["b-000-000"], "returned_ids": ["b-000-002"], "system": "last_write_wins"}
+{"case_id": "case-000002", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-001"], "system": "oracle"}
+{"case_id": "case-000002", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-000", "b-000-001"], "system": "append_only"}
+{"case_id": "case-000002", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-000", "b-000-001"], "system": "full_context"}
+{"case_id": "case-000002", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-001"], "system": "recent_context"}
+{"case_id": "case-000002", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-001"], "system": "bm25_at_1"}
+{"case_id": "case-000002", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-001"], "system": "last_write_wins"}
+{"case_id": "case-000003", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-001"], "system": "oracle"}
+{"case_id": "case-000003", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-000", "b-000-001"], "system": "append_only"}
+{"case_id": "case-000003", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-000", "b-000-001"], "system": "full_context"}
+{"case_id": "case-000003", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-002"], "system": "recent_context"}
+{"case_id": "case-000003", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-002"], "system": "bm25_at_1"}
+{"case_id": "case-000003", "expected_ids": ["b-000-001"], "returned_ids": ["b-000-002"], "system": "last_write_wins"}
+{"case_id": "case-000004", "expected_ids": ["b-000-002"], "returned_ids": ["b-000-002"], "system": "oracle"}
+{"case_id": "case-000004", "expected_ids": ["b-000-002"], "returned_ids": ["b-000-000", "b-000-001", "b-000-002"], "system": "append_only"}
+{"case_id": "case-000004", "expected_ids": ["b-000-002"], "returned_ids": ["b-000-000", "b-000-001", "b-000-002"], "system": "full_context"}
+{"case_id": "case-000004", "expected_ids": ["b-000-002"], "returned_ids": ["b-000-002"], "system": "recent_context"}
+{"case_id": "case-000004", "expected_ids": ["b-000-002"], "returned_ids": ["b-000-002"], "system": "bm25_at_1"}
+{"case_id": "case-000004", "expected_ids": ["b-000-002"], "returned_ids": ["b-000-002"], "system": "last_write_wins"}
+{"case_id": "case-000005", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "oracle"}
+{"case_id": "case-000005", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "append_only"}
+{"case_id": "case-000005", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "full_context"}
+{"case_id": "case-000005", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "recent_context"}
+{"case_id": "case-000005", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "bm25_at_1"}
+{"case_id": "case-000005", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "last_write_wins"}
+{"case_id": "case-000006", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "oracle"}
+{"case_id": "case-000006", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "append_only"}
+{"case_id": "case-000006", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-000"], "system": "full_context"}
+{"case_id": "case-000006", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-002"], "system": "recent_context"}
+{"case_id": "case-000006", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-002"], "system": "bm25_at_1"}
+{"case_id": "case-000006", "expected_ids": ["b-001-000"], "returned_ids": ["b-001-002"], "system": "last_write_wins"}
+{"case_id": "case-000007", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-001"], "system": "oracle"}
+{"case_id": "case-000007", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-000", "b-001-001"], "system": "append_only"}
+{"case_id": "case-000007", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-000", "b-001-001"], "system": "full_context"}
+{"case_id": "case-000007", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-001"], "system": "recent_context"}
+{"case_id": "case-000007", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-001"], "system": "bm25_at_1"}
+{"case_id": "case-000007", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-001"], "system": "last_write_wins"}
+{"case_id": "case-000008", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-001"], "system": "oracle"}
+{"case_id": "case-000008", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-000", "b-001-001"], "system": "append_only"}
+{"case_id": "case-000008", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-000", "b-001-001"], "system": "full_context"}
+{"case_id": "case-000008", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-002"], "system": "recent_context"}
+{"case_id": "case-000008", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-002"], "system": "bm25_at_1"}
+{"case_id": "case-000008", "expected_ids": ["b-001-001"], "returned_ids": ["b-001-002"], "system": "last_write_wins"}
+{"case_id": "case-000009", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "oracle"}
+{"case_id": "case-000009", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-000", "b-001-001", "b-001-002"], "system": "append_only"}
+{"case_id": "case-000009", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-000", "b-001-001", "b-001-002"], "system": "full_context"}
+{"case_id": "case-000009", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "recent_context"}
+{"case_id": "case-000009", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "bm25_at_1"}
+{"case_id": "case-000009", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "last_write_wins"}
+{"case_id": "case-000010", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "oracle"}
+{"case_id": "case-000010", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-000", "b-001-001", "b-001-002"], "system": "append_only"}
+{"case_id": "case-000010", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-000", "b-001-001", "b-001-002"], "system": "full_context"}
+{"case_id": "case-000010", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "recent_context"}
+{"case_id": "case-000010", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "bm25_at_1"}
+{"case_id": "case-000010", "expected_ids": ["b-001-002"], "returned_ids": ["b-001-002"], "system": "last_write_wins"}
+{"case_id": "case-000011", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "oracle"}
+{"case_id": "case-000011", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "append_only"}
+{"case_id": "case-000011", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "full_context"}
+{"case_id": "case-000011", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "recent_context"}
+{"case_id": "case-000011", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "bm25_at_1"}
+{"case_id": "case-000011", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "last_write_wins"}
+{"case_id": "case-000012", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "oracle"}
+{"case_id": "case-000012", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "append_only"}
+{"case_id": "case-000012", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-000"], "system": "full_context"}
+{"case_id": "case-000012", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-002"], "system": "recent_context"}
+{"case_id": "case-000012", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-002"], "system": "bm25_at_1"}
+{"case_id": "case-000012", "expected_ids": ["b-002-000"], "returned_ids": ["b-002-002"], "system": "last_write_wins"}
+{"case_id": "case-000013", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-001"], "system": "oracle"}
+{"case_id": "case-000013", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-000", "b-002-001"], "system": "append_only"}
+{"case_id": "case-000013", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-000", "b-002-001"], "system": "full_context"}
+{"case_id": "case-000013", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-001"], "system": "recent_context"}
+{"case_id": "case-000013", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-001"], "system": "bm25_at_1"}
+{"case_id": "case-000013", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-001"], "system": "last_write_wins"}
+{"case_id": "case-000014", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-001"], "system": "oracle"}
+{"case_id": "case-000014", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-000", "b-002-001"], "system": "append_only"}
+{"case_id": "case-000014", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-000", "b-002-001"], "system": "full_context"}
+{"case_id": "case-000014", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-002"], "system": "recent_context"}
+{"case_id": "case-000014", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-002"], "system": "bm25_at_1"}
+{"case_id": "case-000014", "expected_ids": ["b-002-001"], "returned_ids": ["b-002-002"], "system": "last_write_wins"}
+{"case_id": "case-000015", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "oracle"}
+{"case_id": "case-000015", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-000", "b-002-001", "b-002-002"], "system": "append_only"}
+{"case_id": "case-000015", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-000", "b-002-001", "b-002-002"], "system": "full_context"}
+{"case_id": "case-000015", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "recent_context"}
+{"case_id": "case-000015", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "bm25_at_1"}
+{"case_id": "case-000015", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "last_write_wins"}
+{"case_id": "case-000016", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "oracle"}
+{"case_id": "case-000016", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-000", "b-002-001", "b-002-002"], "system": "append_only"}
+{"case_id": "case-000016", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-000", "b-002-001", "b-002-002"], "system": "full_context"}
+{"case_id": "case-000016", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "recent_context"}
+{"case_id": "case-000016", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "bm25_at_1"}
+{"case_id": "case-000016", "expected_ids": ["b-002-002"], "returned_ids": ["b-002-002"], "system": "last_write_wins"}
+{"case_id": "case-000017", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "oracle"}
+{"case_id": "case-000017", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "append_only"}
+{"case_id": "case-000017", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "full_context"}
+{"case_id": "case-000017", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "recent_context"}
+{"case_id": "case-000017", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "bm25_at_1"}
+{"case_id": "case-000017", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "last_write_wins"}
+{"case_id": "case-000018", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "oracle"}
+{"case_id": "case-000018", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "append_only"}
+{"case_id": "case-000018", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-000"], "system": "full_context"}
+{"case_id": "case-000018", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-002"], "system": "recent_context"}
+{"case_id": "case-000018", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-002"], "system": "bm25_at_1"}
+{"case_id": "case-000018", "expected_ids": ["b-003-000"], "returned_ids": ["b-003-002"], "system": "last_write_wins"}
+{"case_id": "case-000019", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-001"], "system": "oracle"}
+{"case_id": "case-000019", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-000", "b-003-001"], "system": "append_only"}
+{"case_id": "case-000019", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-000", "b-003-001"], "system": "full_context"}
+{"case_id": "case-000019", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-001"], "system": "recent_context"}
+{"case_id": "case-000019", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-001"], "system": "bm25_at_1"}
+{"case_id": "case-000019", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-001"], "system": "last_write_wins"}
+{"case_id": "case-000020", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-001"], "system": "oracle"}
+{"case_id": "case-000020", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-000", "b-003-001"], "system": "append_only"}
+{"case_id": "case-000020", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-000", "b-003-001"], "system": "full_context"}
+{"case_id": "case-000020", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-002"], "system": "recent_context"}
+{"case_id": "case-000020", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-002"], "system": "bm25_at_1"}
+{"case_id": "case-000020", "expected_ids": ["b-003-001"], "returned_ids": ["b-003-002"], "system": "last_write_wins"}
+{"case_id": "case-000021", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "oracle"}
+{"case_id": "case-000021", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-000", "b-003-001", "b-003-002"], "system": "append_only"}
+{"case_id": "case-000021", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-000", "b-003-001", "b-003-002"], "system": "full_context"}
+{"case_id": "case-000021", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "recent_context"}
+{"case_id": "case-000021", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "bm25_at_1"}
+{"case_id": "case-000021", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "last_write_wins"}
+{"case_id": "case-000022", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "oracle"}
+{"case_id": "case-000022", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-000", "b-003-001", "b-003-002"], "system": "append_only"}
+{"case_id": "case-000022", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-000", "b-003-001", "b-003-002"], "system": "full_context"}
+{"case_id": "case-000022", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "recent_context"}
+{"case_id": "case-000022", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "bm25_at_1"}
+{"case_id": "case-000022", "expected_ids": ["b-003-002"], "returned_ids": ["b-003-002"], "system": "last_write_wins"}

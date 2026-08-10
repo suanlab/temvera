@@ -1,0 +1,1 @@
+{"benchmark":"temvera-lifecycle-grid-v0","bootstrap_samples":2000,"bootstrap_seed":1729,"entities":[4,16,32],"profiles":[{"expire_probability":0.0,"name":"revision_only","purge_probability":0.0,"reconfirm_probability":0.0},{"expire_probability":0.35,"name":"mixed_lifecycle","purge_probability":0.25,"reconfirm_probability":0.5}],"revisions":[2,4,8],"seeds":[17,42,99]}

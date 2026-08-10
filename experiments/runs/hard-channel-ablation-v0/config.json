@@ -1,0 +1,1 @@
+{"benchmark":"temvera-hard-retrieval-v0","fixture":"src/temvera/hard_cases.py","methods":["all","lexical","structured","temporal","vector"]}

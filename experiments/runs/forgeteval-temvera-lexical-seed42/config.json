@@ -1,0 +1,7 @@
+{
+  "adapter": "temvera-lexical",
+  "distractors": 4,
+  "scale": 20,
+  "seed": 42,
+  "source_commit": "b6053b7bdacc78a91b9ea4bb25f32edad278c495"
+}

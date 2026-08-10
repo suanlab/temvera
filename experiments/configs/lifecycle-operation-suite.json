@@ -1,0 +1,13 @@
+{
+  "benchmark": "temvera-lifecycle-operations-v0",
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 2718,
+  "operations": [
+    "ingest",
+    "reconfirm",
+    "supersede",
+    "expire",
+    "purge"
+  ],
+  "seeds": [17, 42, 99]
+}

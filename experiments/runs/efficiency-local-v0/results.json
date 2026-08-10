@@ -1,0 +1,87 @@
+[
+  {
+    "budget_items": 1,
+    "cases": 5,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "context_tokens_approx": 2.6,
+    "evidence_recall": 0.8,
+    "latency_p50_ms": 1.009036,
+    "latency_p95_ms": 1.436454,
+    "latency_p99_ms": 1.445051,
+    "samples": 1000
+  },
+  {
+    "budget_items": 2,
+    "cases": 5,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "context_tokens_approx": 3.0,
+    "evidence_recall": 1.0,
+    "latency_p50_ms": 0.965159,
+    "latency_p95_ms": 1.043119,
+    "latency_p99_ms": 1.060282,
+    "samples": 1000
+  },
+  {
+    "budget_items": 3,
+    "cases": 5,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "context_tokens_approx": 3.0,
+    "evidence_recall": 1.0,
+    "latency_p50_ms": 0.963362,
+    "latency_p95_ms": 1.040887,
+    "latency_p99_ms": 1.062836,
+    "samples": 1000
+  },
+  {
+    "budget_items": 5,
+    "cases": 5,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "context_tokens_approx": 3.0,
+    "evidence_recall": 1.0,
+    "latency_p50_ms": 0.963961,
+    "latency_p95_ms": 1.035609,
+    "latency_p99_ms": 1.052736,
+    "samples": 1000
+  },
+  {
+    "budget_items": 10,
+    "cases": 5,
+    "channels": [
+      "exact",
+      "lexical",
+      "vector",
+      "temporal",
+      "graph"
+    ],
+    "context_tokens_approx": 3.0,
+    "evidence_recall": 1.0,
+    "latency_p50_ms": 0.96189,
+    "latency_p95_ms": 1.040091,
+    "latency_p99_ms": 1.059325,
+    "samples": 1000
+  }
+]

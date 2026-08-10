@@ -1,0 +1,629 @@
+{
+  "append_only": [
+    {
+      "case_id": "case-000002",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-000-000"
+      ],
+      "unexpected_ids": [
+        "b-000-000"
+      ]
+    },
+    {
+      "case_id": "case-000003",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-000-000"
+      ],
+      "unexpected_ids": [
+        "b-000-000"
+      ]
+    },
+    {
+      "case_id": "case-000004",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-000-000",
+        "b-000-001"
+      ],
+      "unexpected_ids": [
+        "b-000-000",
+        "b-000-001"
+      ]
+    },
+    {
+      "case_id": "case-000007",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000"
+      ],
+      "unexpected_ids": [
+        "b-001-000"
+      ]
+    },
+    {
+      "case_id": "case-000008",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000"
+      ],
+      "unexpected_ids": [
+        "b-001-000"
+      ]
+    },
+    {
+      "case_id": "case-000009",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000",
+        "b-001-001"
+      ],
+      "unexpected_ids": [
+        "b-001-000",
+        "b-001-001"
+      ]
+    },
+    {
+      "case_id": "case-000010",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000",
+        "b-001-001"
+      ],
+      "unexpected_ids": [
+        "b-001-000",
+        "b-001-001"
+      ]
+    },
+    {
+      "case_id": "case-000013",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000"
+      ],
+      "unexpected_ids": [
+        "b-002-000"
+      ]
+    },
+    {
+      "case_id": "case-000014",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000"
+      ],
+      "unexpected_ids": [
+        "b-002-000"
+      ]
+    },
+    {
+      "case_id": "case-000015",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000",
+        "b-002-001"
+      ],
+      "unexpected_ids": [
+        "b-002-000",
+        "b-002-001"
+      ]
+    },
+    {
+      "case_id": "case-000016",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000",
+        "b-002-001"
+      ],
+      "unexpected_ids": [
+        "b-002-000",
+        "b-002-001"
+      ]
+    },
+    {
+      "case_id": "case-000019",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000"
+      ],
+      "unexpected_ids": [
+        "b-003-000"
+      ]
+    },
+    {
+      "case_id": "case-000020",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000"
+      ],
+      "unexpected_ids": [
+        "b-003-000"
+      ]
+    },
+    {
+      "case_id": "case-000021",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000",
+        "b-003-001"
+      ],
+      "unexpected_ids": [
+        "b-003-000",
+        "b-003-001"
+      ]
+    },
+    {
+      "case_id": "case-000022",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000",
+        "b-003-001"
+      ],
+      "unexpected_ids": [
+        "b-003-000",
+        "b-003-001"
+      ]
+    }
+  ],
+  "bm25_at_1": [
+    {
+      "case_id": "case-000001",
+      "missed_ids": [
+        "b-000-000"
+      ],
+      "stale_ids": [
+        "b-000-002"
+      ],
+      "unexpected_ids": [
+        "b-000-002"
+      ]
+    },
+    {
+      "case_id": "case-000003",
+      "missed_ids": [
+        "b-000-001"
+      ],
+      "stale_ids": [
+        "b-000-002"
+      ],
+      "unexpected_ids": [
+        "b-000-002"
+      ]
+    },
+    {
+      "case_id": "case-000006",
+      "missed_ids": [
+        "b-001-000"
+      ],
+      "stale_ids": [
+        "b-001-002"
+      ],
+      "unexpected_ids": [
+        "b-001-002"
+      ]
+    },
+    {
+      "case_id": "case-000008",
+      "missed_ids": [
+        "b-001-001"
+      ],
+      "stale_ids": [
+        "b-001-002"
+      ],
+      "unexpected_ids": [
+        "b-001-002"
+      ]
+    },
+    {
+      "case_id": "case-000012",
+      "missed_ids": [
+        "b-002-000"
+      ],
+      "stale_ids": [
+        "b-002-002"
+      ],
+      "unexpected_ids": [
+        "b-002-002"
+      ]
+    },
+    {
+      "case_id": "case-000014",
+      "missed_ids": [
+        "b-002-001"
+      ],
+      "stale_ids": [
+        "b-002-002"
+      ],
+      "unexpected_ids": [
+        "b-002-002"
+      ]
+    },
+    {
+      "case_id": "case-000018",
+      "missed_ids": [
+        "b-003-000"
+      ],
+      "stale_ids": [
+        "b-003-002"
+      ],
+      "unexpected_ids": [
+        "b-003-002"
+      ]
+    },
+    {
+      "case_id": "case-000020",
+      "missed_ids": [
+        "b-003-001"
+      ],
+      "stale_ids": [
+        "b-003-002"
+      ],
+      "unexpected_ids": [
+        "b-003-002"
+      ]
+    }
+  ],
+  "full_context": [
+    {
+      "case_id": "case-000002",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-000-000"
+      ],
+      "unexpected_ids": [
+        "b-000-000"
+      ]
+    },
+    {
+      "case_id": "case-000003",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-000-000"
+      ],
+      "unexpected_ids": [
+        "b-000-000"
+      ]
+    },
+    {
+      "case_id": "case-000004",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-000-000",
+        "b-000-001"
+      ],
+      "unexpected_ids": [
+        "b-000-000",
+        "b-000-001"
+      ]
+    },
+    {
+      "case_id": "case-000007",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000"
+      ],
+      "unexpected_ids": [
+        "b-001-000"
+      ]
+    },
+    {
+      "case_id": "case-000008",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000"
+      ],
+      "unexpected_ids": [
+        "b-001-000"
+      ]
+    },
+    {
+      "case_id": "case-000009",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000",
+        "b-001-001"
+      ],
+      "unexpected_ids": [
+        "b-001-000",
+        "b-001-001"
+      ]
+    },
+    {
+      "case_id": "case-000010",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-001-000",
+        "b-001-001"
+      ],
+      "unexpected_ids": [
+        "b-001-000",
+        "b-001-001"
+      ]
+    },
+    {
+      "case_id": "case-000013",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000"
+      ],
+      "unexpected_ids": [
+        "b-002-000"
+      ]
+    },
+    {
+      "case_id": "case-000014",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000"
+      ],
+      "unexpected_ids": [
+        "b-002-000"
+      ]
+    },
+    {
+      "case_id": "case-000015",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000",
+        "b-002-001"
+      ],
+      "unexpected_ids": [
+        "b-002-000",
+        "b-002-001"
+      ]
+    },
+    {
+      "case_id": "case-000016",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-002-000",
+        "b-002-001"
+      ],
+      "unexpected_ids": [
+        "b-002-000",
+        "b-002-001"
+      ]
+    },
+    {
+      "case_id": "case-000019",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000"
+      ],
+      "unexpected_ids": [
+        "b-003-000"
+      ]
+    },
+    {
+      "case_id": "case-000020",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000"
+      ],
+      "unexpected_ids": [
+        "b-003-000"
+      ]
+    },
+    {
+      "case_id": "case-000021",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000",
+        "b-003-001"
+      ],
+      "unexpected_ids": [
+        "b-003-000",
+        "b-003-001"
+      ]
+    },
+    {
+      "case_id": "case-000022",
+      "missed_ids": [],
+      "stale_ids": [
+        "b-003-000",
+        "b-003-001"
+      ],
+      "unexpected_ids": [
+        "b-003-000",
+        "b-003-001"
+      ]
+    }
+  ],
+  "last_write_wins": [
+    {
+      "case_id": "case-000001",
+      "missed_ids": [
+        "b-000-000"
+      ],
+      "stale_ids": [
+        "b-000-002"
+      ],
+      "unexpected_ids": [
+        "b-000-002"
+      ]
+    },
+    {
+      "case_id": "case-000003",
+      "missed_ids": [
+        "b-000-001"
+      ],
+      "stale_ids": [
+        "b-000-002"
+      ],
+      "unexpected_ids": [
+        "b-000-002"
+      ]
+    },
+    {
+      "case_id": "case-000006",
+      "missed_ids": [
+        "b-001-000"
+      ],
+      "stale_ids": [
+        "b-001-002"
+      ],
+      "unexpected_ids": [
+        "b-001-002"
+      ]
+    },
+    {
+      "case_id": "case-000008",
+      "missed_ids": [
+        "b-001-001"
+      ],
+      "stale_ids": [
+        "b-001-002"
+      ],
+      "unexpected_ids": [
+        "b-001-002"
+      ]
+    },
+    {
+      "case_id": "case-000012",
+      "missed_ids": [
+        "b-002-000"
+      ],
+      "stale_ids": [
+        "b-002-002"
+      ],
+      "unexpected_ids": [
+        "b-002-002"
+      ]
+    },
+    {
+      "case_id": "case-000014",
+      "missed_ids": [
+        "b-002-001"
+      ],
+      "stale_ids": [
+        "b-002-002"
+      ],
+      "unexpected_ids": [
+        "b-002-002"
+      ]
+    },
+    {
+      "case_id": "case-000018",
+      "missed_ids": [
+        "b-003-000"
+      ],
+      "stale_ids": [
+        "b-003-002"
+      ],
+      "unexpected_ids": [
+        "b-003-002"
+      ]
+    },
+    {
+      "case_id": "case-000020",
+      "missed_ids": [
+        "b-003-001"
+      ],
+      "stale_ids": [
+        "b-003-002"
+      ],
+      "unexpected_ids": [
+        "b-003-002"
+      ]
+    }
+  ],
+  "oracle": [],
+  "recent_context": [
+    {
+      "case_id": "case-000001",
+      "missed_ids": [
+        "b-000-000"
+      ],
+      "stale_ids": [
+        "b-000-002"
+      ],
+      "unexpected_ids": [
+        "b-000-002"
+      ]
+    },
+    {
+      "case_id": "case-000003",
+      "missed_ids": [
+        "b-000-001"
+      ],
+      "stale_ids": [
+        "b-000-002"
+      ],
+      "unexpected_ids": [
+        "b-000-002"
+      ]
+    },
+    {
+      "case_id": "case-000006",
+      "missed_ids": [
+        "b-001-000"
+      ],
+      "stale_ids": [
+        "b-001-002"
+      ],
+      "unexpected_ids": [
+        "b-001-002"
+      ]
+    },
+    {
+      "case_id": "case-000008",
+      "missed_ids": [
+        "b-001-001"
+      ],
+      "stale_ids": [
+        "b-001-002"
+      ],
+      "unexpected_ids": [
+        "b-001-002"
+      ]
+    },
+    {
+      "case_id": "case-000012",
+      "missed_ids": [
+        "b-002-000"
+      ],
+      "stale_ids": [
+        "b-002-002"
+      ],
+      "unexpected_ids": [
+        "b-002-002"
+      ]
+    },
+    {
+      "case_id": "case-000014",
+      "missed_ids": [
+        "b-002-001"
+      ],
+      "stale_ids": [
+        "b-002-002"
+      ],
+      "unexpected_ids": [
+        "b-002-002"
+      ]
+    },
+    {
+      "case_id": "case-000018",
+      "missed_ids": [
+        "b-003-000"
+      ],
+      "stale_ids": [
+        "b-003-002"
+      ],
+      "unexpected_ids": [
+        "b-003-002"
+      ]
+    },
+    {
+      "case_id": "case-000020",
+      "missed_ids": [
+        "b-003-001"
+      ],
+      "stale_ids": [
+        "b-003-002"
+      ],
+      "unexpected_ids": [
+        "b-003-002"
+      ]
+    }
+  ]
+}

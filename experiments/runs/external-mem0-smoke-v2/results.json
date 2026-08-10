@@ -1,0 +1,41 @@
+{
+  "backbone": {
+    "embed_model": "text-embedding-3-small",
+    "llm_model": "gpt-4o-mini",
+    "mem0_version": "0.1.118",
+    "naturalized": true,
+    "replay": "single_pass"
+  },
+  "events": 12,
+  "mem0": {
+    "abstention_accuracy": 0.0,
+    "abstention_cases": 1,
+    "cases": 13,
+    "evidence_recall": 0.46153846153846156,
+    "exact_state_accuracy": 0.46153846153846156,
+    "stale_use_rate": 0.4
+  },
+  "mem0_exact_by_category": {
+    "expiry_boundary": {
+      "cases": 1,
+      "exact_state_accuracy": 0.0
+    },
+    "transaction_as_of": {
+      "cases": 6,
+      "exact_state_accuracy": 0.5
+    },
+    "valid_time": {
+      "cases": 6,
+      "exact_state_accuracy": 0.5
+    }
+  },
+  "oracle_reference": {
+    "abstention_accuracy": 1.0,
+    "abstention_cases": 1,
+    "cases": 13,
+    "evidence_recall": 1.0,
+    "exact_state_accuracy": 1.0,
+    "stale_use_rate": 0.0
+  },
+  "turns": 12
+}

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "temvera-research"
+version = "0.0.1"
+description = "Temporal, provenance-aware memory research for AI agents"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [{ name = "Temvera contributors" }]
+classifiers = ["License :: OSI Approved :: Apache Software License"]
+dependencies = []
+
+[project.scripts]
+temvera = "temvera.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "cryptography>=42.0",
+  "pytest>=8.0",
+  "ruff>=0.9",
+]
+crypto = ["cryptography>=42.0"]
+learned = ["fastembed>=0.8,<1", "numpy>=1.21,<2.3"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/temvera"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"

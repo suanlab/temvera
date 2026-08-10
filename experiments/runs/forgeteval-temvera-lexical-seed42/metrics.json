@@ -1,0 +1,27 @@
+{
+  "by_family": {
+    "amnesia": [
+      5,
+      20
+    ],
+    "decay": [
+      20,
+      20
+    ],
+    "drift": [
+      20,
+      20
+    ],
+    "purge": [
+      20,
+      20
+    ],
+    "supersession": [
+      20,
+      20
+    ]
+  },
+  "cases": 100,
+  "pass_rate": 0.85,
+  "passed": 85
+}

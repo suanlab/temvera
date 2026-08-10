@@ -1,0 +1,40 @@
+[
+  {
+    "ancestor_ids": [],
+    "attack_type": "query_only_injection",
+    "evidence_ids": [
+      "query-injected"
+    ],
+    "malicious": true,
+    "scenario_id": "T-query"
+  },
+  {
+    "ancestor_ids": [],
+    "attack_type": "forged_front_matter",
+    "evidence_ids": [
+      "forged-frontmatter"
+    ],
+    "malicious": true,
+    "scenario_id": "T-forge"
+  },
+  {
+    "ancestor_ids": [
+      "external-ancestor"
+    ],
+    "attack_type": "provenance_laundering",
+    "evidence_ids": [
+      "laundered"
+    ],
+    "malicious": true,
+    "scenario_id": "T-launder"
+  },
+  {
+    "ancestor_ids": [],
+    "attack_type": "benign_verified",
+    "evidence_ids": [
+      "verified-benign"
+    ],
+    "malicious": false,
+    "scenario_id": "B-tool"
+  }
+]

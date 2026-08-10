@@ -1,0 +1,299 @@
+"""E1 runner: identical-history comparison of external systems vs the oracle.
+
+Generates seeded lifecycle histories (over a seed × scale × profile grid),
+naturalizes surface names so semantic systems can tell entities apart
+(E-052), and scores each system's free-text answers against the bitemporal
+oracle's ground truth with the deterministic value-substring scorer.
+
+Transaction time is monotonic, so replay uses **forward checkpoints**: turns
+are ingested in ``recorded_at`` order and, at each distinct ``transaction_at``,
+every case known by then is answered. This costs O(turns) ingests per cell (not
+O(cases x prefix)) and is the faithful transaction-time model — the store
+accumulates knowledge and cannot un-learn. ``single_pass`` ingests everything
+once (current-state answering) for a cheaper contrast.
+
+The runner is adapter-agnostic: any object satisfying the harness
+``MemorySystem`` contract (Mem0, Graphiti, ...) is supplied by a factory.
+"""
+
+from __future__ import annotations
+
+import random
+from typing import Any, Callable
+
+from .external_harness import MemorySystem, OracleMemorySystem, score_answer
+from .generator import generate_histories
+from .mem0_adapter import Mem0System, default_mem0_config
+from .nl_workload import build_nl_cases, naturalize_events, render_turns
+
+_METRICS = ("exact_state_accuracy", "evidence_recall", "stale_use_rate")
+
+
+def _cells(config: dict[str, Any]):
+    seeds = [int(s) for s in config["seeds"]]
+    if "scales" in config:
+        scales = [
+            (int(s["entities"]), int(s["revisions"])) for s in config["scales"]
+        ]
+    else:
+        d = config["dataset"]
+        scales = [(int(d["entities"]), int(d["revisions"]))]
+    profiles = config.get("profiles") or [
+        {"name": "as_configured", **config.get("profile", {})}
+    ]
+    for profile in profiles:
+        for entities, revisions in scales:
+            for seed in seeds:
+                yield seed, entities, revisions, profile
+
+
+def _events_for(
+    seed: int, entities: int, revisions: int, profile: dict[str, Any], naturalize: bool
+):
+    events = generate_histories(
+        seed=seed,
+        entities=entities,
+        revisions=revisions,
+        reconfirm_probability=float(profile.get("reconfirm_probability", 0.0)),
+        expire_probability=float(profile.get("expire_probability", 0.0)),
+        purge_probability=float(profile.get("purge_probability", 0.0)),
+    )
+    return naturalize_events(events) if naturalize else events
+
+
+def score_on_events(
+    system: MemorySystem,
+    events,
+    *,
+    replay: str = "transaction_checkpoint",
+    transcript: list[dict[str, Any]] | None = None,
+    cell: dict[str, Any] | None = None,
+    system_name: str = "",
+) -> dict[str, Any]:
+    cases = build_nl_cases(events)
+    if not cases:
+        raise ValueError("history produced no query cases")
+    turns = sorted(render_turns(events), key=lambda t: (t.recorded_at, t.event_id))
+
+    system.reset()
+    answers: dict[str, str] = {}
+    if replay == "transaction_checkpoint":
+        pending = 0
+        for tx in sorted({c.transaction_at for c in cases}):
+            while pending < len(turns) and turns[pending].recorded_at <= tx:
+                system.ingest(turns[pending])
+                pending += 1
+            for case in (c for c in cases if c.transaction_at == tx):
+                answers[case.case_id] = system.answer(case)
+    elif replay == "single_pass":
+        for turn in turns:
+            system.ingest(turn)
+        for case in cases:
+            answers[case.case_id] = system.answer(case)
+    else:
+        raise ValueError(f"unknown replay mode: {replay}")
+
+    exact = recall_total = stale_selected = selected_total = 0.0
+    abstain = abstain_correct = 0
+    by_cat: dict[str, list[float]] = {}
+    for case in cases:
+        score = score_answer(answers[case.case_id], case)
+        exact += score.exact
+        recall_total += score.recall
+        stale_selected += len(score.present_stale)
+        selected_total += len(score.present_expected) + len(score.present_stale)
+        by_cat.setdefault(case.category, []).append(float(score.exact))
+        if not case.expected_values:
+            abstain += 1
+            abstain_correct += score.exact
+        if transcript is not None:
+            transcript.append(
+                {
+                    "system": system_name,
+                    **(cell or {}),
+                    "case_id": case.case_id,
+                    "category": case.category,
+                    "query": case.query_text,
+                    "expected_values": sorted(case.expected_values),
+                    "stale_values": sorted(case.stale_values),
+                    "answer": answers[case.case_id],
+                    "present_expected": sorted(score.present_expected),
+                    "present_stale": sorted(score.present_stale),
+                    "exact": score.exact,
+                }
+            )
+    n = len(cases)
+    return {
+        "cases": n,
+        "exact_state_accuracy": exact / n,
+        "evidence_recall": recall_total / n,
+        "stale_use_rate": stale_selected / selected_total if selected_total else 0.0,
+        "abstention_cases": abstain,
+        "abstention_accuracy": abstain_correct / abstain if abstain else 1.0,
+        "by_category_exact": {c: sum(v) / len(v) for c, v in sorted(by_cat.items())},
+    }
+
+
+def run_external_comparison(
+    config: dict[str, Any],
+    system_factory: Callable[[str], MemorySystem],
+    *,
+    system_name: str,
+) -> dict[str, Any]:
+    replay = config.get("replay", "transaction_checkpoint")
+    naturalize = bool(config.get("naturalize", True))
+    rows: list[dict[str, Any]] = []
+    transcript: list[dict[str, Any]] = []
+    for seed, entities, revisions, profile in _cells(config):
+        events = _events_for(seed, entities, revisions, profile, naturalize)
+        cell = {
+            "seed": seed,
+            "entities": entities,
+            "revisions": revisions,
+            "profile": str(profile.get("name", "as_configured")),
+        }
+        label = f"{cell['profile']}-e{entities}-r{revisions}-s{seed}"
+        target = score_on_events(
+            system_factory(label),
+            events,
+            replay=replay,
+            transcript=transcript,
+            cell=cell,
+            system_name=system_name,
+        )
+        oracle = score_on_events(OracleMemorySystem(events), events, replay=replay)
+        rows.append({**cell, "system": system_name, **target})
+        rows.append({**cell, "system": "oracle", **oracle})
+    summary = _summarize(rows, samples=int(config.get("bootstrap_samples", 2000)))
+    return {
+        "replay": replay,
+        "naturalized": naturalize,
+        "rows": rows,
+        "summary": summary,
+        "transcript": transcript,
+    }
+
+
+def _summarize(rows: list[dict[str, Any]], *, samples: int) -> dict[str, Any]:
+    rng = random.Random(1729)
+    systems = sorted({r["system"] for r in rows})
+    out: dict[str, Any] = {"overall": {}, "by_condition": {}, "by_category_exact": {}}
+    for system in systems:
+        sel = [r for r in rows if r["system"] == system]
+        out["overall"][system] = {
+            m: sum(r[m] for r in sel) / len(sel) for m in _METRICS
+        }
+        out["overall"][system]["abstention_accuracy"] = sum(
+            r["abstention_accuracy"] for r in sel
+        ) / len(sel)
+        cats: dict[str, list[float]] = {}
+        for r in sel:
+            for c, v in r["by_category_exact"].items():
+                cats.setdefault(c, []).append(v)
+        out["by_category_exact"][system] = {
+            c: sum(v) / len(v) for c, v in sorted(cats.items())
+        }
+    conditions = sorted({(r["profile"], r["entities"], r["revisions"]) for r in rows})
+    for profile, entities, revisions in conditions:
+        key = f"profile={profile},entities={entities},revisions={revisions}"
+        out["by_condition"][key] = {}
+        for system in systems:
+            values = [
+                r["exact_state_accuracy"]
+                for r in rows
+                if r["system"] == system
+                and r["profile"] == profile
+                and r["entities"] == entities
+                and r["revisions"] == revisions
+            ]
+            boot = sorted(
+                sum(rng.choice(values) for _ in values) / len(values)
+                for _ in range(samples)
+            )
+            out["by_condition"][key][system] = {
+                "exact_mean": sum(values) / len(values),
+                "ci95_low": boot[int(0.025 * (len(boot) - 1))],
+                "ci95_high": boot[int(0.975 * (len(boot) - 1))],
+                "n_seeds": len(values),
+            }
+    return out
+
+
+def run_mem0_comparison(config: dict[str, Any]) -> dict[str, Any]:
+    model = config.get("model", "gpt-4o-mini")
+    embed_model = config.get("embed_model", "text-embedding-3-small")
+    search_limit = int(config.get("search_limit", 5))
+    base_user = config.get("user_id", "temvera-e1")
+
+    def factory(label: str) -> MemorySystem:
+        return Mem0System(
+            config=default_mem0_config(model=model, embed_model=embed_model),
+            user_id=f"{base_user}-{label}",
+            search_limit=search_limit,
+        )
+
+    result = run_external_comparison(config, factory, system_name="mem0")
+    result["backbone"] = {
+        "system": "mem0",
+        "mem0_version": Mem0System(
+            config=default_mem0_config(model=model, embed_model=embed_model)
+        ).version,
+        "llm_model": model,
+        "embed_model": embed_model,
+        "replay": result["replay"],
+        "naturalized": result["naturalized"],
+    }
+    return result
+
+
+def run_graphiti_comparison(config: dict[str, Any]) -> dict[str, Any]:
+    import os
+
+    from .graphiti_adapter import GraphitiSystem
+
+    model = config.get("model", "gpt-4o-mini")
+    embed_model = config.get("embed_model", "text-embedding-3-small")
+    search_limit = int(config.get("search_limit", 5))
+    neo4j_uri = config.get("neo4j_uri") or os.environ.get("NEO4J_URI")
+    neo4j_user = config.get("neo4j_user") or os.environ.get("NEO4J_USER", "neo4j")
+    neo4j_password = config.get("neo4j_password") or os.environ.get("NEO4J_PASSWORD")
+    temporal_filter = bool(config.get("temporal_filter", False))
+
+    def factory(label: str) -> MemorySystem:
+        return GraphitiSystem(
+            model=model,
+            embed_model=embed_model,
+            search_limit=search_limit,
+            group_id=f"e1-{label}",
+            neo4j_uri=neo4j_uri,
+            neo4j_user=neo4j_user,
+            neo4j_password=neo4j_password,
+            temporal_filter=temporal_filter,
+        )
+
+    result = run_external_comparison(config, factory, system_name="graphiti")
+    result["backbone"] = {
+        "system": "graphiti",
+        "graphiti_version": GraphitiSystem(
+            neo4j_uri=neo4j_uri, neo4j_user=neo4j_user, neo4j_password=neo4j_password
+        ).version,
+        "backend": "neo4j" if neo4j_uri else "kuzu",
+        "temporal_filter": temporal_filter,
+        "llm_model": model,
+        "embed_model": embed_model,
+        "replay": result["replay"],
+        "naturalized": result["naturalized"],
+    }
+    return result
+
+
+def projected_ingests(config: dict[str, Any]) -> dict[str, int]:
+    """Offline projection of ingest/query call volume (no API calls)."""
+    naturalize = bool(config.get("naturalize", True))
+    ingests = queries = cells = 0
+    for seed, entities, revisions, profile in _cells(config):
+        events = _events_for(seed, entities, revisions, profile, naturalize)
+        ingests += len(events)
+        queries += len(build_nl_cases(events))
+        cells += 1
+    return {"cells": cells, "ingest_calls": ingests, "search_calls": queries}

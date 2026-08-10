@@ -1,0 +1,24 @@
+{
+  "calibrated_test_recall_at_budget": 1.0,
+  "development_examples": 16,
+  "fixed_test_recall_at_budget": 1.0,
+  "learned_weights": [
+    [
+      "exact",
+      0.5
+    ],
+    [
+      "graph",
+      0.5
+    ],
+    [
+      "lexical",
+      0.5
+    ],
+    [
+      "vector",
+      0.5
+    ]
+  ],
+  "test_examples": 16
+}

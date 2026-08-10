@@ -1,0 +1,45 @@
+{
+  "adaptive_bypass": [
+    {
+      "activated": true,
+      "expected_limitation": true,
+      "probe": "compromised_trusted_signer"
+    },
+    {
+      "activated": false,
+      "expected_limitation": false,
+      "probe": "cross_tenant_replay"
+    },
+    {
+      "activated": false,
+      "expected_limitation": false,
+      "probe": "signed_claim_tamper"
+    },
+    {
+      "activated": false,
+      "expected_limitation": false,
+      "probe": "expired_signature_replay"
+    }
+  ],
+  "governed": {
+    "attack_activation_rate": 0.0,
+    "attack_write_acceptance_rate": 0.75,
+    "attacks": 4,
+    "benign_utility": 1.0,
+    "quarantined_attacks": 1
+  },
+  "provenance_gate": {
+    "attack_success_rate": 0.0,
+    "attacks": 3,
+    "benign_utility": 1.0,
+    "detected_laundering": 1,
+    "scenarios": 4
+  },
+  "undefended": {
+    "attack_success_rate": 1.0,
+    "attacks": 3,
+    "benign_utility": 1.0,
+    "detected_laundering": 1,
+    "scenarios": 4
+  }
+}

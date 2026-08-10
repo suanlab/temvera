@@ -1,0 +1,23 @@
+{
+  "benchmark": "temvera-external-graphiti-grid-v1",
+  "seeds": [7, 17, 42],
+  "scales": [
+    {"entities": 3, "revisions": 2},
+    {"entities": 6, "revisions": 3}
+  ],
+  "profiles": [
+    {
+      "name": "mixed_lifecycle",
+      "reconfirm_probability": 0.5,
+      "expire_probability": 0.35,
+      "purge_probability": 0.25
+    }
+  ],
+  "replay": "transaction_checkpoint",
+  "naturalize": true,
+  "model": "gpt-4o-mini",
+  "embed_model": "text-embedding-3-small",
+  "search_limit": 5,
+  "bootstrap_samples": 2000,
+  "user_id": "temvera-e1-graphiti"
+}

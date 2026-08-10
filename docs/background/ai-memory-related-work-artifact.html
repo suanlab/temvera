@@ -1,0 +1,424 @@
+<title>AI Memory 연구 주제별 선행연구 조사</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1a1d24; --muted:#5c6470; --line:#e4e7ec;
+    --accent:#3b5bdb; --accent-soft:#eef2ff;
+    --open:#0f9d58; --open-bg:#e6f4ea; --partial:#d98a00; --partial-bg:#fdf3e0; --crowd:#c0392b; --crowd-bg:#fbeae8;
+    --star:#b8860b; --star-bg:#fdf6e3; --code:#f0f2f5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0f1115; --card:#171a21; --ink:#e6e8ec; --muted:#9aa2af; --line:#2a2f3a;
+      --accent:#748ffc; --accent-soft:#1e2536;
+      --open:#4cc38a; --open-bg:#123322; --partial:#e0a53d; --partial-bg:#3a2c10; --crowd:#e57368; --crowd-bg:#3a1a17;
+      --star:#e0b84d; --star-bg:#332a12; --code:#20242e;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1115; --card:#171a21; --ink:#e6e8ec; --muted:#9aa2af; --line:#2a2f3a;
+    --accent:#748ffc; --accent-soft:#1e2536;
+    --open:#4cc38a; --open-bg:#123322; --partial:#e0a53d; --partial-bg:#3a2c10; --crowd:#e57368; --crowd-bg:#3a1a17;
+    --star:#e0b84d; --star-bg:#332a12; --code:#20242e;
+  }
+  :root[data-theme="light"]{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1a1d24; --muted:#5c6470; --line:#e4e7ec;
+    --accent:#3b5bdb; --accent-soft:#eef2ff;
+    --open:#0f9d58; --open-bg:#e6f4ea; --partial:#d98a00; --partial-bg:#fdf3e0; --crowd:#c0392b; --crowd-bg:#fbeae8;
+    --star:#b8860b; --star-bg:#fdf6e3; --code:#f0f2f5;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",Roboto,sans-serif;
+    line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  header.hero{padding:56px 0 32px;border-bottom:1px solid var(--line)}
+  h1{font-size:2rem;margin:0 0 10px;letter-spacing:-.02em;line-height:1.25;text-wrap:balance}
+  .sub{color:var(--muted);font-size:1.02rem;max-width:760px}
+  .meta{margin-top:18px;color:var(--muted);font-size:.85rem}
+  .meta code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:.85em}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 0}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:600;
+    padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .b-open{background:var(--open-bg);color:var(--open)}
+  .b-partial{background:var(--partial-bg);color:var(--partial)}
+  .b-crowd{background:var(--crowd-bg);color:var(--crowd)}
+  .b-star{background:var(--star-bg);color:var(--star)}
+  section.block{padding:36px 0 8px}
+  h2.tier{font-size:1.35rem;margin:0 0 6px;display:flex;align-items:center;gap:10px;text-wrap:balance}
+  .tier-dot{width:12px;height:12px;border-radius:3px;flex:none}
+  .tier-desc{color:var(--muted);font-size:.9rem;margin:0 0 20px}
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:20px 0 8px}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:.86rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--accent-soft);color:var(--ink);font-weight:600;position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:none}
+  td a{color:var(--accent);text-decoration:none;font-weight:600}
+  .tnum{font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent);white-space:nowrap}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 24px;margin:18px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card.starred{border-color:var(--star);box-shadow:0 0 0 1px var(--star) inset,0 1px 2px rgba(0,0,0,.03)}
+  .chead{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:4px}
+  .chead .id{font-weight:800;color:var(--accent);font-size:1.05rem}
+  .chead .name{font-weight:700;font-size:1.05rem;flex:1;min-width:200px}
+  .chead .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .tag{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+  .desc{color:var(--muted);font-size:.92rem;margin:8px 0 16px}
+  .card h4{font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    margin:16px 0 8px;font-weight:700}
+  ul.refs{margin:0;padding:0;list-style:none}
+  ul.refs li{padding:7px 0 7px 16px;border-left:2px solid var(--line);margin-bottom:6px;font-size:.9rem}
+  ul.refs li b{font-weight:700}
+  ul.refs li .venue{font-size:.78rem;color:var(--muted);font-weight:600}
+  ul.refs li a{color:var(--accent);text-decoration:none}
+  ul.refs li a:hover{text-decoration:underline}
+  .gap{background:var(--accent-soft);border-radius:10px;padding:12px 16px;font-size:.9rem;margin:6px 0}
+  .base{font-size:.86rem;color:var(--muted)}
+  .verdict{margin-top:14px;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .caveat{background:var(--partial-bg);border:1px solid var(--partial);border-radius:12px;padding:16px 20px;margin:28px 0;font-size:.88rem}
+  .caveat b{color:var(--partial)}
+  .caveat code{background:var(--code);padding:1px 5px;border-radius:4px}
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0 60px;color:var(--muted);font-size:.82rem}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+  @media(max-width:640px){h1{font-size:1.6rem}header.hero{padding:40px 0 24px}}
+</style>
+
+<header class="hero"><div class="wrap">
+  <h1>AI Memory · Database · Knowledge Base<br>연구 주제별 선행연구 조사</h1>
+  <p class="sub">16개 발굴 연구 주제 각각에 대한 related-work 심층 조사 — 가장 근접한 선행연구, 정확한 미해결 갭, 비교 베이스라인·벤치마크, 신규성 판정.</p>
+  <div class="meta">작성일 2026-07-15 · 방법: 6개 클러스터 전문 리서치 에이전트 병렬 조사(2022–2026 문헌) · ★ = Temvera(파일+프론트매터+git) 직접 적합</div>
+  <div class="legend">
+    <span class="badge b-open">● 열린 문제 (genuinely open)</span>
+    <span class="badge b-partial">◑ 부분적 해결 (partially addressed)</span>
+    <span class="badge b-crowd">○ 혼잡 (crowded)</span>
+    <span class="badge b-star">★ Temvera 적합</span>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+<section class="block">
+  <h2 class="tier"><span class="tier-dot" style="background:var(--accent)"></span>요약 매트릭스</h2>
+  <p class="tier-desc">전체 16개 주제의 티어·클러스터·신규성 판정. 대부분이 "구성요소는 존재하나 특정 조합이 미탐색"인 <b>열린 문제</b> 또는 <b>부분적 해결</b>로 판정됐다. 완전히 혼잡한 주제는 없었다.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>주제</th><th>티어</th><th>클러스터</th><th>신규성 판정</th></tr></thead>
+    <tbody>
+      <tr><td class="tnum"><a href="#t1">T1</a> 생애주기 벤치마크 ★</td><td>1 즉시</td><td>평가</td><td><span class="badge b-partial">◑ 조합상 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t2">T2</a> judge 메타평가</td><td>1 즉시</td><td>평가</td><td><span class="badge b-open">● 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t3">T3</a> 리랭커 조건부 융합</td><td>1 즉시</td><td>평가</td><td><span class="badge b-open">● 열림(협소)</span></td></tr>
+      <tr><td class="tnum"><a href="#t4">T4</a> 망각인식 인덱스</td><td>2 알고리즘</td><td>인덱싱</td><td><span class="badge b-open">● 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t5">T5</a> 충돌인식 검색 ★</td><td>2 알고리즘</td><td>검색</td><td><span class="badge b-open">● 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t6">T6</a> 학습형 검색 라우터</td><td>2 알고리즘</td><td>검색</td><td><span class="badge b-partial">◑ 부분</span></td></tr>
+      <tr><td class="tnum"><a href="#t7">T7</a> 학습형 컴팩션</td><td>2 알고리즘</td><td>검색</td><td><span class="badge b-open">● 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t8">T8</a> bitemporal MVCC</td><td>3 시스템</td><td>DB</td><td><span class="badge b-open">● 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t9">T9</a> 대역폭 포화 디스크그래프</td><td>3 시스템</td><td>인덱싱</td><td><span class="badge b-partial">◑ 부분</span></td></tr>
+      <tr><td class="tnum"><a href="#t10">T10</a> 접근제어 인식 검색</td><td>3 시스템</td><td>보안</td><td><span class="badge b-open">● 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t11">T11</a> 프로비넌스·믿음개정 메모리 ★</td><td>4 프론티어</td><td>Temvera</td><td><span class="badge b-partial">◑ 개정기제 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t12">T12</a> 프론트매터 프로비넌스 방어 ★</td><td>4 프론티어</td><td>보안</td><td><span class="badge b-partial">◑ 교차점 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t13">T13</a> 값싼 통합 정책 ★</td><td>4 프론티어</td><td>Temvera</td><td><span class="badge b-partial">◑ 무GPU 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t14">T14</a> 휴대형 스킬 파일 ★</td><td>4 프론티어</td><td>Temvera</td><td><span class="badge b-partial">◑ 혼잡화 중</span></td></tr>
+      <tr><td class="tnum"><a href="#t15">T15</a> 메모리 배치 정책</td><td>4 프론티어</td><td>인모델</td><td><span class="badge b-open">● 열림</span></td></tr>
+      <tr><td class="tnum"><a href="#t16">T16</a> 편집→메모리층</td><td>4 프론티어</td><td>인모델</td><td><span class="badge b-partial">◑ 부분</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="block">
+  <h2 class="tier"><span class="tier-dot" style="background:var(--open)"></span>Tier 1 — 즉시 착수형 (평가 인프라 · 저위험·고레버리지)</h2>
+  <p class="tier-desc">평가/벤치마크 클러스터. 대부분 학습 불필요, 데이터·프로토콜 엔지니어링 중심으로 후속 모든 연구의 측정 기반이 된다.</p>
+
+  <div class="card starred" id="t1">
+    <div class="chead"><span class="id">T1</span><span class="name">메모리 생애주기 벤치마크 — 존재기반 회수를 넘어</span>
+      <div class="tags"><span class="tag">벤치마크</span><span class="tag">★ Temvera</span></div></div>
+    <p class="desc">회수율이 아니라 쓰기·통합·망각·모순해소 <b>연산 자체</b>를 채점. 유효기간을 가진 다세션 히스토리를 절차적 생성, 반사실적 갱신·시간유효 질의를 <b>LLM-judge 없이</b> 정답 계산.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>From Recall to Forgetting (Memora / FAMA)</b> <span class="venue">· ACL 2026 Findings (채택)</span> — FAMA 지표로 폐기·무효 메모리 의존을 벌점. <a href="https://arxiv.org/abs/2604.20006">2604.20006</a>. <em>단, 채점이 human+auto 하이브리드·QA 중심.</em></li>
+      <li><b>MemStrata</b> <span class="venue">· preprint</span> — 결정론적 supersession + <b>마커 없는 계산가능 정답(LLM 무호출)</b>. <a href="https://arxiv.org/abs/2606.26511">2606.26511</a>. <em>judge-free 요구에 최근접하나 자기 방법 검증용으로 협소.</em></li>
+      <li><b>MemoryAgentBench</b> <span class="venue">· preprint</span> — 정확회수·test-time학습·장기이해·<b>선택적 망각</b> 4역량. <a href="https://arxiv.org/abs/2507.05257">2507.05257</a>. <em>망각을 LLM judge로 채점.</em></li>
+      <li><b>GEM — Is Agent Memory a Database?</b> <span class="venue">· preprint</span> — 4개 상태연산자+6 정확성조건. <a href="https://arxiv.org/abs/2605.26252">2605.26252</a>. <em>연산 어휘는 제공하나 벤치는 없음.</em></li>
+      <li><b>MemConflict / STALE / EvoMemBench</b> — 모순 분류·시간유효 질의 설계. <a href="https://arxiv.org/html/2605.20926">2605.20926</a> · <a href="https://arxiv.org/pdf/2605.06527">2605.06527</a> · <a href="https://arxiv.org/abs/2605.18421">2605.18421</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">다음 <b>전부를 결합</b>한 벤치마크가 없음: ① 유효기간 명시 히스토리의 절차적 생성, ② write/merge/expiry/contradiction을 <b>분리 이벤트로 직접 채점</b>, ③ <b>LLM-judge 없는 계산가능 정답</b>, ④ FAMA 페널티와 judge-free 지표 동시 보고. 개별 조각은 혼잡하나 통합 생성기 기반 연산수준 스위트는 미구축.</div>
+    <p class="base"><b>베이스라인/데이터셋:</b> Mem0·MemGPT/Letta·LangMem·A-MEM·raw long-context·vanilla RAG // LOCOMO·LongMemEval(-V2)·MemoryAgentBench·MemConflict·STALE·MemStrata.</p>
+    <div class="verdict"><span class="badge b-partial">◑ 조합상 열림</span> 조각들은 혼잡하나, 절차생성·유효기간·완전 judge-free·연산수준 조합은 미존재.</div>
+  </div>
+
+  <div class="card" id="t2">
+    <div class="chead"><span class="id">T2</span><span class="name">메모리 judge 메타평가 하네스</span>
+      <div class="tags"><span class="tag">평가 인프라</span></div></div>
+    <p class="desc">LLM-judge의 신뢰성 <b>및</b> 타당성을 메모리 과업(시간추론·모순·망각)에 특화 측정: 온도민감도·편향·인간일치 신뢰구간.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>Reliability without Validity</b> <span class="venue">· preprint</span> — 21모델·541k 판정, κ/α·test-retest·편향. <a href="https://arxiv.org/html/2606.19544v1">2606.19544</a>. <em>MT-Bench/JudgeBench — 메모리·시간·모순 과업 없음.</em></li>
+      <li><b>Judge Reliability Harness (RAND)</b> <span class="venue">· preprint</span> — 라벨플립·불변·안정성 하네스. <a href="https://arxiv.org/abs/2603.05399">2603.05399</a>. <em>벤치는 안전/설득 — 메모리 아님.</em></li>
+      <li><b>AgentProp-Bench</b> <span class="venue">· preprint</span> — 에이전트 judge 신뢰성·오류전파. <a href="https://arxiv.org/pdf/2604.16706">2604.16706</a></li>
+      <li><b>Policy Invariance as Reliability Test</b> <span class="venue">· preprint</span> — 불변성 기반 신뢰성. <a href="https://arxiv.org/html/2605.06161">2605.06161</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">모든 기존 하네스는 판정 대상을 <b>정적</b> 선호/정답으로 취급. 메모리 judging 고유 실패면 — 시간유효성 추론, "망각/만료 vs 회수실패" 구분, superseded↔current 모순 해소 — 을 격리한 것이 없음. 메모리 특화 섭동과 sub-skill별 human-agreement CI가 미제공.</div>
+    <p class="base"><b>과업 기질:</b> LongMemEval 시간추론·knowledge-update, MemConflict, STALE, 그리고 T1 judge-free 스위트(judge-vs-계산정답 CI 산출).</p>
+    <div class="verdict"><span class="badge b-open">● 열림</span> 범용 judge 메타평가는 혼잡, 메모리 특화+human-agreement CI 하네스는 미구축.</div>
+  </div>
+
+  <div class="card" id="t3">
+    <div class="chead"><span class="id">T3</span><span class="name">리랭커 조건부 융합 — 강한 cross-encoder가 있으면 학습 융합은 잉여인가?</span>
+      <div class="tags"><span class="tag">실증연구</span></div></div>
+    <p class="desc">리랭커를 고정한 채, 학습/적응 융합 가중이 RRF+rerank 대비 <b>통계적으로 유의한 한계 이득</b>을 주는지 BEIR+에이전트메모리에서 검증.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>Reciprocal Rank Fusion</b> <span class="venue">· SIGIR 2009 (동료심사)</span> — 순위기반 융합, 고정 베이스라인. <a href="https://plg.uwaterloo.ca/~gvcorma/cormacksigir09-rrf.pdf">RRF</a></li>
+      <li><b>vstash — Adaptive Fusion</b> <span class="venue">· preprint</span> — IDF 적응 RRF, BEIR +0.1~21.4% NDCG. <a href="https://arxiv.org/pdf/2604.15484">2604.15484</a>. <em>단 리랭커 없는 검색 단계 — 이 연구가 제거하는 교란.</em></li>
+      <li><b>From BM25 to Corrective RAG</b> <span class="venue">· preprint</span> — 융합이 상류 recall은 올리나 <b>리랭킹 후엔 동등/열위</b>. <a href="https://arxiv.org/html/2604.01733v1">2604.01733</a>. <em>가장 근접한 힌트, 유의성 검정 없음.</em></li>
+      <li><b>HYRR</b> <span class="venue">· preprint</span> — 리랭커를 하이브리드 후보로 학습(반대 설계). <a href="https://arxiv.org/pdf/2212.10528">2212.10528</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">강한 cross-encoder 하나를 고정하고 학습/적응 융합이 순수 RRF+rerank 대비 유의한 한계 이득을 주는지 — 리랭커 불변 조건에서 BEIR <b>및</b> 에이전트메모리(방해요소=superseded/stale) 양쪽에서 — 검증한 통제 실험이 문헌에 없음.</div>
+    <p class="base"><b>베이스라인:</b> dense/BM25/RRF/학습융합/ColBERT ×rerank(bge-reranker-v2 등 고정) // BEIR + TREC-DL + LOCOMO/LongMemEval/MemConflict. paired bootstrap 유의성 검정.</p>
+    <div class="verdict"><span class="badge b-open">● 열림(협소)</span> 하이브리드+리랭킹은 혼잡하나, 리랭커 고정 한계효용 ablation은 미보고 — 방어가능한 negative-result 기여.</div>
+  </div>
+</section>
+
+<section class="block">
+  <h2 class="tier"><span class="tier-dot" style="background:#f59f00"></span>Tier 2 — 핵심 알고리즘 베팅 (중위험·고임팩트)</h2>
+  <p class="tier-desc">인덱싱·검색·컴팩션. "정적 휴리스틱 → 학습형/보증형 컨트롤러" 패턴이 공통.</p>
+
+  <div class="card" id="t4">
+    <div class="chead"><span class="id">T4</span><span class="name">망각인식·처닝강건 ANN 인덱스</span><div class="tags"><span class="tag">시스템/알고리즘</span></div></div>
+    <p class="desc">삭제·감쇠가 네이티브인 갱신형 인덱스: 시간감쇠 엣지가중·TTL 회수·연속 스트림 하 <b>증명가능 recall-드리프트 한계</b>·감쇠 결합 hot/cold 티어링.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>SPFresh</b> <span class="venue">· SOSP 2023 (동료심사)</span> — LIRE 인플레이스 upsert. <a href="https://arxiv.org/abs/2410.14452">2410.14452</a>. <em>삭제=tombstone, 감쇠 아님·드리프트 한계 없음.</em></li>
+      <li><b>FreshDiskANN</b> <span class="venue">· preprint</span> — eager insert/lazy delete + StreamingMerge. <a href="https://arxiv.org/abs/2105.09613">2105.09613</a></li>
+      <li><b>When to Repair a Graph ANN Index</b> <span class="venue">· preprint</span> — navigability 신호 트리거 국소 수리. <a href="https://arxiv.org/pdf/2607.00728">2607.00728</a>. <em>드리프트 모니터링 최근접, 단 휴리스틱.</em></li>
+      <li><b>UBIS / DGAI</b> — 스트림 안정성·갱신 I/O 절감. <a href="https://arxiv.org/abs/2510.25401">2510.25401</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">망각을 <b>형식 보증을 가진 인덱스 1급 연산</b>으로 만든 것이 없음: 네이티브 감쇠/TTL 연산자 + upsert/forget 스트림 하 <b>증명가능 Δrecall 한계</b> + 감쇠 결합 hot/cold 티어링의 교집합은 미해결.</div>
+    <p class="base"><b>베이스라인/벤치:</b> SPFresh·FreshDiskANN·UBIS·DGAI // Big-ANN streaming track·CANDOR-Bench·SIFT1B/Deep1B + 직접 구축 TTL/decay 스트림(표준 부재=기여).</p>
+    <div class="verdict"><span class="badge b-open">● 열림</span> 갱신/처닝은 혼잡, 네이티브 감쇠+증명 드리프트 한계+망각주도 티어링은 무선행.</div>
+  </div>
+
+  <div class="card starred" id="t5">
+    <div class="chead"><span class="id">T5</span><span class="name">살리언스·충돌 인식 에이전트 메모리 검색</span><div class="tags"><span class="tag">알고리즘</span><span class="tag">★ Temvera</span></div></div>
+    <p class="desc">검색 점수를 의미유사도 + 최근성 + 쓰기 프로비넌스 + <b>모순신호</b>로 구성. 충돌을 생성 하류가 아니라 <b>검색 시점 리랭킹/기권</b> 문제로 취급.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>MemConflict</b> <span class="venue">· preprint</span> — 현재 질의에 유효한 항목 랭킹이 핵심. <a href="https://arxiv.org/html/2605.20926">2605.20926</a>. <em>평가 벤치이지 스코어러 제안 아님.</em></li>
+      <li><b>Zep / Graphiti</b> <span class="venue">· preprint</span> — bitemporal 유효성 + 하이브리드+리랭킹. <a href="https://arxiv.org/abs/2501.13956">2501.13956</a>. <em>모순을 검색 시점 신호로 미모델·기권 없음.</em></li>
+      <li><b>TOKI</b> <span class="venue">· preprint</span> — bitemporal 모순해소 대수. <a href="https://arxiv.org/pdf/2606.06240">2606.06240</a>. <em>저장/통합 계층이지 질의시 리랭킹 아님.</em></li>
+      <li><b>SPAR</b> <span class="venue">· EMNLP 2022 (동료심사)</span> — 살리언스 증강 dense 검색 기반. <a href="https://aclanthology.org/2022.findings-emnlp.19.pdf">PDF</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">의미유사도 + 최근성 + 프로비넌스 + 후보 간 <b>명시적 모순 신호</b>를 <b>단일 학습 스코어링</b>으로 융합하고, 충돌을 <b>검색 시점 리랭킹/기권</b>으로 처리하는 검색기가 없음. 기존은 최근성 랭킹 / 저장시 해소 / 충돌 평가로 분리.</div>
+    <p class="base"><b>베이스라인/벤치:</b> dense(BGE/E5)·RRF·cross-encoder·Zep·Mem0 decay·Self-RAG // MemConflict·MemoryAgentBench·BEAM·LongMemEval·LoCoMo.</p>
+    <div class="verdict"><span class="badge b-open">● 열림</span> 프로비넌스·최근성 융합 + 기권형 검색 리랭커는 미착수.</div>
+  </div>
+
+  <div class="card" id="t6">
+    <div class="chead"><span class="id">T6</span><span class="name">학습형 검색 라우터 (모달리티 × 깊이 × 컨텍스트)</span><div class="tags"><span class="tag">알고리즘</span></div></div>
+    <p class="desc">질의별로 그래프/벡터/하이브리드 × 단일벡터/MUVERA·ColBERT 깊이 × retrieve/long-context/혼합을 <b>교정된 비용-정확도 보증</b>과 함께 선택.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>Adaptive-RAG</b> <span class="venue">· NAACL 2024 (동료심사)</span> — 질의복잡도 라우팅. <a href="https://arxiv.org/abs/2403.14403">2403.14403</a>. <em>iteration 깊이만·보증 없음.</em></li>
+      <li><b>RouteRAG</b> <span class="venue">· preprint</span> — GRPO로 passage/graph/hybrid. <a href="https://arxiv.org/html/2512.09487">2512.09487</a>. <em>모달리티 축만·교정 기권 없음.</em></li>
+      <li><b>Self-Route</b> <span class="venue">· EMNLP 2024 (동료심사)</span> — RAG vs long-context 자기반성 라우트. <a href="https://aclanthology.org/2024.emnlp-industry.66/">ACL</a></li>
+      <li><b>UCCI / BalanceRAG</b> <span class="venue">· preprint</span> — isotonic 교정·분포무관 위험 인증. <a href="https://arxiv.org/html/2605.18796">2605.18796</a>. <em>LLM 캐스케이드 — 검색 모달리티/깊이 아님.</em></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">각 축이 개별적으로만 해결됨. {graph|vector|hybrid}×{단일|MUVERA/ColBERT}×{retrieve|LC|hybrid} 전체 곱공간을 <b>교정된 분포무관 보증 + 기권</b>과 함께 결합 결정한 것이 없음. 특히 인코더 깊이를 <b>라우팅 변수</b>로 둔 사례 무.</div>
+    <p class="base"><b>벤치:</b> RAGRouter-Bench·HotpotQA/2Wiki·NQ/TriviaQA·∞Bench/LongBench·BEIR/LoTTE. 비용-정확도 Pareto·ECE 보고.</p>
+    <div class="verdict"><span class="badge b-partial">◑ 부분</span> 각 축·교정층은 개별 존재, 인코더 깊이 포함 결합 라우터+교정 기권은 열림.</div>
+  </div>
+
+  <div class="card" id="t7">
+    <div class="chead"><span class="id">T7</span><span class="name">학습형 비용인식 컴팩션/축출 정책</span><div class="tags"><span class="tag">알고리즘/이론</span></div></div>
+    <p class="desc">컴팩션을 RL/rate-distortion 제어로: keep/merge/summarize/evict를 (검색오차 × 과업효용)/토큰예산으로 최소화, <b>측정된 한계 수집비용</b>으로 트리거.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>What to Keep, What to Forget (Rate–Distortion)</b> <span class="venue">· preprint</span> — 컴팩션 통합 이론+하한. <a href="https://arxiv.org/pdf/2607.08032">2607.08032</a>. <em>택소노미 — 학습 컨트롤러 없음(스스로 갭 명시).</em></li>
+      <li><b>Agent Memory: Characterization…</b> <span class="venue">· preprint</span> — phase별 비용 프로파일링(트리거 신호). <a href="https://arxiv.org/abs/2606.06448">2606.06448</a></li>
+      <li><b>Mem-α / Memory-R1 / MemQ</b> <span class="venue">· preprint</span> — RL로 ADD/UPDATE/DELETE 학습. <a href="https://arxiv.org/html/2509.25911">2509.25911</a>. <em>보상=과업효용만·예산/트리거 없음.</em></li>
+      <li><b>LightMem</b> <span class="venue">· ICLR 2026 (채택)</span> — soft + offline sleep 재조직. <a href="https://arxiv.org/abs/2510.18866">2510.18866</a>. <em>휴리스틱 스케줄.</em></li>
+      <li><b>H2O / DuoAttention / RDKV</b> — KV 축출·rate-distortion 비트할당. <a href="https://arxiv.org/abs/2306.14048">2306.14048</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">① 검색오차×과업효용을 <b>하드 토큰예산</b> 하 최적화, ② keep/merge/summarize/evict 제어행동, ③ <b>측정 한계 수집비용</b>으로 트리거 — 세 조건을 닫은 컨트롤러가 없음.</div>
+    <p class="base"><b>벤치:</b> LongMemEval·LoCoMo·MemoryAgentBench + 2606.06448 워크로드. 비용-효용 Pareto 보고.</p>
+    <div class="verdict"><span class="badge b-open">● 열림</span> 재료는 개별 존재, 예산제약·수집비용 트리거 학습 컨트롤러는 미구축.</div>
+  </div>
+</section>
+
+<section class="block">
+  <h2 class="tier"><span class="tier-dot" style="background:#4263eb"></span>Tier 3 — 시스템/DB 엄밀성 (중~고위험, 강한 논문성)</h2>
+  <p class="tier-desc">"메모리=DB"를 은유에서 보증으로. SIGMOD/VLDB/CIDR/OSDI 지향.</p>
+
+  <div class="card" id="t8">
+    <div class="chead"><span class="id">T8</span><span class="name">bitemporal MVCC 트랜잭션 메모리 저장소</span><div class="tags"><span class="tag">DB 시스템/이론</span></div></div>
+    <p class="desc">(event-time, ingestion-time) 키의 다버전 동시성제어·스냅샷 격리 읽기·동시 다중에이전트 쓰기의 <b>형식적 직렬성 정확성 모델</b>.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>Zep / Graphiti</b> <span class="venue">· preprint</span> — bitemporal 엣지. <a href="https://arxiv.org/abs/2501.13956">2501.13956</a>. <em>MVCC·격리·동시성 보증 없음.</em></li>
+      <li><b>TOKI</b> <span class="venue">· preprint (cs.DB)</span> — 4 해소 휴리스틱을 bitemporal 연산자로, 감사행. <a href="https://arxiv.org/abs/2606.06240">2606.06240</a>. <em>쓰기 대수이지 스냅샷격리·직렬성 증명 아님.</em></li>
+      <li><b>Fast Serializable MVCC (HyPer)</b> <span class="venue">· SIGMOD 2015 (동료심사)</span> — precision-locking 검증. <a href="https://db.in.tum.de/~muehlbau/papers/mvcc.pdf">PDF</a>. <em>단일시간·모순 개념 없음.</em></li>
+      <li><b>Serializable Snapshot Isolation · SQL:2011 temporal</b> — SI 직렬성·(valid,transaction) 표준. <em>bitemporal 에이전트 메모리 미적용.</em></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">(event,ingestion) MVCC + 스냅샷격리 읽기 + 동시 다중에이전트 <b>직렬성 정확성 모델</b> + 모순해소를 <b>직렬화 연산</b>으로 통합 — 셋을 결합한 DB급 트랜잭션 모델이 없음. 고전 MVCC/SSI와 bitemporal 에이전트 메모리가 별개 문헌.</div>
+    <p class="base"><b>벤치:</b> LoCoMo·DMR + 모순주입 동시쓰기 워크로드(격리 이상률·직렬성 위반) + 시간 QA. 표준 부재=기여.</p>
+    <div class="verdict"><span class="badge b-open">● 열림</span> 증명된 다중에이전트 직렬성 bitemporal-MVCC 저장소는 미구축.</div>
+  </div>
+
+  <div class="card" id="t9">
+    <div class="chead"><span class="id">T9</span><span class="name">대역폭 포화 온디스크 그래프 인덱스</span><div class="tags"><span class="tag">시스템</span></div></div>
+    <p class="desc">한 논리적 홉이 co-located 이웃을 <b>대형 배치/순차 읽기</b>(io_uring)로 → 4KiB 랜덤 IOPS-bound를 대역폭-bound로 전환. RaBitQ 인라인으로 2차 read 제거.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>Starling</b> <span class="venue">· SIGMOD 2024 (동료심사)</span> — 노드+이웃 페이지 공유(43.9×). <a href="https://arxiv.org/abs/2401.02116">2401.02116</a>. <em>여전히 페이지 랜덤(4KiB).</em></li>
+      <li><b>PipeANN</b> <span class="venue">· OSDI 2025 (동료심사)</span> — compute/IO 파이프라인. <a href="https://www.usenix.org/system/files/osdi25-guo.pdf">PDF</a>. <em>overlap으로 지연 — 순차 대역폭 변환 아님.</em></li>
+      <li><b>SymphonyQG</b> <span class="venue">· SIGMOD 2025 (동료심사)</span> — RaBitQ co-locate·재랭크 생략. <a href="https://dl.acm.org/doi/pdf/10.1145/3709730">ACM</a>. <em>인메모리 — 온디스크 코디자인 부재.</em></li>
+      <li><b>AiSAQ / LM-DiskANN</b> — 인라인 PQ. <a href="https://arxiv.org/abs/2404.06004">2404.06004</a>. <em>여전히 노드 랜덤 페이지.</em></li>
+      <li><b>IISWC 2025 특성화</b> — 스토리지 ANN이 NVMe 미포화 실측(동기). <a href="https://atlarge-research.com/pdfs/2025-iiswc-vectordb.pdf">PDF</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">위 전부 랜덤 4KiB read를 줄이거나 숨김. <b>한 홉이 co-located 이웃 전체를 단일 대형 배치/순차 read로 가져와 대역폭을 포화</b>시키는 물리 레이아웃 재설계(io_uring)는 무. 온디스크 인라인 RaBitQ(SymphonyQG는 인메모리)와 대역폭지향 레이아웃 결합도 무.</div>
+    <p class="base"><b>벤치:</b> SIFT1B·Deep1B·MS-Turing·VIBE. recall-지연 + <b>달성 대역폭 vs 장치 피크</b>(IISWC 핵심 지표) 보고.</p>
+    <div class="verdict"><span class="badge b-partial">◑ 부분</span> 순차홉 레이아웃+온디스크 인라인 RaBitQ 전체 코디자인은 미구축.</div>
+  </div>
+
+  <div class="card" id="t10">
+    <div class="chead"><span class="id">T10</span><span class="name">접근제어 인식 멀티테넌트 벡터 검색</span><div class="tags"><span class="tag">시스템/보안</span></div></div>
+    <p class="desc">ANN 검색 <b>내부</b>에서 행/속성 수준 보안(ACL predicate-pushdown) + 교차사용자 DP 예산, 추출공격 대비 벤치.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>ACORN</b> <span class="venue">· SIGMOD 2024 (동료심사)</span> — predicate-agnostic 그래프 내 필터. <a href="https://arxiv.org/abs/2403.04871">2403.04871</a>. <em>필터=질의조건, 보안경계 아님.</em></li>
+      <li><b>HoneyBee — RBAC for Vector DBs</b> <span class="venue">· PACMMOD 2026 (동료심사)</span> — 인덱스 내 RBAC 동적 파티셔닝(RLS 대비 13.5×). <a href="https://arxiv.org/abs/2505.01538">2505.01538</a>. <em>최강 매치이나 교차사용자 추론누출 미모델·DP 없음.</em></li>
+      <li><b>Curator / Collaborative Memory</b> <span class="venue">· preprint</span> — 멀티테넌트 인덱스·ACL 설계. <a href="https://arxiv.org/abs/2401.07119">2401.07119</a> · <a href="https://arxiv.org/abs/2505.18279">2505.18279</a></li>
+      <li><b>DP-RAG</b> <span class="venue">· preprint</span> — RAG 생성 per-token DP. <a href="https://arxiv.org/abs/2412.04697">2412.04697</a>. <em>단일 corpus 생성측, 교차테넌트 아님.</em></li>
+      <li><b>RAG-Leaks / E-MIA</b> — 추출·MIA 공격(ACL 파티션 인덱스엔 미실행). <a href="https://link.springer.com/article/10.1007/s11432-024-4441-4">RAG-Leaks</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">(a) ACL을 ANN traversal <b>내부</b> 보안경계로 + (b) 교차테넌트 <b>DP 검색 예산</b> + (c) 추출/MIA 공격 검증 — 셋을 통합한 시스템 무. "인가되었으나 추론"(거리 side-channel로 타 테넌트 이웃 추론) 위협은 미해결.</div>
+    <p class="base"><b>위협모델:</b> 파티션 escape·인가이웃 추론·교차테넌트 MIA·예산소진. <b>벤치:</b> 필터-ANN(합성 ACL) + Enron/MS-MARCO 테넌트 분할.</p>
+    <div class="verdict"><span class="badge b-open">● 열림</span> ACL-보안+교차사용자 DP+추출공격 검증 통합은 무선행.</div>
+  </div>
+</section>
+
+<section class="block">
+  <h2 class="tier"><span class="tier-dot" style="background:#9c36b5"></span>Tier 4 — 프론티어 / 고위험·고보상 (다수 Temvera 핵심)</h2>
+  <p class="tier-desc">파일+프론트매터+git 기질이 이례적 강점이 되는 구간. 공통 발견: 시맨틱(bitemporal·supersede·decay·skill transfer)은 존재하나 거의 항상 벡터/그래프/DB 위 — <b>평면 마크다운+git 기질 위에서는 거의 무</b>.</p>
+
+  <div class="card starred" id="t11">
+    <div class="chead"><span class="id">T11</span><span class="name">프로비넌스·믿음개정 마크다운 메모리</span><div class="tags"><span class="tag">알고리즘/시스템</span><span class="tag">★ Temvera 핵심</span></div></div>
+    <p class="desc">각 메모리 = (event,ingestion) + <b>재확인 없으면 감쇠하는 confidence</b>를 가진 개정가능 믿음. 모순을 질의시 supersede(패자 보존)로 해소. git history = append-only bitemporal 로그.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>Hindsight</b> <span class="venue">· preprint</span> — 4망 분리·진화하는 믿음. <a href="https://arxiv.org/abs/2512.12818">2512.12818</a>. <em>쿼리 substrate, 마크다운/git 아님·감쇠 confidence 없음.</em></li>
+      <li><b>Zep / Graphiti</b> <span class="venue">· preprint</span> — (valid,transaction) + supersession. <a href="https://arxiv.org/abs/2501.13956">2501.13956</a>. <em>그래프 DB·boolean 무효화.</em></li>
+      <li><b>TOKI</b> <span class="venue">· preprint</span> — supersede 시 패자를 audit row 보존. <a href="https://arxiv.org/abs/2606.06240">2606.06240</a>. <em>DB 지향·감쇠 없음.</em></li>
+      <li><b>ACE</b> <span class="venue">· preprint</span> — delta 편집 플레이북. <a href="https://arxiv.org/abs/2510.04618">2510.04618</a>. <em>시간모델·프로비넌스·모순해소 없음.</em></li>
+      <li><b>FadeMem / memoir · remnic</b> — 벡터 감쇠 / 파일 도구(평가·원칙적 감쇠 없음). <a href="https://arxiv.org/pdf/2601.18642">2601.18642</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">네 요소를 <b>동시</b> 결합한 연구 무: ① 재확인 없이 <b>감쇠하는 confidence</b>(연속 믿음강도), ② (event,ingestion) 태그, ③ 패자 보존 질의시 supersede, ④ <b>git 커밋 = append-only bitemporal 로그</b>를 <b>평면 마크다운+프론트매터</b>에서. <b>평면 파일 위 원칙적 감쇠/만료는 무선행</b>(모든 감쇠 연구는 벡터/그래프).</div>
+    <p class="base"><b>벤치:</b> LongMemEval(knowledge-update·temporal·abstention)·LOCOMO + 2606.01435 freshness. 모순해소 정확도+staleness-abstention 보고.</p>
+    <div class="verdict"><span class="badge b-partial">◑ 개정기제 열림</span> 시맨틱은 그래프/DB에서 표준화, <b>confidence 감쇠 기제 + 평면파일/git 실현</b>은 무주공산.</div>
+  </div>
+
+  <div class="card starred" id="t12">
+    <div class="chead"><span class="id">T12</span><span class="name">프론트매터-as-프로비넌스: 출처구속 메모리 쓰기 방어</span><div class="tags"><span class="tag">보안</span><span class="tag">★ Temvera 핵심</span></div></div>
+    <p class="desc">YAML 프론트매터에 프로비넌스·출처권위·confidence를 싣고 <b>권위 인식 검색</b>으로 비신뢰 출처가 고위험 행동을 못 몰게. 사후 인과 감사.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>MINJA — Memory Injection Attack</b> <span class="venue">· NeurIPS 2025 (동료심사)</span> — 질의만으로 독성주입 >95%. <a href="https://arxiv.org/abs/2503.03704">2503.03704</a>. <em>위협 동기 — 방어 아님.</em></li>
+      <li><b>TMA-NM — Origin-Bound Authority</b> <span class="venue">· preprint</span> — 쓰기시 출처구속+비가단 IFC+corroboration-gated. <a href="https://arxiv.org/abs/2606.24322">2606.24322</a>. <em>최근접 방어 — 추상 IFC·파일/프론트매터 아님.</em></li>
+      <li><b>MemAudit</b> <span class="venue">· preprint</span> — 반사실 영향점수+일관성그래프(사후 인과감사). <a href="https://arxiv.org/abs/2605.23723">2605.23723</a>. <em>메모리 불투명 취급·쓰기시 권위와 미연결.</em></li>
+      <li><b>MemGuard / MemLineage / MEMIR</b> <span class="venue">· preprint</span> — 역할/계보/타입 격리. <a href="https://arxiv.org/abs/2605.28009">2605.28009</a></li>
+      <li><b>LTM Security 서베이</b> <span class="venue">· preprint</span> — "보안은 저장시 프로비넌스에 앵커돼야". <a href="https://arxiv.org/abs/2604.16548">2604.16548</a></li>
+    </ul>
+    <h4>정확한 미해결 갭 · <b>파일저장소 방어는 명시적으로 없음</b></h4>
+    <div class="gap">① 출처권위+confidence를 <b>YAML 프론트매터에 싣고 그것을 집행 지점으로</b> 삼은 시스템 무(기존 프론트매터 도구는 서술만·게이팅 안 함; 집행 시스템은 파일 미사용). ② 파일 기반에서 <b>MINJA 대비 평가된 권위인식 검색</b> 무 — <b>프론트매터 위조/프로비넌스 세탁</b>이라는 미연구 공격면. ③ 사후감사+쓰기시 구속 미통합.</div>
+    <p class="base"><b>위협모델:</b> MINJA 주입·persistent poisoning·<b>프론트매터 위조</b>(신규)·비신뢰 사실의 고위험 tool call. <b>벤치:</b> MINJA 셋업·GateMem·2601.05504.</p>
+    <div class="verdict"><span class="badge b-partial">◑ 교차점 열림</span> 프론트매터 네이티브·행동 게이팅·주입공격 평가를 파일 저장소에서 결합한 것은 무.</div>
+  </div>
+
+  <div class="card starred" id="t13">
+    <div class="chead"><span class="id">T13</span><span class="name">값싼 통합 정책 — 무GPU 파일 하네스에서 오프라인 압축은 언제 이득인가</span><div class="tags"><span class="tag">실증/시스템</span><span class="tag">★ Temvera 적합</span></div></div>
+    <p class="desc">통합 <b>트리거·예산</b>(에피소드 수·주제 드리프트·모순 밀도)을 연구, 오프라인 vs 인라인의 정확도/토큰/지연 <b>Pareto 교차점</b> 측정.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>LightMem</b> <span class="venue">· preprint</span> — sleep-time 오프라인 통합, LongMemEval +10.9%·토큰 117×↓. <a href="https://arxiv.org/abs/2510.18866">2510.18866</a>. <em>최근접 — 아키텍처이지 트리거/예산 연구 아님·무GPU 격리 안 함.</em></li>
+      <li><b>Letta sleep-time compute</b> <span class="venue">· 엔지니어링</span> — 비동기 이중에이전트 통합. <a href="https://www.letta.com/blog/sleep-time-compute/">blog</a>. <em>언제 이득인지 Pareto 없음.</em></li>
+      <li><b>Generative Agents</b> <span class="venue">· UIST 2023 (동료심사)</span> — 누적중요도 임계 reflection. <a href="https://arxiv.org/abs/2304.03442">2304.03442</a>. <em>비용-편익 미분석.</em></li>
+      <li><b>Token Economics for LLM Agents</b> <span class="venue">· preprint</span> — >120K는 비용만↑·~50K 손실없이 3×↓. <a href="https://arxiv.org/html/2605.09104v1">2605.09104</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap"><b>측정가능 트리거의 함수로</b> 오프라인 통합이 인라인을 언제 이기는지 <b>원칙적 Pareto 특성화</b>가 없음 — 특히 <b>저자원·무GPU·평면파일</b> 예산에서. LightMem/Letta는 GPU 백본서 이길 수 있음만 증명, 교차 곡면은 미측정.</div>
+    <p class="base"><b>벤치:</b> LongMemEval-S/M·LOCOMO, accuracy vs {입력토큰, API콜, wall-clock} 스윕. Pareto 전선·손익분기 트리거값 보고. 순수 오케스트레이션(학습 불필요).</p>
+    <div class="verdict"><span class="badge b-partial">◑ 무GPU 열림</span> 오프라인 유효성은 입증, 무GPU 평면파일의 트리거×예산 교차점은 미연구.</div>
+  </div>
+
+  <div class="card starred" id="t14">
+    <div class="chead"><span class="id">T14</span><span class="name">휴대형·모델무관 절차 메모리 = 버전관리 스킬 파일</span><div class="tags"><span class="tag">알고리즘/시스템</span><span class="tag">★ Temvera 적합</span></div></div>
+    <p class="desc">학습된 스킬/워크플로를 1급 markdown+프론트매터 아티팩트로 저장(편집·버전·이식·감사), 교차백본/교차역할 전이를 명시 측정.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>Managing Procedural Memory (AFTER)</b> <span class="venue">· preprint</span> — 382과업·6역할·22스킬 cross-task/role/model 전이(cross-model 73.1%). <a href="https://arxiv.org/abs/2606.23127">2606.23127</a>. <em>최근접 — 저장소이지 markdown+git 아티팩트 아님.</em></li>
+      <li><b>Voyager</b> <span class="venue">· 널리 인용</span> — 실행코드 스킬 라이브러리·교차에이전트 전이. <a href="https://arxiv.org/abs/2305.16291">2305.16291</a>. <em>단일도메인·버전/감사 없음.</em></li>
+      <li><b>Agent Workflow Memory</b> <span class="venue">· ICML 2025 (동료심사)</span> — 재사용 워크플로 유도. <a href="https://arxiv.org/abs/2409.07429">2409.07429</a>. <em>cross-backbone 미평가.</em></li>
+      <li><b>Memp</b> <span class="venue">· preprint</span> — Build/Retrieve/Update 생애주기·stale 폐기. <a href="https://arxiv.org/abs/2508.06433">2508.06433</a>. <em>distilled 스크립트·git 없음.</em></li>
+    </ul>
+    <h4>정확한 미해결 갭 · <b>평면파일 스킬전이 평가 → 없음</b></h4>
+    <div class="gap">전이 평가는 AFTER가 거의 제공하나 <b>당신 아티팩트 클래스가 아님</b>. 스킬을 <b>1급 markdown+프론트매터 파일</b>로 저장하고 편집/버전/감사성(git diff·인간리뷰·롤백)을 <b>측정 변수</b>로, <b>하네스 간 이식성</b>(SKILL.md가 여러 하네스서 무수정 실행)을 측정한 사례 무.</div>
+    <p class="base"><b>벤치:</b> AFTER·OfficeBench·WebArena/Mind2Web·TravelPlanner/ALFWorld. cross-backbone 전이·cross-role 열화 + <b>차별자</b>: 인간편집 후 성공delta·실패 diff-국소화.</p>
+    <div class="verdict"><span class="badge b-partial">◑ 혼잡화 중</span> 평면파일·git버전·감사 아티팩트+하네스 이식성 프레이밍은 열림.</div>
+  </div>
+
+  <div class="card" id="t15">
+    <div class="chead"><span class="id">T15</span><span class="name">비용인식 메모리 배치 정책 (가중치 vs KV vs 컨텍스트 vs 외부)</span><div class="tags"><span class="tag">알고리즘/이론</span></div></div>
+    <p class="desc">사실/질의별로 어디 저장할지(메모리층 가중치·KV/활성·컨텍스트 압축·외부)를 정확도·지연·최신성·프로비넌스 공동목적으로 학습.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>MemOS</b> <span class="venue">· preprint</span> — plaintext/activation/parameter를 MemCube로 통합. <a href="https://arxiv.org/abs/2507.03724">2507.03724</a>. <em>최근접 — 스케줄이 휴리스틱, 학습 정책 아님.</em></li>
+      <li><b>Memory Layers at Scale</b> <span class="venue">· ICLR 2025 (동료심사)</span> — 주소지정 가중치-메모리 티어. <a href="https://arxiv.org/abs/2412.09764">2412.09764</a>. <em>결정기제 없음.</em></li>
+      <li><b>Scaling Laws for Fact Memorization</b> <span class="venue">· EMNLP 2024 Findings (동료심사)</span> — memorize-or-retrieve 비용 근거. <a href="https://arxiv.org/abs/2406.15720">2406.15720</a></li>
+      <li><b>Adaptive-RAG / Self-RAG · PRAG</b> — 이진 retrieve 라우터 / context vs weights 2택. <a href="https://github.com/oneal2000/PRAG">PRAG</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap"><b>네 티어를 동시</b> 선택하는 per-fact/query 정책을 <b>정확도·지연·최신성·프로비넌스</b> 단일 목적으로 학습한 것이 없음. 기존은 통합만(MemOS)·이진(Adaptive/Self-RAG)·2택(PRAG)·바이트(KV 티어링).</div>
+    <p class="base"><b>벤치:</b> NQ/TriviaQA/HotpotQA·LongBench v2·<b>FreshQA/RealTimeQA</b>(최신성)·<b>ALCE</b>(프로비넌스)·PopQA. EM/F1·지연·$/query·staleness·인용정밀도 공동 보고.</p>
+    <div class="verdict"><span class="badge b-open">● 열림</span> 최신성·프로비넌스를 목적에 넣은 4티어 학습 배치정책은 미구축.</div>
+  </div>
+
+  <div class="card" id="t16">
+    <div class="chead"><span class="id">T16</span><span class="name">편집을 주소지정형 메모리층으로 (MLP 가중치 대신)</span><div class="tags"><span class="tag">알고리즘</span></div></div>
+    <p class="desc">지식편집을 <b>희소 메모리 슬롯</b>(Memory Layers)으로 라우팅 → 국소·가역·감사 가능, ROME/MEMIT 순차붕괴 회피.</p>
+    <h4>가장 근접한 선행연구</h4>
+    <ul class="refs">
+      <li><b>ROME / MEMIT</b> <span class="venue">· NeurIPS 2022 / ICLR 2023</span> — locate-then-edit MLP. <a href="https://arxiv.org/abs/2210.07229">2210.07229</a>. <em>공유 MLP·순차붕괴 = 표적.</em></li>
+      <li><b>AlphaEdit</b> <span class="venue">· ICLR 2025 Outstanding</span> — 널스페이스 제약 국소성(+36.7%). <a href="https://arxiv.org/abs/2410.02355">2410.02355</a>. <em>MLP 가중치, 슬롯 아님.</em></li>
+      <li><b>Sparse Memory Finetuning</b> <span class="venue">· preprint</span> — 최다활성 슬롯만 갱신, 망각 11%(vs 89%). <a href="https://arxiv.org/abs/2510.15103">2510.15103</a>. <em>가장 근접 — continual learning 프레임·가역/감사/편집벤치 없음.</em></li>
+      <li><b>WISE / Limits of Lifelong Editing</b> <span class="venue">· NeurIPS 2024 / preprint</span> — 사이드 메모리 / 붕괴 기준. <a href="https://arxiv.org/abs/2405.14768">2405.14768</a> · <a href="https://arxiv.org/abs/2503.05683">2503.05683</a></li>
+    </ul>
+    <h4>정확한 미해결 갭</h4>
+    <div class="gap">지식편집을 <b>희소 주소지정 슬롯 쓰기</b>로 취급하며 (i) 슬롯 국소성 (ii) 가역성(슬롯 undo) (iii) 감사성(슬롯별 프로비넌스)을 갖춘 방법이 없음. Sparse Memory FT는 슬롯 갱신만(편집기로 미평가). AlphaEdit 국소성+Sparse-Memory 슬롯주소를 순차붕괴 벤치서 가역·감사 지표로 평가한 조합은 미완.</div>
+    <p class="base"><b>벤치:</b> CounterFact·zsRE·MQuAKE·KnowEdit + 10k 편집 순차 프로토콜. + <b>차별지표</b>: undo 후 복원충실도·슬롯-프로비넌스 커버리지.</p>
+    <div class="verdict"><span class="badge b-partial">◑ 부분</span> 가역·감사 편집 프리미티브로서 편집/붕괴 벤치 평가는 열림.</div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="caveat">
+    <b>⚠ 한계·주의</b><br>
+    · 2024–2026 문헌 상당수가 <b>비심사 arXiv 프리프린트</b>다. 동료심사 확인 앵커만 venue 명시. 각 주제의 "가장 근접" 시스템(MemStrata·TOKI·TMA-NM·AFTER·vstash 등)은 대개 단일저자/포지션 프리프린트로 독립 재현이 없다.<br>
+    · <b>인용 정정:</b> MINJA = <code>2503.03704</code>(NeurIPS 2025); Memora/FAMA = <code>2604.20006</code>(ACL 2026 Findings 채택); <code>2505.18279</code>은 추출공격이 아니라 <b>Collaborative Memory</b>(ACL 설계); GEM = "Is Agent Memory a Database?"(<code>2605.26252</code>).<br>
+    · 신규성 판정은 조사 기반 <b>판단</b>이며, 착수 전 각 주제별 정밀 선행연구와 최신 camera-ready 대조를 권장한다. 벤더/저자 자체 벤치마크(LOCOMO·LongMemEval)는 설정 민감·논쟁 중이므로 직접 비교 금물.
+  </div>
+</section>
+
+<footer><div class="wrap">
+  방법 통계: 6개 클러스터 전문 리서치 에이전트 병렬 조사 · 16개 주제 · 100+ 선행연구 참조 · 2022–2026 문헌 · 2026-07-15 생성.<br>
+  관련 문서: 연구 지형 지도(ai-memory-research-agenda.md) · DB·인덱스 심층 조사(agent-memory-db-index-research.md).
+</div></footer>
+</div>

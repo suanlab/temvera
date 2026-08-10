@@ -1,0 +1,1 @@
+{"benchmark":"temvera-lifecycle-smoke","dataset":{"entities":4,"generator":"temvera.generator.generate_histories","revisions":3,"seed":17},"metrics":["exact_state_accuracy","evidence_recall","stale_use_rate"],"systems":["LifecycleOracle","AppendOnlyBaseline","LastWriteWinsBaseline"]}

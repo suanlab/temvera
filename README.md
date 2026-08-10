@@ -1,0 +1,90 @@
+# Temvera
+
+> Temporal, provenance-aware memory infrastructure for AI agents.
+
+Temvera is a research project investigating how long-running AI agents should
+store, revise, retrieve, forget, and audit memory. The project treats memory as
+an evolving data-management problem rather than a flat vector store.
+
+## Research thesis
+
+Git-native, bitemporal memory can make agent beliefs inspectable, reversible,
+and governable while retaining competitive retrieval quality. Temvera studies
+this thesis through three connected tracks:
+
+1. **Memory substrate** — append-only events, bitemporal facts, provenance,
+   belief revision, consolidation, and human-reviewable history.
+2. **Retrieval and indexing** — exact, lexical, vector, temporal, and graph
+   retrieval with calibrated fusion and reranking.
+3. **Evaluation and security** — judge-free lifecycle benchmarks, stale-fact
+   resistance, abstention, provenance integrity, and memory-poisoning defenses.
+
+## Repository map
+
+```text
+Temvera/
+├── docs/                 Research program, architecture, and proposals
+├── data/                 Dataset manifests and generated benchmark data
+├── experiments/          Reproducible experiment configurations and outputs
+├── src/temvera/          Typed research reference implementation
+├── tests/                Deterministic tests and benchmark verifiers
+├── CITATION.cff          Citation metadata
+└── pyproject.toml        Minimal Python research package configuration
+```
+
+Start with [docs/index.md](docs/index.md), then read the
+[research program](docs/research-program.md) and
+[roadmap](docs/roadmap.md).
+
+## Current status
+
+Local WP1–WP4 mechanism studies are implemented. Prior-art breadth,
+identical-budget external-system reproduction, human evaluation, licensing,
+and public archival remain incomplete. Claims outside the frozen synthetic
+fixtures remain hypotheses.
+
+## Quick start
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e '.[dev]'
+pytest
+```
+
+No production readiness is claimed. The package implements the deterministic
+research substrate and experiment harness behind a provisional API.
+
+## Deterministic lifecycle smoke test
+
+The local baseline requires no model or external service:
+
+```bash
+temvera generate /tmp/temvera-demo --seed 17 --entities 4 --revisions 3
+temvera benchmark /tmp/temvera-demo
+```
+
+The report compares the bitemporal oracle with append-only, full/recent
+context, BM25@1, and last-write-wins baselines under identical histories. It is
+a harness identifiability check, not a performance or novelty result.
+
+Verify the accepted sealed experiment package with:
+
+```bash
+temvera verify-artifacts experiments/accepted-runs.json experiments/runs
+```
+
+See [REPRODUCING.md](REPRODUCING.md) for the complete local protocol.
+
+## Name
+
+**Temvera** combines *temporal* and *veritas*: memory whose truth is interpreted
+with respect to time and supporting evidence. The name has been selected for
+this project after a preliminary collision screen; that screen is not legal
+trademark clearance or reservation.
+
+## License
+
+Repository-authored code, documentation, fully synthetic fixtures, and accepted
+local experiment outputs are licensed under [Apache-2.0](LICENSE). Third-party
+artifacts are governed by their own licenses and are not redistributed here.

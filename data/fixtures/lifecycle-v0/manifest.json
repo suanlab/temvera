@@ -1,0 +1,29 @@
+{
+  "entities_per_split": 8,
+  "generator": "temvera.generator.generate_histories",
+  "license": "Apache-2.0",
+  "name": "temvera-lifecycle-v0",
+  "personal_or_sensitive_data": "none; fully synthetic labels",
+  "redistribution": "permitted under the repository Apache-2.0 license",
+  "revisions_per_entity": 4,
+  "splits": {
+    "development": {
+      "events": 56,
+      "seed": 202,
+      "sha256": "244f36ce3ce2af4034930073a9ce2040f423f926aeb9819402ebded1f37add46"
+    },
+    "test": {
+      "events": 56,
+      "seed": 303,
+      "sha256": "1148979624cfbab65b44c02cf725c689e09e02443b61927279937cbb6e18c1b4"
+    },
+    "train": {
+      "events": 56,
+      "seed": 101,
+      "sha256": "027257d49064e6d171fcc53699035eaf710339bb6cc0923204b137f342bf82da"
+    }
+  },
+  "test_tuning": "prohibited; tune only on train/development",
+  "timestamp_policy": "wall-clock time omitted for byte reproducibility",
+  "version": "0.1.0"
+}

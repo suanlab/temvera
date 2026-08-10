@@ -1,0 +1,17 @@
+{
+  "benchmark": "temvera-external-mem0-smoke-v1",
+  "dataset": {
+    "seed": 17,
+    "entities": 3,
+    "revisions": 2
+  },
+  "profile": {
+    "reconfirm_probability": 0.5,
+    "expire_probability": 0.3,
+    "purge_probability": 0.3
+  },
+  "model": "gpt-4o-mini",
+  "embed_model": "text-embedding-3-small",
+  "search_limit": 5,
+  "user_id": "temvera-e1-smoke"
+}
