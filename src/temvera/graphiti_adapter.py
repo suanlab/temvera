@@ -89,6 +89,22 @@ class GraphitiSystem:
     def _run(self, coro):
         return self._loop.run_until_complete(coro)
 
+    def _wipe_group(self) -> None:
+        """Delete every node/edge carrying this run's group_id."""
+        from neo4j import GraphDatabase
+
+        driver = GraphDatabase.driver(
+            self._neo4j_uri, auth=(self._neo4j_user, self._neo4j_password)
+        )
+        try:
+            with driver.session() as session:
+                session.run(
+                    "MATCH (n) WHERE n.group_id = $g DETACH DELETE n",
+                    g=self._group_id,
+                )
+        finally:
+            driver.close()
+
     def reset(self) -> None:
         from graphiti_core import Graphiti
 
@@ -98,8 +114,6 @@ class GraphitiSystem:
             except Exception:
                 pass
         if self._neo4j_uri:
-            # Maintained server backend. Per-cell isolation is by group_id, so a
-            # fresh in-graph wipe is unnecessary; indices are idempotent.
             self._graphiti = Graphiti(
                 uri=self._neo4j_uri,
                 user=self._neo4j_user,
@@ -107,6 +121,10 @@ class GraphitiSystem:
                 llm_client=self._llm,
                 embedder=self._embedder,
             )
+            # Neo4j is a persistent server, and cell labels repeat across runs,
+            # so the group must be wiped or a later run would query a graph that
+            # still holds an earlier run's episodes and edges.
+            self._wipe_group()
         else:
             from graphiti_core.driver.kuzu_driver import KuzuDriver
 

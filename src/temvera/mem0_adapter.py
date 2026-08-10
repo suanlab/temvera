@@ -19,9 +19,18 @@ from .nl_workload import NLQueryCase, WorkloadTurn
 
 
 def default_mem0_config(
-    *, model: str = "gpt-4o-mini", embed_model: str = "text-embedding-3-small"
+    *,
+    model: str = "gpt-4o-mini",
+    embed_model: str = "text-embedding-3-small",
+    history_db_path: str | None = None,
 ) -> dict[str, Any]:
-    return {
+    """Mem0 config pinned to the shared backbone.
+
+    ``history_db_path`` isolates the SQLite history database per run; the
+    default `~/.mem0/history.db` is global and would mix rows across runs,
+    which matters for the purge residual scan (E3).
+    """
+    config: dict[str, Any] = {
         "llm": {
             "provider": "openai",
             "config": {"model": model, "temperature": 0.0},
@@ -31,6 +40,9 @@ def default_mem0_config(
             "config": {"model": embed_model},
         },
     }
+    if history_db_path:
+        config["history_db_path"] = history_db_path
+    return config
 
 
 class Mem0System:

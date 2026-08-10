@@ -264,7 +264,9 @@ def run_graphiti_comparison(config: dict[str, Any]) -> dict[str, Any]:
             model=model,
             embed_model=embed_model,
             search_limit=search_limit,
-            group_id=f"e1-{label}",
+            # Prefix must differ per run: Neo4j persists between runs and cell
+            # labels repeat, so a shared prefix would mix ingestions.
+            group_id=f"{config.get('graphiti_group_prefix', 'e1')}-{label}",
             neo4j_uri=neo4j_uri,
             neo4j_user=neo4j_user,
             neo4j_password=neo4j_password,
@@ -285,6 +287,91 @@ def run_graphiti_comparison(config: dict[str, Any]) -> dict[str, Any]:
         "naturalized": result["naturalized"],
     }
     return result
+
+
+def run_purge_residual(config: dict[str, Any], workdir: Any) -> dict[str, Any]:
+    """E3: ingest one history into each system, then scan derived stores."""
+    import os
+    from pathlib import Path
+
+    from .purge_residual import (
+        purged_values,
+        scan_graphiti,
+        scan_mem0,
+        scan_temvera,
+    )
+
+    dataset = config["dataset"]
+    profile = config.get("profile", {"purge_probability": 1.0})
+    events = _events_for(
+        int(dataset["seed"]),
+        int(dataset["entities"]),
+        int(dataset["revisions"]),
+        profile,
+        bool(config.get("naturalize", True)),
+    )
+    values = purged_values(events)
+    if not values:
+        raise ValueError("history contains no purge; raise purge_probability")
+    transaction_at = max(event.recorded_at for event in events)
+    turns = sorted(render_turns(events), key=lambda t: (t.recorded_at, t.event_id))
+    reports = [
+        scan_temvera(events, Path(workdir) / "temvera-store", transaction_at).as_dict()
+    ]
+
+    if config.get("include_mem0", True):
+        model = config.get("model", "gpt-4o-mini")
+        embed_model = config.get("embed_model", "text-embedding-3-small")
+        mem0 = Mem0System(
+            config=default_mem0_config(
+                model=model,
+                embed_model=embed_model,
+                # Isolate history from the global ~/.mem0/history.db so the
+                # residual scan cannot attribute other runs' rows to this one.
+                history_db_path=str(Path(workdir) / "mem0-history.db"),
+            ),
+            user_id=config.get("user_id", "temvera-e3"),
+        )
+        mem0.reset()
+        for turn in turns:
+            mem0.ingest(turn)
+        reports.append(scan_mem0(mem0, events).as_dict())
+
+    if config.get("include_graphiti", True):
+        from .graphiti_adapter import GraphitiSystem
+
+        uri = config.get("neo4j_uri") or os.environ.get("NEO4J_URI")
+        user = config.get("neo4j_user") or os.environ.get("NEO4J_USER", "neo4j")
+        password = config.get("neo4j_password") or os.environ.get("NEO4J_PASSWORD")
+        group = config.get("graphiti_group", "e3-purge")
+        graphiti = GraphitiSystem(
+            model=config.get("model", "gpt-4o-mini"),
+            embed_model=config.get("embed_model", "text-embedding-3-small"),
+            group_id=group,
+            neo4j_uri=uri,
+            neo4j_user=user,
+            neo4j_password=password,
+        )
+        graphiti.reset()
+        for turn in turns:
+            graphiti.ingest(turn)
+        reports.append(
+            scan_graphiti(
+                group, events, uri=uri, user=user, password=password
+            ).as_dict()
+        )
+
+    return {
+        "purged_values": list(values),
+        "events": len(events),
+        "turns": len(turns),
+        "reports": reports,
+        "backbone": {
+            "llm_model": config.get("model", "gpt-4o-mini"),
+            "embed_model": config.get("embed_model", "text-embedding-3-small"),
+            "naturalized": bool(config.get("naturalize", True)),
+        },
+    }
 
 
 def projected_ingests(config: dict[str, Any]) -> dict[str, int]:

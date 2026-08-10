@@ -112,24 +112,46 @@ evidence recall (0.873) — but its default retrieval does not filter by
 valid-time, returning superseded facts alongside current ones (stale-use 0.561,
 exact 0.224; E-054, 6 cells). The oracle stays exact (1.0) across both.
 
-Crucially, enabling Graphiti's *own* valid-time filter does not fix this — it
-degrades every metric (exact 0.224→0.031, recall 0.873→0.049, stale-use
-0.561→0.960; E-055). The cause is unreliable extracted metadata rather than a
-missing mechanism: 26 of 80 edges carry no `invalid_at` after supersession, so
-stale facts satisfy the filter indefinitely, while a few dated invalidations are
-internally contradictory (`invalid_at <= valid_at`). Graphiti's `created_at`/
-`expired_at` record wall-clock ingestion, not the history's transaction time, so
-they cannot express an `as-of` bound at all. Temporal *fields* are therefore not
-equivalent to temporal *correctness* — the distinction this paper measures.
+Enabling Graphiti's *own* valid-time filter helps, but only partially and at a
+cost: exact accuracy rises 0.224→0.318 and stale use falls 0.561→0.360, while
+evidence recall drops 0.873→0.318 (E-057). The filter buys precision by
+discarding evidence, and the categories that matter remain largely unanswered —
+valid_time 0.093, expiry 0.067, purge 0.306 — against 1.0 for the oracle. Two
+structural limits explain the ceiling: extracted `invalid_at` is often absent on
+superseded edges (so stale facts satisfy the filter) and occasionally
+contradictory (`invalid_at <= valid_at`), and `created_at`/`expired_at` record
+wall-clock ingestion rather than the history's transaction time, so they cannot
+express an `as-of` bound at all. Temporal *fields* are therefore not equivalent
+to temporal *correctness* — the distinction this paper measures.
+
+The ceiling is architectural, not an artifact of a weak extractor: swapping
+`gpt-4o-mini` for `gpt-4o` on matched cells leaves the decisive categories
+unchanged (valid_time 0.111 → 0.111, expiry 0.000 → 0.000) despite a 15×
+costlier model, improving only transaction-scoped current queries (E-058).
+
+(An earlier version of this experiment reported that filtering degraded every
+metric; that measurement was invalidated by cross-run graph contamination and is
+retracted (E-055). The numbers above come from re-runs with per-group isolation
+verified directly in the database.)
 
 ### 5.2 Deletion / purge completeness (headline)
-Both external systems fail deletion semantics under identical histories: Mem0
-returns purged values (purge-category exact 0.121) and expired values
-(expiry 0.062); Graphiti likewise (purge 0.062, expiry 0.000). Source-verified
-expectations frame this: Mem0 best-effort projection cleanup (E-025), Graphiti
-physical `remove_episode` (E-024), Hindsight orphan→backfill (E-032); Temvera
-reports JSONL residuals honestly and offers crypto-purge (E-033). **PENDING E3:**
-per-system residual scan of derived stores after purge.
+Both external systems fail deletion semantics under identical histories at the
+answer level: Mem0 returns purged values (purge-category exact 0.121) and
+expired values (0.062); Graphiti likewise (0.062, 0.000).
+
+A residual scan of the backing stores explains why (E-056). After the same
+purge, Temvera's rebuildable projections — Markdown, lexical, vector, graph —
+contain **zero** occurrences of the purged payload; its only residual is the
+append-only audit ledger (a documented limitation, D-005, addressed by the
+encrypted profile's key destruction, E-033). Both external systems instead
+retain the payload inside retrieval-reachable stores: Mem0 in exposed memories,
+its Qdrant vector store, and its SQLite history; Graphiti in edge facts, entity
+nodes, and raw episode bodies. The distinction is *where* deleted content
+survives — an audit log that no query path reads, versus the serving index a
+later query can resurface. Source-verified expectations frame this: Mem0
+best-effort projection cleanup (E-025), Graphiti physical `remove_episode`
+(E-024), Hindsight orphan→backfill (E-032). Counts are substring occurrences
+over differently-shaped stores and are not magnitude-comparable.
 
 ### 5.3 Retrieval channels
 Hard-channel necessity fixture isolates one necessary channel per category

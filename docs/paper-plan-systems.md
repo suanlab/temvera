@@ -284,6 +284,29 @@ exact 0.224→0.031, recall 0.873→0.049, stale 0.561→0.960.
 
 → **논문 메시지 강화:** temporal *필드* 보유 ≠ temporal *정확성*.
 
+### 오염 사고와 정정 (2026-07-17)
+
+**사고:** Graphiti cell `group_id`가 실행 간 재사용되는데 Neo4j `reset()`이 그룹을
+비우지 않아, 나중 실행이 이전 실행 엣지가 남은 그래프에 질의(셀당 36 episodes,
+정상 12). **E-055와 1차 gpt-4o 결과 무효** → ledger에 `superseded — invalid
+measurement`로 철회하고 원본 수치는 provenance로 보존. default 실행(E-054)은
+최초라 무오염.
+**수정:** `reset()`에 group 단위 DETACH DELETE + config `graphiti_group_prefix`로
+이중 격리. Neo4j 직접 조회로 12 episodes/cell 검증.
+
+**정정된 결과 (E-057, 무오염):** 필터는 "전부 악화"가 아니라 **정밀도↑/recall↓**
+트레이드오프 — exact 0.224→0.318, stale 0.561→0.360, recall 0.873→0.318.
+그러나 핵심 범주는 여전히 실패: valid_time 0.093, expiry 0.067, purge 0.306.
+
+**E-058 (교란 제거):** gpt-4o 추출로 교체해도 valid_time 0.111→0.111,
+expiry 0.000→0.000 **불변**(purge는 오히려 하락). 천장은 추출기 품질이 아니라
+**아키텍처**(transaction-time 축 부재, `invalid_at` 미설정)임을 확정.
+
+### E1+E3 최종 상태
+Mem0(48 cells)·Graphiti(default/filtered/gpt-4o, 격리 검증)·purge 잔존 스캔까지
+완료. 헤드라인 C-A/C-B 모두 실측 근거 확보. 남은 것: E6 문헌검토, 규모 확대,
+E7 외적타당성.
+
 **E1 현황:** Mem0(48 cells)·Graphiti(6 cells) 2종 외부시스템 동일조건 확정.
 남은 것: (a) temporally-filtered Graphiti, (b) purge 파생저장소 잔존 스캔(E3),
 (c) 규모 확대. 헤드라인 C-A/C-B 성립.

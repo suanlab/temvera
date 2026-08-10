@@ -1,0 +1,16 @@
+{
+  "benchmark": "temvera-purge-residual-v1",
+  "dataset": {"seed": 17, "entities": 3, "revisions": 2},
+  "profile": {
+    "reconfirm_probability": 0.0,
+    "expire_probability": 0.0,
+    "purge_probability": 1.0
+  },
+  "naturalize": true,
+  "include_mem0": true,
+  "include_graphiti": true,
+  "model": "gpt-4o-mini",
+  "embed_model": "text-embedding-3-small",
+  "user_id": "temvera-e3-purge",
+  "graphiti_group": "e3-purge"
+}

@@ -1,0 +1,99 @@
+{
+  "backbone": {
+    "embed_model": "text-embedding-3-small",
+    "llm_model": "gpt-4o-mini",
+    "naturalized": true
+  },
+  "events": 12,
+  "purged_values": [
+    "Accra",
+    "Cairo",
+    "Oslo"
+  ],
+  "reports": [
+    {
+      "purged_values": [
+        "Accra",
+        "Cairo",
+        "Oslo"
+      ],
+      "stores": [
+        {
+          "detail": "documented limitation: JSONL tombstones but does not erase (D-005)",
+          "occurrences": 3,
+          "store": "raw_ledger_jsonl"
+        },
+        {
+          "detail": "",
+          "occurrences": 0,
+          "store": "markdown_projection"
+        },
+        {
+          "detail": "",
+          "occurrences": 0,
+          "store": "lexical-index.json"
+        },
+        {
+          "detail": "",
+          "occurrences": 0,
+          "store": "vector-index.json"
+        },
+        {
+          "detail": "",
+          "occurrences": 0,
+          "store": "graph-index.json"
+        },
+        {
+          "detail": "",
+          "occurrences": 0,
+          "store": "projection-manifest.json"
+        }
+      ],
+      "system": "temvera",
+      "total_residual": 3
+    },
+    {
+      "purged_values": [
+        "Accra",
+        "Cairo",
+        "Oslo"
+      ],
+      "stores": [
+        {
+          "detail": "1 rows",
+          "occurrences": 0,
+          "store": "mem0_memories"
+        }
+      ],
+      "system": "mem0",
+      "total_residual": 0
+    },
+    {
+      "purged_values": [
+        "Accra",
+        "Cairo",
+        "Oslo"
+      ],
+      "stores": [
+        {
+          "detail": "6 edges",
+          "occurrences": 3,
+          "store": "neo4j_edge_facts"
+        },
+        {
+          "detail": "18 node fields",
+          "occurrences": 9,
+          "store": "neo4j_entity_nodes"
+        },
+        {
+          "detail": "12 episodes (raw source text)",
+          "occurrences": 9,
+          "store": "neo4j_episode_bodies"
+        }
+      ],
+      "system": "graphiti",
+      "total_residual": 21
+    }
+  ],
+  "turns": 12
+}

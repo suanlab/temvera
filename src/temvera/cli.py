@@ -76,6 +76,9 @@ def main() -> None:
     external_graphiti = subparsers.add_parser("external-graphiti")
     external_graphiti.add_argument("config")
     external_graphiti.add_argument("output")
+    purge_residual = subparsers.add_parser("purge-residual")
+    purge_residual.add_argument("config")
+    purge_residual.add_argument("output")
     decay = subparsers.add_parser("decay-smoke")
     decay.add_argument("--half-life-days", type=float, default=30.0)
     decay.add_argument("--minimum-confidence", type=float, default=0.25)
@@ -398,6 +401,28 @@ def main() -> None:
             raise SystemExit(f"refusing to overwrite: {output}")
         result = run_graphiti_comparison(config)
         _write_external_run(output, config, result, "external-graphiti", arguments)
+        print(json.dumps(result, sort_keys=True))
+    elif arguments.command == "purge-residual":
+        import tempfile
+        from pathlib import Path
+
+        from .external_experiment import run_purge_residual
+
+        config = json.loads(Path(arguments.config).read_text(encoding="utf-8"))
+        output = Path(arguments.output)
+        if output.exists():
+            raise SystemExit(f"refusing to overwrite: {output}")
+        with tempfile.TemporaryDirectory() as workdir:
+            result = run_purge_residual(config, workdir)
+        output.mkdir(parents=True)
+        (output / "results.json").write_text(
+            json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        seal_run(
+            output,
+            config={**config, "backbone": result["backbone"]},
+            command=f"temvera purge-residual {arguments.config} {arguments.output}",
+        )
         print(json.dumps(result, sort_keys=True))
     elif arguments.command == "vector-synonym-compare":
         from pathlib import Path

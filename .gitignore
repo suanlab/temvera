@@ -30,6 +30,11 @@ experiments/runs/*
 !experiments/runs/external-graphiti-filtered-v1/
 !experiments/runs/learned-vector-v1.json
 !experiments/runs/vector-synonym-compare-v1.json
+!experiments/runs/purge-residual-v1/
+!experiments/runs/purge-residual-v2/
+!experiments/runs/external-graphiti-filtered-v2/
+!experiments/runs/external-graphiti-filtered-gpt4o-v1/
+!experiments/runs/external-graphiti-filtered-gpt4o-v2/
 
 .env
 .env.*
