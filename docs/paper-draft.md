@@ -1,199 +1,275 @@
-# Auditable Bitemporal Memory for Long-Running Agents
+# Temporal Fields Are Not Temporal Correctness: Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory
 
-> Systems-paper working draft. Structure follows
-> [paper-plan-systems.md](./paper-plan-systems.md) §5. Every result sentence
-> carries an evidence-ledger ID; sections gated on external-system runs (E1)
-> and external-validity data (E2/E7) are marked **PENDING (D-010)** and must not
-> be written as completed until those runs exist.
+> Full working draft for ICLR 2027 (abstract 2026-09-19, paper 2026-09-24).
+> Every result sentence carries an evidence-ledger ID; numbers come from sealed,
+> checksum-verified runs under `experiments/runs/`. Sections still gated on work
+> not yet done are marked **PENDING**. Positioning follows
+> `docs/contribution-statement.md`, which was downgraded after the 2026
+> prior-art sweep (E-059–E-061).
 
 ## Abstract
 
-Persistent agent memory must distinguish when a fact was valid from when the
-system learned it, and must preserve revision and deletion semantics across
-derived stores. We present a typed, append-only research substrate with an
-independent SQLite bitemporal oracle, deterministic rebuilds, purge lineage,
-and provenance-aware action gating. The contribution is not Git storage,
-temporal fields, confidence decay, or judge-free forgetting in isolation;
-Springdrift, Graphiti, Hindsight, Mem0, and ForgetEval already cover adjacent
-capabilities (E-005, E-009, E-024, E-025, E-032). Instead we contribute an
-independently *verifiable* account of temporal correctness and deletion/audit
-semantics, measured against deployed systems under identical budgets.
+Long-running agents accumulate facts that change, expire, and must sometimes be
+deleted. Answering *what was true then* and *what did the agent know then*
+requires distinguishing valid time from transaction time, and honouring deletion
+across every store a query can reach. Recent systems advertise exactly these
+capabilities: temporal graphs expose validity fields, memory stores record
+update history, and 2026 work formalises bitemporal operators for agent memory.
+We ask whether those features deliver the semantics they name.
 
-Across a synthetic 3-profile lifecycle grid (10 seeds), the oracle preserved
-exact state in every condition while raw-context, recency, BM25, and
-last-write-wins baselines exposed distinct stale-state failures that worsen with
-churn (E-044, E-049). A learned dense channel resolved held-out synonyms that
-the dependency-free hashing channel could not (E-050). Under identical histories,
-two deployed systems diverge from the oracle in distinct ways — Mem0 forgets
-historical valid-time (exact 0.607) and Graphiti retains edges but does not
-temporally filter them (exact 0.224), while both fail expiry and purge (E-053,
-E-054). The result establishes mechanism identifiability, a verifiable substrate,
-and measured external divergence — not superiority on natural conversations.
+We build a deterministic lifecycle generator whose ground truth is computed by
+an oracle cross-checked against an independent SQLite implementation, render the
+same histories into natural language, and replay them into two deployed systems
+under identical budgets with forward-checkpoint transaction-time replay. The
+oracle is exact in all 90 conditions of a 10-seed grid, while non-temporal
+baselines degrade with churn. Mem0 answers transaction-scoped current queries
+well (0.949) but collapses on historical valid time (0.346), expiry (0.062), and
+purge (0.121); Graphiti preserves temporal edges — evidence recall 0.944 — yet
+its default retrieval ignores them, giving exact 0.223 with valid-time and
+expiry at 0.000. Enabling Graphiti's own valid-time filter buys precision by
+discarding evidence rather than fixing semantics, and a 15× costlier extractor
+leaves the decisive categories unchanged. A residual scan shows purged payloads
+persist inside both systems' retrieval-reachable stores, whereas our substrate's
+rebuildable projections are clean and its only residual sits in an append-only
+ledger no query path reads. The asymmetry reproduces on human-written
+LongMemEval conversations.
+
+We do not claim bitemporal modelling, deterministic supersession, or forgetting
+evaluation as novel — all are prior art (E-059–E-061). The contribution is
+measurement: a reproducible harness and the finding that temporal *fields* are
+not temporal *correctness*.
 
 ## 1. Introduction
 
-Long-running agents accumulate facts that change, expire, get corrected, and
-must sometimes be deleted. Two questions any such memory must answer are *what
-was true at time t* (valid time) and *what did the agent know at time t*
-(transaction time); current-state stores conflate them. We ask whether a
-file/Git-native, human-auditable memory can provide the same temporal
-correctness as a dedicated store while offering better *verifiability* of
-revision, forgetting, and provenance.
+An agent that remembers must also revise, expire, and forget. Two questions
+recur: *what was true at time t* (valid time) and *what did the system know at
+time t* (transaction time). Current-state stores conflate them, and deletion is
+harder still — a value removed from a serving index may survive in a history
+table, a vector store, or a raw episode log, ready to resurface.
 
-Positioning (honest): git-native auditable memory (Springdrift, E-009),
-confidence decay (Springdrift), procedural judge-free forgetting benchmarks
-(ForgetEval, E-005), temporal-graph fields (Graphiti, E-024), and belief
-revision (MnemeBrain/mnemosy) are all prior or adjacent. We therefore claim only
-the *combination measured under identical budget*: verified bitemporal `as-of`
-correctness, deletion/purge completeness across derived stores, and
-provenance→action gating, packaged as a reproducible harness.
+These needs are recognised. Graphiti attaches creation, validity, invalidity and
+expiry timestamps to graph edges (E-024); Mem0 records add/update/delete history
+beside a mutable vector store (E-025); Hindsight combines invalidation archives,
+histories, audit logs and derived-record cleanup (E-032); and 2026 work makes
+the temporal model explicit, from a graph-native bitemporal store to TOKI's
+bitemporal operator algebra and MemStrata's bi-temporal ledger with
+deterministic supersession (E-059, E-060).
+
+Given that, the open question is not *whether to model time* but **whether the
+modelling produces correct answers under the operations agents actually
+perform**. We answer it by measurement:
+
+1. a deterministic lifecycle generator with independently computed ground truth,
+   cross-checked by a second oracle implementation;
+2. a natural-language rendering of those histories so opaque systems can be
+   scored against the same truth;
+3. forward-checkpoint transaction-time replay, so an `as-of` query is answered
+   from a store that has seen only what was known by then;
+4. a residual scan that asks where a purged payload physically survives.
+
+**Contributions.** (i) An identical-history comparison of two deployed memory
+systems showing two distinct, previously unquantified failure modes. (ii) A
+cross-store deletion-completeness measurement, which the closest prior systems
+describe as a feature but do not measure. (iii) A reproducible, sealed harness,
+including preserved negative results and two retracted measurements.
 
 ## 2. Related Work
 
-**PENDING WP0/E6.** Single-screened prior-art matrix exists in
-`data/literature/`; venue-wide search (ACL/ACM DL/IEEE/USENIX/OpenReview/arXiv)
-and a second screening remain (completion-audit). Anchors already verified at
-source: ForgetEval `b6053b7` (E-013), Springdrift `19b52b9` (E-040), Graphiti
-`20a6728` (E-024), Mem0 `633b035` (E-025), Hindsight `1549987` (E-032).
-Do not describe any capability as "first".
+**Temporal modelling is prior art.** A graph-native bitemporal memory store
+(arXiv:2607.26520) keeps valid- and transaction-time intervals with
+point-in-time retrieval, and TOKI (arXiv:2606.06240) defines bitemporal
+operators over a dual-row schema with released code (E-059). MemStrata
+(arXiv:2606.26511) pairs a bi-temporal ledger with a deterministic
+(subject, relation, object) supersession rule and reports stale-fact rate as its
+headline metric (E-060). We therefore claim none of these.
+
+**Forgetting evaluation is prior art.** ForgetEval generates seeded lifecycle
+cases with deterministic substring scoring across supersession, decay, amnesia,
+purge and drift (E-005, E-013); MemoryAgentBench evaluates selective forgetting
+among four competencies (E-061). Springdrift already combines append-only
+memory, auditability and git-backed recovery (E-009), which retires any
+"first git-native auditable memory" framing.
+
+**Deployed systems.** Mem0, Zep/Graphiti, MemGPT/Letta, HippoRAG 2 and Hindsight
+form the baseline landscape (E-018–E-021, E-027, E-032). **Security.** MINJA
+shows query-only poisoning (E-008); MemLineage proposes lineage-based action
+gating (E-010); A-MemGuard and MemIncept are current defence and adaptive-attack
+baselines (E-030, E-031, E-034).
+
+**What is left.** No prior work we found measures, under one controlled history,
+both bitemporal answer correctness *and* where deleted content physically
+survives across a system's derived stores. The literature review is
+single-reviewer with a deterministic 10% rescreen; searches, exclusions and
+rescreens are logged and frozen.
 
 ## 3. Design
 
-Source: [architecture.md](./architecture.md). Principles: raw events immutable,
-interpretations derived and versioned; valid time ≠ transaction time; current
-truth is a view over history; retrieval hybrid and scoped before ranking; every
-derived memory cites evidence; untrusted content is data, not policy; indexes
-rebuildable from the ledger.
+Principles: raw events are immutable and interpretations derived; valid time is
+distinct from transaction time; current truth is a view over history; retrieval
+is scoped before ranking; every derived memory cites evidence; untrusted content
+is data, never policy; indexes are rebuildable from the ledger.
 
-- **Event ledger** — typed `MemoryEvent` (`ingest/reconfirm/supersede/expire/
-  purge`), append-only, JSONL or Git transaction adapter.
-- **Bitemporal oracle** — `LifecycleOracle` folds events into `Belief`s; an
-  independent `SqliteBitemporalOracle` is the cross-check.
-- **Disposable projections** — exact/lexical/hashing-vector/learned-vector/graph
-  indexes, rebuilt from materialized beliefs; RRF fusion then validity/authority/
-  poisoning gates; evidence-backed `MemoryPacket`s.
-- **Purge/crypto-purge** — JSONL tombstoning (with honest residual reporting) and
-  the encrypted-payload `ProtectedEventStore` with per-belief key destruction
-  (D-005, D-006).
-- **Provenance-action gate** — signed, tenant-scoped ingestion quarantine
-  separating write acceptance from sensitive-action activation.
+- **Event ledger.** Typed `MemoryEvent`s (`ingest`, `reconfirm`, `supersede`,
+  `expire`, `purge`), append-only, over JSONL or a git transaction adapter.
+- **Bitemporal oracle.** `LifecycleOracle` folds events into beliefs;
+  `SqliteBitemporalOracle` is an independent second implementation used purely
+  as a correctness cross-check, not an operational baseline.
+- **Disposable projections.** Exact, lexical, hashing-vector, learned-vector and
+  graph indexes rebuilt from materialised beliefs; RRF fusion, then validity,
+  authority and poisoning gates; evidence-backed memory packets.
+- **Deletion.** Purge tombstones with receipts, plus an encrypted-payload
+  profile whose per-belief key destruction is verified after a git clone
+  (D-005, D-006, E-033).
+- **Provenance gate.** Signed, tenant-scoped ingestion quarantine separating
+  write acceptance from sensitive-action activation.
 
 ## 4. Experimental Setup
 
-Deterministic seeded generator produces typed histories; query truth is computed
-independently of retrieval ranking. A natural-language renderer
-(`nl_workload.py`) turns histories into conversational turns so opaque systems
-answer against the same truth, removing the "BM25 gets structured terms" gap
-(E-043). External systems are compared under identical backbone model,
-temperature 0, retrieved-token budget, and pinned prompts, with sealed response
-transcripts (D-010). Metrics: exact-state accuracy, evidence recall@K, stale/
-superseded use rate, abstention, provenance coverage, purge completeness (see
-evaluation-plan.md). ≥3 seeds (grid uses 10), per-condition bootstrap 95% CIs.
+**Workload.** A seeded generator emits typed histories over entity/attribute
+state machines with configurable reconfirm/expire/purge probabilities. Query
+truth is computed by the oracle independently of any retrieval ranking.
 
-Baselines: recent/full context, BM25, append-only, last-write-wins, relational
-bitemporal oracle, and — **PENDING E1 (D-010)** — Mem0 and Zep/Graphiti at
-identical budget.
+**Rendering.** Histories are rendered to dated conversational turns. Because the
+generator's synthetic tokens (`entity-000`, `place-38`) collapse under a
+semantic embedder — leaving systems unable to tell entities apart — an injective
+relabelling maps them to distinct natural names. The relabelling preserves
+oracle semantics exactly (verified by test) and doubled Mem0's measured exact
+accuracy, isolating tokenisation from temporal semantics (E-052).
+
+**Replay.** Transaction time is monotonic, so turns are ingested in recorded
+order and every query is answered at the checkpoint matching its transaction
+time. This costs O(turns) per cell and, unlike single-pass ingestion, actually
+tests whether a store can answer as of a past point.
+
+**Scoring.** Deterministic: a returned answer must contain the expected value(s)
+and no superseded value, mirroring ForgetEval's substring scoring (E-013). We
+report exact-state accuracy, evidence recall, stale-use rate and abstention.
+
+**Systems.** Internal baselines (append-only, full/recent context, BM25,
+last-write-wins) and the oracle; external systems Mem0 `0.1.118` and Graphiti
+`0.29.2` on Neo4j 5.26, both with `gpt-4o-mini` at temperature 0 and
+`text-embedding-3-small`. Runs are sealed with canonical config, environment,
+source hash and per-file checksums.
 
 ## 5. Results
 
-### 5.1 Bitemporal correctness (RQ1)
-The oracle held exact/recall/stale = 1/1/0 in all 90 conditions of a 3-profile ×
-3-scale × 3-revision × 10-seed grid (E-049, strengthening E-044). Non-temporal
-baselines degrade with churn: under the high-churn profile append-only reached
-exact 0.255 / stale 0.662, recent/BM25 0.532 / 0.468, LWW 0.580 / 0.420 (E-049).
+### 5.1 The oracle is exact; non-temporal baselines are not
+Across 3 profiles × 3 scales × 3 revision counts × 10 seeds (90 conditions), the
+oracle held exact/recall/stale at 1/1/0 in every condition (E-049). Baseline
+means over the same grid: last-write-wins 0.603 exact / 0.397 stale, recent
+context and BM25@1 0.576 / 0.424, append-only and full context 0.272 / 0.624
+(with 0.915 recall — they retrieve the evidence but cannot choose among
+versions). Under the high-churn profile append-only falls to 0.255 exact with
+0.662 stale. A separate operation suite isolates purge, expiry-boundary,
+transaction-as-of and valid-time categories (E-043).
 
-Against deployed systems under identical histories (forward-checkpoint
-transaction-time replay, naturalized names), two distinct failure modes emerge:
-**Mem0** consolidates to a single current value — good at transaction-scoped
-current queries (transaction_as_of 0.949) but failing historical valid-time
-(0.346), expiry (0.062), and purge (0.121); overall exact 0.607 and degrading
-with scale (E-053, 48 cells). **Graphiti** preserves temporal edges — high
-evidence recall (0.873) — but its default retrieval does not filter by
-valid-time, returning superseded facts alongside current ones (stale-use 0.561,
-exact 0.224; E-054, 6 cells). The oracle stays exact (1.0) across both.
+### 5.2 Deployed systems: two distinct failure modes
+Under identical histories (Table 1), **Mem0** consolidates to a single current
+value: it is strong on transaction-scoped current queries (0.949) but weak on
+historical valid time (0.346) and near-total failures on expiry (0.062) and
+purge (0.121); overall exact 0.607, degrading with scale from ≈0.70 to ≈0.52
+across 48 cells (E-053). **Graphiti** does the opposite: it retains temporal
+edges and reaches 0.944 evidence recall, but its default retrieval does not
+filter by validity, so it returns superseded facts alongside current ones —
+overall exact 0.223, stale-use 0.530, with valid_time and expiry at **0.000**
+across 20 cells with narrow 5-seed intervals, replicated in an independent
+`revision_only` profile (E-062).
 
-Enabling Graphiti's *own* valid-time filter helps, but only partially and at a
-cost: exact accuracy rises 0.224→0.318 and stale use falls 0.561→0.360, while
-evidence recall drops 0.873→0.318 (E-057). The filter buys precision by
-discarding evidence, and the categories that matter remain largely unanswered —
-valid_time 0.093, expiry 0.067, purge 0.306 — against 1.0 for the oracle. Two
-structural limits explain the ceiling: extracted `invalid_at` is often absent on
-superseded edges (so stale facts satisfy the filter) and occasionally
-contradictory (`invalid_at <= valid_at`), and `created_at`/`expired_at` record
-wall-clock ingestion rather than the history's transaction time, so they cannot
-express an `as-of` bound at all. Temporal *fields* are therefore not equivalent
-to temporal *correctness* — the distinction this paper measures.
+| Category (exact) | Mem0 | Graphiti | Oracle |
+|---|---|---|---|
+| transaction_as_of | 0.949 | 0.470 | 1.000 |
+| valid_time | 0.346 | 0.000 | 1.000 |
+| expiry_boundary | 0.062 | 0.000 | 1.000 |
+| purge | 0.121 | 0.036 | 1.000 |
+| **overall exact** | 0.607 | 0.223 | 1.000 |
+| evidence recall | 0.649 | 0.944 | 1.000 |
+| stale-use | 0.379 | 0.530 | 0.000 |
 
-The ceiling is architectural, not an artifact of a weak extractor: swapping
-`gpt-4o-mini` for `gpt-4o` on matched cells leaves the decisive categories
-unchanged (valid_time 0.111 → 0.111, expiry 0.000 → 0.000) despite a 15×
-costlier model, improving only transaction-scoped current queries (E-058).
+Enabling Graphiti's own valid-time filter raises exact to 0.318 and cuts
+stale-use to 0.360, but collapses recall from 0.873 to 0.318 — precision bought
+by discarding evidence, with valid_time still 0.093 and expiry 0.067 (E-057).
+Two structural limits cap it: `invalid_at` is frequently absent on superseded
+edges and occasionally contradictory (`invalid_at <= valid_at`), and
+`created_at`/`expired_at` record wall-clock ingestion rather than the history's
+transaction time, so they cannot express an `as-of` bound at all. The ceiling is
+architectural, not an extraction artifact: swapping `gpt-4o-mini` for `gpt-4o`
+leaves valid_time (0.111 → 0.111) and expiry (0.000 → 0.000) unchanged (E-058).
 
-(An earlier version of this experiment reported that filtering degraded every
-metric; that measurement was invalidated by cross-run graph contamination and is
-retracted (E-055). The numbers above come from re-runs with per-group isolation
-verified directly in the database.)
+### 5.3 Deletion completeness (headline)
+After the same ingested purge, our substrate's rebuildable projections —
+Markdown, lexical, vector, graph — contain **zero** occurrences of the purged
+payload; its only residual (3) is the append-only audit ledger, a documented
+limitation (D-005) addressed by the encrypted profile's key destruction (E-033).
+Mem0 retains 14 occurrences (exposed memories 2, vector store 2, SQLite history
+10) and Graphiti 27 (edge facts 5, entity nodes 13, raw episode bodies 9)
+(E-056). The claim is *where* deleted content survives — an audit log no query
+path reads, versus serving indexes a later query can resurface — not the integer
+magnitudes, which are substring counts over differently shaped stores.
 
-### 5.2 Deletion / purge completeness (headline)
-Both external systems fail deletion semantics under identical histories at the
-answer level: Mem0 returns purged values (purge-category exact 0.121) and
-expired values (0.062); Graphiti likewise (0.062, 0.000).
+### 5.4 Retrieval channels
+A hard fixture isolates one necessary channel per category (E-016). A learned
+dense channel resolves held-out synonyms at recall@1 1.0 where the
+dependency-free hashing channel scores 0.0, quantifying that channel's
+alias-table-only design (E-050). Calibrated fusion gave no held-out gain over
+fixed RRF (E-022), and state-level decay did not dominate rank-level decay
+(E-014).
 
-A residual scan of the backing stores explains why (E-056). After the same
-purge, Temvera's rebuildable projections — Markdown, lexical, vector, graph —
-contain **zero** occurrences of the purged payload; its only residual is the
-append-only audit ledger (a documented limitation, D-005, addressed by the
-encrypted profile's key destruction, E-033). Both external systems instead
-retain the payload inside retrieval-reachable stores: Mem0 in exposed memories,
-its Qdrant vector store, and its SQLite history; Graphiti in edge facts, entity
-nodes, and raw episode bodies. The distinction is *where* deleted content
-survives — an audit log that no query path reads, versus the serving index a
-later query can resurface. Source-verified expectations frame this: Mem0
-best-effort projection cleanup (E-025), Graphiti physical `remove_episode`
-(E-024), Hindsight orphan→backfill (E-032). Counts are substring occurrences
-over differently-shaped stores and are not magnitude-comparable.
+### 5.5 External validity
+On human-written LongMemEval conversations the same asymmetry appears. Across
+all six question types (60 instances, 10 each), mean gold-token recall was
+knowledge-update 0.724, single-session-user 0.622, single-session-preference
+0.314, multi-session 0.287, temporal-reasoning 0.221, single-session-assistant
+0.151 (E-064) — replicating a smaller run that gave 0.809 vs 0.188 for the two
+extreme types (E-063). Retrieval quality tracks how much temporal or
+cross-session reasoning a question demands rather than recency alone: simple
+within-session user recall is nearly as strong as current-value questions, while
+multi-session and assistant-stated facts are poorly retained. Scoring is
+deterministic substring/token presence over retrieved memories and is
+deliberately **not** LongMemEval's GPT-4o-judged QA metric (E-036); n=10 per
+type on the oracle split, which has no distractor sessions.
 
-### 5.3 Retrieval channels
-Hard-channel necessity fixture isolates one necessary channel per category
-(E-016). Learned dense retrieval resolved 10 held-out synonyms at recall@1 1.0
-vs 0.0 for the alias-table-only hashing channel (E-050). Calibrated fusion gave
-no held-out gain over fixed RRF (E-022); state-level decay did not dominate
-rank-level decay (E-014).
+These numbers are conservative for Mem0: during ingestion it silently dropped 15
+memory `UPDATE`/`DELETE` actions across these 60 conversations, a defect we
+traced to an unvalidated id lookup swallowed by a broad exception handler
+(E-065). Dropped updates leave superseded values in place, so the true system
+would score no worse than reported.
 
-### 5.4 External validity
-On human-written LongMemEval conversations the same asymmetry appears: Mem0
-retrieves the evidence for `knowledge-update` questions (current value after a
-change) far better than for `temporal-reasoning` questions — gold-token recall
-0.809 versus 0.188 (E-063). This supports the *characterisation* drawn from
-synthetic histories, not any accuracy figure: scoring here is deterministic
-substring/token presence over retrieved memories, deliberately separate from
-LongMemEval's GPT-4o-judged QA metric (E-036), and the sample is 6 instances per
-type. Mem0 also logged internal `UPDATE` failures during ingestion, which biases
-against the knowledge-update side, so the real gap may be wider.
+### 5.6 Provenance security
+Signed, tenant-scoped gating admitted 3/4 attacks as inert data while activating
+0/4, with benign utility preserved (E-017) — but it fails once a trusted signer
+is compromised: provenance proves origin, not signer honesty (E-023). This is a
+mechanism study; GPU-bound defences such as A-MemGuard were out of scope (E-034).
 
-### 5.5 Provenance security
-Signed, tenant-scoped gating blocked 0/4 activations while accepting 3/4 attacks
-as inert data (E-017); it fails after trusted-signer compromise — provenance
-proves origin, not signer honesty (E-023). Positioned as a mechanism study, not
-a SOTA defense; adaptive/model-mediated attacks and GPU-bound defenses
-(A-MemGuard, E-034) are out of scope.
+## 6. Negative Results, Corrections, and Limitations
 
-## 6. Negative Results and Limitations
+We preserve results that did not go our way: state-level decay did not beat
+rank-level decay (E-014), fusion calibration gave no held-out gain (E-022),
+signed provenance failed under signer compromise (E-023), and an early channel
+ablation saturated at 1.0 and had to be redesigned (E-015).
 
-Preserved negatives: rank vs state decay (E-014), fusion calibration (E-022),
-signer compromise (E-023), single-query learned saturation motivating the
-expanded synonym set (E-050). Limitations: synthetic hand-specified operation
-profiles; "contradiction density" approximated by operation mix and revision
-count; no identical-budget end-to-end external result yet; single-screened
-literature; human audit untested (protocol-only, D-009); purge guarantees cover
-declared stores and tested failure points only.
+Two measurements were **retracted rather than quietly fixed**. Graphiti cell
+group ids repeated across runs while the Neo4j reset did not wipe the group, so
+later runs queried graphs still holding earlier episodes (36 per cell where one
+run produces 12); the affected filtered and extractor runs are marked invalid
+and re-run under verified isolation (E-055). A first purge scan reported Mem0 at
+zero residual because it read Graphiti's raw database but only Mem0's
+API-exposed memories; the corrected scan adds Mem0's vector store and history
+database with a per-run database path (E-056).
+
+**Limitations.** Histories are synthetic with hand-specified operation profiles;
+"contradiction density" is approximated by operation mix and revision count.
+Two external systems, one backbone, and LLM extraction that is not
+bit-reproducible. The literature review is single-reviewer. Purge claims cover
+declared stores and tested failure points, not backups, OS caches or
+provider-side copies. Human audit benefit (RQ4) remains protocol-only.
 
 ## 7. Artifact and Reproducibility
 
-Sealed local runs with canonical config, environment, source hash, and per-file
-checksums; frozen synthetic dataset; aggregate verifier (E-045, E-047).
-`pytest` and `ruff` pass on CPython 3.11. New systems-paper infrastructure:
-`nl_workload.py`, `external_harness.py`, `synonym_eval.py`, the robustness grid
-`lifecycle-grid-robust-v1`, and the learned-vector comparison. Public archive/DOI
-deferred (D-009) until camera-ready; a flaky artifact tamper check is logged for
-release hardening (E-051).
+Runs are sealed with canonical config, environment, source-tree hash and
+per-file checksums, and verified by an aggregate checker (E-045, E-047). The
+frozen synthetic fixture is byte-reproducible and split-disjoint (E-037). Tests
+and lint pass on CPython 3.11. Third-party datasets are used locally and never
+redistributed. A dropped-`UPDATE` defect found in Mem0 during evaluation is
+documented with root-cause analysis and a reproduction script, since it biases
+results against that system. Public archive/DOI is deferred (D-009); a flaky
+artifact tamper check is logged for release hardening (E-051).

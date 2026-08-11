@@ -103,9 +103,21 @@ def run_longmemeval(
     from datetime import datetime, timedelta, timezone
 
     base = datetime(2025, 1, 1, tzinfo=timezone.utc)
+    # Mem0 defaults to a single global ~/.mem0/history.db. Any other Mem0
+    # process running at the same time contends for it and can raise
+    # "attempt to write a readonly database", silently dropping memories and
+    # corrupting the measurement, so each run gets its own database file.
+    # Keep the database out of the run directory: it embeds the ingested
+    # third-party conversation text, which must not be sealed into a
+    # distributable artifact.
+    import tempfile
+
+    history_db = str(Path(tempfile.mkdtemp(prefix="mem0-lme-")) / "history.db")
     for position, instance in enumerate(instances):
         system = Mem0System(
-            config=default_mem0_config(model=model, embed_model=embed_model),
+            config=default_mem0_config(
+                model=model, embed_model=embed_model, history_db_path=history_db
+            ),
             user_id=f"{config.get('user_id', 'temvera-e7')}-{position:03d}",
             search_limit=search_limit,
         )
