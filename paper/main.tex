@@ -278,6 +278,14 @@ reasoning a question demands rather than recency alone. Scoring is deterministic
 substring/token presence over retrieved memories and is deliberately \emph{not}
 the benchmark's LLM-judged QA metric.
 
+Distractor pressure lowers the absolute numbers without removing the pattern.
+On the harder split, where each instance carries 42--52 sessions of which most
+are distractors, knowledge-update recall falls $0.724 \to 0.619$ and
+temporal-reasoning $0.221 \to 0.167$, preserving the ratio between them
+($3.3\times \to 3.7\times$). Only three instances per type were run, at roughly
+35--40 minutes each, so we rely on the preserved ordering rather than the point
+estimates.
+
 These numbers are conservative for Mem0: during ingestion it silently dropped 15
 memory \texttt{UPDATE}/\texttt{DELETE} actions across these 60 conversations, a
 defect we traced to an unvalidated id lookup swallowed by a broad exception

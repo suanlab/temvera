@@ -1,0 +1,6 @@
+{"gold_present": true, "question_id": "01493427", "question_type": "knowledge-update", "sessions": 47, "token_recall": 1.0}
+{"gold_present": false, "question_id": "031748ae", "question_type": "knowledge-update", "sessions": 46, "token_recall": 0.412}
+{"gold_present": false, "question_id": "031748ae_abs", "question_type": "knowledge-update", "sessions": 52, "token_recall": 0.444}
+{"gold_present": false, "question_id": "08f4fc43", "question_type": "temporal-reasoning", "sessions": 47, "token_recall": 0.25}
+{"gold_present": false, "question_id": "0bb5a684", "question_type": "temporal-reasoning", "sessions": 42, "token_recall": 0.25}
+{"gold_present": false, "question_id": "0bc8ad92", "question_type": "temporal-reasoning", "sessions": 49, "token_recall": 0.0}

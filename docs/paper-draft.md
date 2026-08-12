@@ -228,6 +228,14 @@ deterministic substring/token presence over retrieved memories and is
 deliberately **not** LongMemEval's GPT-4o-judged QA metric (E-036); n=10 per
 type on the oracle split, which has no distractor sessions.
 
+Distractor pressure lowers the absolute numbers without removing the pattern.
+On the `_s` split, where each instance carries 42--52 sessions of which most are
+distractors, knowledge-update recall falls 0.724 to 0.619 and temporal-reasoning
+0.221 to 0.167, so the ratio between them is preserved (3.3x to 3.7x; E-066).
+Only three instances per type were run at roughly 35--40 minutes each, so the
+point estimates are weak and we rely on the preserved ordering rather than the
+values.
+
 These numbers are conservative for Mem0: during ingestion it silently dropped 15
 memory `UPDATE`/`DELETE` actions across these 60 conversations, a defect we
 traced to an unvalidated id lookup swallowed by a broad exception handler
