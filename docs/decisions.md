@@ -119,3 +119,23 @@
   that sequence before recruitment.
 - **Limit:** This is a scope decision for one submission, not a finding that
   the defect is unimportant or that the study is infeasible later.
+
+## D-013 — Retarget the submission from ICLR to COLM
+
+- **Status:** accepted 2026-08-13 by user decision
+- **Decision:** Target COLM 2027 as the primary venue, with NeurIPS Datasets &
+  Benchmarks as the fallback. Do not submit to ICLR 2027.
+- **Reason:** A five-reviewer simulation was unanimous that the work has no
+  learning contribution — nothing is trained, fine-tuned, or probed — and that
+  ICLR's pool would score a measurement study of two libraries in the low 4s
+  regardless of how well it was executed (predicted accept probability 8–10%,
+  versus 40–50% at COLM). COLM explicitly welcomes empirical studies of LM
+  systems, evaluation methodology, and negative results, which is exactly what
+  this is. The venue objection survives every presentation fix, so retargeting
+  is worth more than any amount of polishing for ICLR.
+- **Consequence:** The September ICLR deadline no longer binds. That removes the
+  pressure that would have forced shipping the protocol defects found in review
+  (budget dependence, deletion asymmetry, unmatched grids) as-is.
+- **Limit:** This is a venue decision, not a judgement that the corrected
+  findings are weaker; several corrections made the surviving claims narrower
+  and better supported.

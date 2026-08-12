@@ -225,9 +225,19 @@ def run_mem0_comparison(config: dict[str, Any]) -> dict[str, Any]:
     search_limit = int(config.get("search_limit", 5))
     base_user = config.get("user_id", "temvera-e1")
 
+    # Mem0 defaults to one global ~/.mem0/history.db; a concurrent Mem0 process
+    # contending for it raises "attempt to write a readonly database", which the
+    # library swallows while silently dropping memory actions. Isolate per run.
+    import tempfile
+    from pathlib import Path as _Path
+
+    history_db = str(_Path(tempfile.mkdtemp(prefix="mem0-grid-")) / "history.db")
+
     def factory(label: str) -> MemorySystem:
         return Mem0System(
-            config=default_mem0_config(model=model, embed_model=embed_model),
+            config=default_mem0_config(
+                model=model, embed_model=embed_model, history_db_path=history_db
+            ),
             user_id=f"{base_user}-{label}",
             search_limit=search_limit,
         )
@@ -236,8 +246,11 @@ def run_mem0_comparison(config: dict[str, Any]) -> dict[str, Any]:
     result["backbone"] = {
         "system": "mem0",
         "mem0_version": Mem0System(
-            config=default_mem0_config(model=model, embed_model=embed_model)
+            config=default_mem0_config(
+                model=model, embed_model=embed_model, history_db_path=history_db
+            )
         ).version,
+        "history_db_isolated": True,
         "llm_model": model,
         "embed_model": embed_model,
         "replay": result["replay"],
@@ -258,6 +271,7 @@ def run_graphiti_comparison(config: dict[str, Any]) -> dict[str, Any]:
     neo4j_user = config.get("neo4j_user") or os.environ.get("NEO4J_USER", "neo4j")
     neo4j_password = config.get("neo4j_password") or os.environ.get("NEO4J_PASSWORD")
     temporal_filter = bool(config.get("temporal_filter", False))
+    search_recipe = config.get("search_recipe", "hybrid_rrf")
 
     def factory(label: str) -> MemorySystem:
         return GraphitiSystem(
@@ -271,6 +285,7 @@ def run_graphiti_comparison(config: dict[str, Any]) -> dict[str, Any]:
             neo4j_user=neo4j_user,
             neo4j_password=neo4j_password,
             temporal_filter=temporal_filter,
+            search_recipe=search_recipe,
         )
 
     result = run_external_comparison(config, factory, system_name="graphiti")
@@ -281,6 +296,7 @@ def run_graphiti_comparison(config: dict[str, Any]) -> dict[str, Any]:
         ).version,
         "backend": "neo4j" if neo4j_uri else "kuzu",
         "temporal_filter": temporal_filter,
+        "search_recipe": search_recipe,
         "llm_model": model,
         "embed_model": embed_model,
         "replay": result["replay"],
