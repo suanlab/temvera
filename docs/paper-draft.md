@@ -261,7 +261,16 @@ database with a per-run database path (E-056).
 Two external systems, one backbone, and LLM extraction that is not
 bit-reproducible. The literature review is single-reviewer. Purge claims cover
 declared stores and tested failure points, not backups, OS caches or
-provider-side copies. Human audit benefit (RQ4) remains protocol-only.
+provider-side copies.
+
+**Future work.** Whether provenance-linked diffs actually help human auditors
+(RQ4) is the largest untested claim. A preregisterable protocol, a seeded
+planted-fault generator, a crossover assignment, and a deterministic scorer are
+included in the artifact, but no participants were recruited for this work, so
+we make no human-effectiveness claim. Running it requires ethics review or a
+documented exemption, a pilot for variance, and an a priori power analysis
+(D-009, D-012). Also open: distractor-laden LongMemEval splits, more external
+systems, and non-synthetic operation profiles.
 
 ## 7. Artifact and Reproducibility
 

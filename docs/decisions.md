@@ -103,3 +103,19 @@
   deferred until separately authorized.
 - **Reason:** These actions require ethics, external model, or publication
   authority beyond the local deterministic artifact.
+
+## D-012 — No upstream bug filing; human audit study is future work
+
+- **Status:** accepted 2026-08-12 by user decision
+- **Decision:** Do not file the Mem0 defect upstream. Keep the analysis in
+  `docs/upstream-bug-mem0-update-keyerror.md` as internal evidence for E-065,
+  which explains why the reported Mem0 numbers are conservative. The human
+  audit study (RQ4) is not run for this submission and is reported as future
+  work; D-009's protocol-only scope therefore stands unchanged.
+- **Reason:** The defect report is a routine, non-security OSS issue whose
+  filing is optional, and the intermittent reproduction weakens it. Ethics
+  review or a documented exemption plus a pilot and power analysis cannot
+  responsibly fit before the ICLR deadline, and the protocol itself requires
+  that sequence before recruitment.
+- **Limit:** This is a scope decision for one submission, not a finding that
+  the defect is unimportant or that the study is infeasible later.

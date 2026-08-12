@@ -1,8 +1,9 @@
 # Upstream bug report (draft, not filed)
 
-> Status: **drafted locally, not submitted.** Filing this publicly is an
-> outward-facing action and needs explicit approval. Target if approved:
-> `mem0ai/mem0` issue tracker.
+> Status: **not filed — closed by decision D-012 (2026-08-12).** This document
+> is retained as internal evidence for ledger row E-065: the defect biases our
+> Mem0 measurements downward, so the numbers we report are conservative. It is
+> not a pending action item.
 
 ## Title
 
