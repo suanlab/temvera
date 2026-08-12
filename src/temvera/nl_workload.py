@@ -153,9 +153,12 @@ def render_turns(events: tuple[MemoryEvent, ...]) -> tuple[WorkloadTurn, ...]:
                 f"({value}) is no longer valid after {_day(boundary)}."
             )
         elif event.operation is Operation.PURGE:
+            # The deletion instruction must NOT restate the payload: a system
+            # that stores its input verbatim would otherwise be scored as
+            # retaining the very value it was asked to delete.
             text = (
-                f"[recorded {_day(event.recorded_at)}] Permanently delete the "
-                f"record that {subject}'s {attribute} was {value}."
+                f"[recorded {_day(event.recorded_at)}] Permanently delete "
+                f"everything you recorded about {subject}'s {attribute}."
             )
         else:  # pragma: no cover - Operation is exhaustive
             raise ValueError(f"unhandled operation: {event.operation}")

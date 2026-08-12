@@ -29,6 +29,7 @@ class GraphitiSystem:
         embed_model: str = "text-embedding-3-small",
         search_limit: int = 5,
         group_id: str = "temvera-e1",
+        search_recipe: str = "hybrid_rrf",
         neo4j_uri: str | None = None,
         neo4j_user: str = "neo4j",
         neo4j_password: str | None = None,
@@ -53,13 +54,20 @@ class GraphitiSystem:
             SearchConfig,
         )
 
-        # Kuzu's full-text index is broken in graphiti-core 0.29.2, so restrict
-        # retrieval to edge cosine similarity (embedding-only) and disable the
-        # node/episode/community sub-searches that would re-trigger bm25/FTS.
+        # `cosine_only` exists because Kuzu's full-text index is broken in
+        # graphiti-core 0.29.2. It must NOT be used on Neo4j, where BM25 works:
+        # disabling lexical retrieval there removes the one channel suited to a
+        # workload whose only discriminating token is the subject name.
+        # `hybrid_rrf` mirrors the library's own default for `search()`.
+        methods = (
+            [EdgeSearchMethod.cosine_similarity]
+            if search_recipe == "cosine_only"
+            else [EdgeSearchMethod.bm25, EdgeSearchMethod.cosine_similarity]
+        )
+        self._search_recipe = search_recipe
         self._search_config = SearchConfig(
             edge_config=EdgeSearchConfig(
-                search_methods=[EdgeSearchMethod.cosine_similarity],
-                reranker=EdgeReranker.rrf,
+                search_methods=methods, reranker=EdgeReranker.rrf
             ),
             node_config=None,
             episode_config=None,
@@ -193,6 +201,36 @@ class GraphitiSystem:
                 ],
             ],
         )
+
+    def delete_episodes_mentioning(self, needle: str) -> int:
+        """Call Graphiti's native `remove_episode` for episodes containing `needle`.
+
+        Measuring deletion by feeding a natural-language "delete" sentence tests
+        whether extraction infers deletion intent, not whether the system's
+        deletion works. This exercises the documented API instead.
+        """
+        from neo4j import GraphDatabase
+
+        driver = GraphDatabase.driver(
+            self._neo4j_uri, auth=(self._neo4j_user, self._neo4j_password)
+        )
+        try:
+            with driver.session() as session:
+                uuids = [
+                    record["uuid"]
+                    for record in session.run(
+                        "MATCH (n:Episodic) WHERE n.group_id = $g AND "
+                        "toLower(n.content) CONTAINS toLower($needle) "
+                        "RETURN n.uuid AS uuid",
+                        g=self._group_id,
+                        needle=needle,
+                    )
+                ]
+        finally:
+            driver.close()
+        for uuid in uuids:
+            self._run(self._graphiti.remove_episode(uuid))
+        return len(uuids)
 
     def answer(self, case: NLQueryCase) -> str:
         search_filter = (

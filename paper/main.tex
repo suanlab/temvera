@@ -51,8 +51,10 @@ valid-time filter trades recall for precision without repairing semantics, and a
 stronger extractor leaves the decisive categories unchanged---the ceiling is the
 unreliability of extracted \texttt{invalid\_at} (absent on 26 of 80 superseded
 edges) and the fact that \texttt{created\_at} records wall-clock ingestion, so no
-\texttt{as-of} bound is expressible at all. A residual scan shows purged
-payloads surviving in stores a later query can reach.
+\texttt{as-of} bound is expressible at all. A residual scan finds that both
+systems' deletion APIs do clear their retrieval-reachable stores, but that
+deletion requested in prose is silently ignored --- the operationally relevant
+gap for an assistant asked to forget something.
 
 We claim no novelty for bitemporal modelling \citep{snodgrass1985,toki},
 deterministic supersession \citep{memstrata}, or forgetting evaluation
@@ -310,27 +312,41 @@ ceiling is not an extraction-quality artifact: with \texttt{gpt-4o} in place of
 improves ($0.514 \to 0.625$) and purge degrades ($0.296 \to 0.176$); with two
 seeds these movements are within noise and we draw no conclusion from them.
 
-\subsection{Deletion completeness}
+\subsection{Deletion: the API works, the instruction does not}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.62\linewidth]{figures/residual.pdf}
-\caption{Where a purged payload survives, split by whether a query path can
-reach the store. Counts are substring occurrences over differently shaped stores
-and are not comparable in magnitude across systems; the reachability split is
-the claim.}
-\label{fig:residual}
-\end{figure}
+Our first attempt at this measurement was unfair in two ways, and correcting it
+reversed the conclusion. It gave our substrate a typed \texttt{purge} operation
+while giving the deployed systems an English sentence, and that sentence
+restated the value it asked to delete --- so any system storing its input
+verbatim was penalised by construction. We now run two conditions with a
+non-restating instruction (Figure~\ref{fig:residual}).
 
-After the same ingested purge, our substrate's rebuildable projections---
-Markdown, lexical, vector, graph---contain \textbf{zero} occurrences of the
-purged payload; its only residual (3) is the append-only audit ledger, a
-documented limitation addressed by the encrypted profile's key destruction. Mem0
-retains 14 occurrences (exposed memories 2, vector store 2, SQLite history 10)
-and Graphiti 27 (edge facts 5, entity nodes 13, raw episode bodies 9). The claim
-is \emph{where} deleted content survives---an audit log no query path reads,
-versus serving indexes a later query can resurface---not the integer magnitudes,
-which are substring counts over differently shaped stores.
+Under a \textbf{natural-language instruction}, residual occurrences of the
+purged value are Temvera 3 (audit ledger only), Mem0 15 (exposed memories 3,
+vector store 3, history 9), Graphiti 18 (edges 3, entity nodes 9, episodes 6).
+Under each system's \textbf{native deletion API} (\texttt{Memory.delete},
+\texttt{remove\_episode}) the picture changes completely: Mem0 falls to 12 with
+\emph{zero} in exposed memories and \emph{zero} in the vector store, and
+Graphiti falls to 3 with \emph{zero} in edges and episodes.
+
+Two conclusions follow, and the first contradicts what we previously reported.
+\textbf{Both systems' deletion APIs do clear their retrieval-reachable stores};
+purged content does not linger in the serving path when deletion is actually
+invoked. What fails is \textbf{deletion expressed in prose}: told in natural
+language to delete a fact, neither system acts on it, and the value remains
+retrievable. For agents that receive deletion requests conversationally --- the
+normal case for a user asking an assistant to forget something --- that gap is
+the operationally relevant one.
+
+Two residues survive API deletion. Mem0's SQLite history retains 12 occurrences
+and in fact \emph{grows}, because deletion appends history rows; Graphiti's
+LLM-generated entity summaries retain 3, which \texttt{remove\_episode} does not
+rewrite. Mem0's history and our own append-only ledger are the same class of
+store --- an audit log no query path reads --- so we do not claim our substrate
+is uniquely clean. Counts are substring occurrences over differently shaped
+stores and are not comparable in magnitude; the reachability split is the claim.
+This rests on a single seeded history (12 events, three purged values) and one
+backbone, with extraction that is not bit-reproducible.
 
 \subsection{Retrieval channels}
 

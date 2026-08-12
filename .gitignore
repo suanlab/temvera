@@ -38,6 +38,8 @@ experiments/runs/*
 !experiments/runs/external-graphiti-scale-v1/
 !experiments/runs/longmemeval-e7-v1/
 !experiments/runs/longmemeval-s-v1/
+!experiments/runs/purge-residual-v3-api/
+!experiments/runs/purge-residual-v3-nl/
 
 .env
 .env.*

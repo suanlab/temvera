@@ -79,6 +79,26 @@ class Mem0System:
     def ingest(self, turn: WorkloadTurn) -> None:
         self._memory.add(turn.text, user_id=self._user_id)
 
+    def delete_memories_mentioning(self, needle: str) -> int:
+        """Call Mem0's native `delete` for memories containing `needle`.
+
+        Feeding a natural-language "delete" sentence tests whether extraction
+        infers deletion intent; this exercises the documented deletion API.
+        """
+        result = self._memory.get_all(user_id=self._user_id)
+        rows = result.get("results", result) if isinstance(result, dict) else result
+        removed = 0
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            if needle.casefold() in str(row.get("memory", "")).casefold():
+                try:
+                    self._memory.delete(memory_id=row["id"])
+                    removed += 1
+                except Exception:
+                    pass
+        return removed
+
     def answer(self, case: NLQueryCase) -> str:
         result = self._memory.search(
             case.query_text, user_id=self._user_id, limit=self._search_limit

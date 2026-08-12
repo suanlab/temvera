@@ -319,6 +319,8 @@ def run_purge_residual(config: dict[str, Any], workdir: Any) -> dict[str, Any]:
         scan_temvera(events, Path(workdir) / "temvera-store", transaction_at).as_dict()
     ]
 
+    deletion_mode = config.get("deletion_mode", "nl_instruction")
+
     if config.get("include_mem0", True):
         model = config.get("model", "gpt-4o-mini")
         embed_model = config.get("embed_model", "text-embedding-3-small")
@@ -335,7 +337,12 @@ def run_purge_residual(config: dict[str, Any], workdir: Any) -> dict[str, Any]:
         mem0.reset()
         for turn in turns:
             mem0.ingest(turn)
-        reports.append(scan_mem0(mem0, events).as_dict())
+        if deletion_mode == "native_api":
+            for value in values:
+                mem0.delete_memories_mentioning(value)
+        report = scan_mem0(mem0, events).as_dict()
+        report["deletion_mode"] = deletion_mode
+        reports.append(report)
 
     if config.get("include_graphiti", True):
         from .graphiti_adapter import GraphitiSystem
@@ -355,18 +362,23 @@ def run_purge_residual(config: dict[str, Any], workdir: Any) -> dict[str, Any]:
         graphiti.reset()
         for turn in turns:
             graphiti.ingest(turn)
-        reports.append(
-            scan_graphiti(
-                group, events, uri=uri, user=user, password=password
-            ).as_dict()
-        )
+        if deletion_mode == "native_api":
+            for value in values:
+                graphiti.delete_episodes_mentioning(value)
+        report = scan_graphiti(
+            group, events, uri=uri, user=user, password=password
+        ).as_dict()
+        report["deletion_mode"] = deletion_mode
+        reports.append(report)
 
     return {
         "purged_values": list(values),
         "events": len(events),
         "turns": len(turns),
         "reports": reports,
+        "deletion_mode": deletion_mode,
         "backbone": {
+            "deletion_mode": deletion_mode,
             "llm_model": config.get("model", "gpt-4o-mini"),
             "embed_model": config.get("embed_model", "text-embedding-3-small"),
             "naturalized": bool(config.get("naturalize", True)),

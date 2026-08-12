@@ -121,32 +121,41 @@ def figure_residual() -> None:
     """Where purged payloads survive, split by reachability class."""
     import json
 
-    data = json.loads(
-        (RUNS / "purge-residual-v2" / "results.json").read_text(encoding="utf-8")
-    )
-    reach = {"Temvera": 0, "Mem0": 0, "Graphiti": 0}
-    audit = {"Temvera": 0, "Mem0": 0, "Graphiti": 0}
     label = {"temvera": "Temvera", "mem0": "Mem0", "graphiti": "Graphiti"}
-    for report in data["reports"]:
-        name = label[report["system"]]
-        for store in report["stores"]:
-            # Append-only source logs are not read by any query path; every
-            # other store is reachable from retrieval.
-            is_audit = store["store"] in {"raw_ledger_jsonl", "neo4j_episode_bodies"}
-            (audit if is_audit else reach)[name] += max(0, store["occurrences"])
-    fig, ax = plt.subplots(figsize=(5.2, 3.0))
-    names = list(reach)
-    ax.bar(names, [reach[n] for n in names], label="retrieval-reachable", color="#b3462f")
-    ax.bar(
-        names,
-        [audit[n] for n in names],
-        bottom=[reach[n] for n in names],
-        label="append-only log (not queried)",
-        color="#c9c9c9",
+    # Append-only audit logs are not read by any query path; everything else is
+    # reachable from retrieval.
+    audit_stores = {"raw_ledger_jsonl", "mem0_history_sqlite"}
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), sharey=True)
+    for ax, tag, title in (
+        (axes[0], "nl", "natural-language instruction"),
+        (axes[1], "api", "native deletion API"),
+    ):
+        data = json.loads(
+            (RUNS / f"purge-residual-v3-{tag}" / "results.json").read_text("utf-8")
+        )
+        reach = {"Temvera": 0, "Mem0": 0, "Graphiti": 0}
+        audit = {"Temvera": 0, "Mem0": 0, "Graphiti": 0}
+        for report in data["reports"]:
+            name = label[report["system"]]
+            for store in report["stores"]:
+                bucket = audit if store["store"] in audit_stores else reach
+                bucket[name] += max(0, store["occurrences"])
+        names = list(reach)
+        ax.bar(names, [reach[n] for n in names], label="retrieval-reachable", color="#b3462f")
+        ax.bar(
+            names,
+            [audit[n] for n in names],
+            bottom=[reach[n] for n in names],
+            label="append-only log (not queried)",
+            color="#c9c9c9",
+        )
+        ax.set_title(title, fontsize=10)
+    axes[0].set_ylabel("residual occurrences")
+    axes[0].legend(frameon=False, fontsize=8)
+    fig.suptitle(
+        "Deletion works through the API; prose deletion intent does not survive extraction",
+        fontsize=10,
     )
-    ax.set_ylabel("residual occurrences of purged value")
-    ax.set_title("Where purged payloads survive", fontsize=10)
-    ax.legend(frameon=False, fontsize=8)
     fig.tight_layout()
     fig.savefig(OUT / "residual.pdf")
     plt.close(fig)
