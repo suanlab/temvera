@@ -1,0 +1,13 @@
+{
+  "benchmark": "temvera-longmemeval-s-v1",
+  "dataset_path": "data/raw/longmemeval_s_cleaned.json",
+  "embed_model": "text-embedding-3-small",
+  "limit_per_type": 3,
+  "model": "gpt-4o-mini",
+  "question_types": [
+    "knowledge-update",
+    "temporal-reasoning"
+  ],
+  "search_limit": 10,
+  "user_id": "temvera-e7s"
+}

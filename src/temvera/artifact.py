@@ -8,6 +8,7 @@ import io
 import json
 from pathlib import Path
 import tarfile
+import zlib
 from typing import Any
 
 from .experiment import verify_run_set
@@ -68,7 +69,26 @@ def create_artifact_archive(root: Path, output: Path) -> dict[str, Any]:
     return manifest
 
 
+def _gzip_envelope_intact(archive: Path) -> bool:
+    """Decode the whole gzip stream so its trailing CRC is actually checked.
+
+    Verifying member checksums alone only proves *content* integrity: a byte
+    flipped in tar padding or gzip framing can leave every member unchanged and
+    pass. Reading the stream to completion forces gzip's CRC32/length check, so
+    envelope corruption is reported rather than silently accepted.
+    """
+    try:
+        with gzip.open(archive, "rb") as stream:
+            while stream.read(1 << 20):
+                pass
+    except (OSError, EOFError, zlib.error):
+        return False
+    return True
+
+
 def verify_artifact_archive(archive: Path) -> bool:
+    if not _gzip_envelope_intact(archive):
+        return False
     try:
         with tarfile.open(archive, mode="r:gz") as tar:
             members = tar.getmembers()

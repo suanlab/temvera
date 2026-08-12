@@ -1,4 +1,6 @@
+import gzip
 import hashlib
+import io
 import json
 from pathlib import Path
 import tarfile
@@ -46,7 +48,47 @@ def test_artifact_archive_is_deterministic_and_detects_tamper(tmp_path) -> None:
     with tarfile.open(first, "r:gz") as archive:
         manifest = json.load(archive.extractfile("ARTIFACT-MANIFEST.json"))
     assert manifest["redistribution_status"] == "permitted_under_apache_2_0"
-    payload = bytearray(first.read_bytes())
-    payload[len(payload) // 2] ^= 1
-    first.write_bytes(payload)
-    assert not verify_artifact_archive(first)
+
+
+def test_artifact_verification_detects_content_tampering(tmp_path) -> None:
+    """Rewriting a member's bytes must fail the manifest comparison."""
+    root = tmp_path / "root"
+    root.mkdir()
+    _fixture(root)
+    archive = tmp_path / "a.tar.gz"
+    create_artifact_archive(root, archive)
+    assert verify_artifact_archive(archive)
+
+    with tarfile.open(archive, "r:gz") as source:
+        members = [(m, source.extractfile(m.name).read()) for m in source.getmembers()]
+    tampered = tmp_path / "tampered.tar.gz"
+    with gzip.GzipFile(filename="", mode="wb", fileobj=tampered.open("wb"), mtime=0) as gz:
+        with tarfile.open(fileobj=gz, mode="w", format=tarfile.PAX_FORMAT) as out:
+            for member, payload in members:
+                if member.name == "README.md":
+                    payload = payload + b"tampered"
+                    member.size = len(payload)
+                out.addfile(member, io.BytesIO(payload))
+    assert not verify_artifact_archive(tampered)
+
+
+def test_artifact_verification_detects_envelope_corruption(tmp_path) -> None:
+    """Any single-byte flip must fail, including gzip framing or tar padding.
+
+    Member checksums alone can miss this, so verification also decodes the gzip
+    stream to force its CRC check.
+    """
+    root = tmp_path / "root"
+    root.mkdir()
+    _fixture(root)
+    archive = tmp_path / "b.tar.gz"
+    create_artifact_archive(root, archive)
+    original = archive.read_bytes()
+    # Sweep several offsets rather than one: the previous single-offset test was
+    # flaky because a flip can land where it does not alter member content.
+    for fraction in (0.25, 0.5, 0.75, 0.9):
+        offset = int(len(original) * fraction)
+        payload = bytearray(original)
+        payload[offset] ^= 1
+        archive.write_bytes(payload)
+        assert not verify_artifact_archive(archive), f"missed corruption at {offset}"

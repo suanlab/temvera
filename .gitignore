@@ -49,3 +49,12 @@ experiments/runs/*
 .DS_Store
 .idea/
 .vscode/
+
+# LaTeX build artifacts (keep sources only)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.pdf
+paper/build.log
