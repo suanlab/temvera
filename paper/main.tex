@@ -11,6 +11,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{microtype}
+\usepackage[round]{natbib}
 \usepackage[margin=1in]{geometry}
 
 \title{Temporal Fields Are Not Temporal Correctness:\\
@@ -33,25 +34,31 @@ memory. We ask whether those features deliver the semantics they name.
 
 We build a deterministic lifecycle generator whose ground truth is computed by
 an oracle cross-checked against an independent SQLite implementation, render the
-same histories into natural language, and replay them into two deployed systems
-under identical budgets with forward-checkpoint transaction-time replay. The
-oracle is exact in all 90 conditions of a ten-seed grid, while non-temporal
-baselines degrade with churn. Mem0 answers transaction-scoped current queries
-well ($0.949$) but collapses on historical valid time ($0.346$), expiry
-($0.062$), and purge ($0.121$); Graphiti preserves temporal edges---evidence
-recall $0.944$---yet its default retrieval ignores them, giving exact $0.223$
-with valid-time and expiry at $0.000$. Enabling Graphiti's own valid-time filter
-buys precision by discarding evidence rather than fixing semantics, and a
-$15\times$ costlier extractor leaves the decisive categories unchanged. A
-residual scan shows purged payloads persist inside both systems'
-retrieval-reachable stores, whereas our substrate's rebuildable projections are
-clean and its only residual sits in an append-only ledger no query path reads.
-The asymmetry reproduces on human-written conversations.
+same histories into natural language, and replay them into two widely-used
+open-source systems---Mem0 \citep{mem0} and Graphiti \citep{graphiti,zep}---under
+forward-checkpoint transaction-time replay.
 
-We do not claim bitemporal modelling, deterministic supersession, or forgetting
-evaluation as novel; all are prior art. The contribution is measurement: a
-reproducible harness and the finding that temporal \emph{fields} are not
-temporal \emph{correctness}.
+On 20 matched conditions the two systems fail in different ways. Mem0
+consolidates to a single current value: it answers transaction-scoped current
+queries well ($0.956$) but historical valid-time poorly ($0.374$), and never
+correctly withholds an expired or purged fact ($0.000$ expiry, $0.111$ purge).
+Graphiti retains temporal edges---evidence recall $0.944$---but does not filter
+on them, so it returns superseded facts alongside current ones. That deficit is
+budget-dependent in a way prior evaluations would miss: at a one-item budget the
+two systems' valid-time accuracy is identical ($0.385$), while at five items
+Graphiti falls to $0.000$ and Mem0 is nearly unchanged. Enabling Graphiti's own
+valid-time filter trades recall for precision without repairing semantics, and a
+stronger extractor leaves the decisive categories unchanged---the ceiling is the
+unreliability of extracted \texttt{invalid\_at} (absent on 26 of 80 superseded
+edges) and the fact that \texttt{created\_at} records wall-clock ingestion, so no
+\texttt{as-of} bound is expressible at all. A residual scan shows purged
+payloads surviving in stores a later query can reach.
+
+We claim no novelty for bitemporal modelling \citep{snodgrass1985,toki},
+deterministic supersession \citep{memstrata}, or forgetting evaluation
+\citep{forgeteval,memoryagentbench}. The contribution is measurement, and the
+finding that a system can expose temporal fields, and even filter on them,
+without answering temporal queries correctly.
 \end{abstract}
 
 \section{Introduction}
@@ -94,24 +101,24 @@ two retracted measurements.
 \section{Related Work}
 
 \paragraph{Temporal modelling is prior art.}
-A graph-native bitemporal memory store keeps valid- and transaction-time
-intervals with point-in-time retrieval, and TOKI defines bitemporal operators
-over a dual-row schema with released code. MemStrata pairs a bi-temporal ledger
+A \citep{graphnativebitemporal} graph-native bitemporal memory store keeps valid- and transaction-time
+intervals with point-in-time retrieval, and TOKI \citep{toki} defines bitemporal operators
+over a dual-row schema with released code. MemStrata \citep{memstrata} pairs a bi-temporal ledger
 with a deterministic (subject, relation, object) supersession rule and reports
 stale-fact rate as its headline metric. We therefore claim none of these.
 
 \paragraph{Forgetting evaluation is prior art.}
-ForgetEval generates seeded lifecycle cases with deterministic substring scoring
-across supersession, decay, amnesia, purge and drift; MemoryAgentBench evaluates
-selective forgetting among four competencies. Springdrift already combines
+ForgetEval \citep{forgeteval} generates seeded lifecycle cases with deterministic substring scoring
+across supersession, decay, amnesia, purge and drift; MemoryAgentBench \citep{memoryagentbench} evaluates
+selective forgetting among four competencies. Springdrift \citep{springdrift} already combines
 append-only memory, auditability and git-backed recovery, which retires any
 ``first git-native auditable memory'' framing.
 
 \paragraph{Deployed systems and security.}
-Mem0, Zep/Graphiti, MemGPT/Letta, HippoRAG~2 and Hindsight form the baseline
-landscape. MINJA shows query-only poisoning; MemLineage proposes lineage-based
-action gating; A-MemGuard and MemIncept are current defence and adaptive-attack
-baselines.
+Mem0 \citep{mem0}, Zep/Graphiti \citep{zep,graphiti}, MemGPT/Letta \citep{memgpt},
+HippoRAG~2 \citep{hipporag2} and Hindsight \citep{hindsight} form the baseline landscape. MINJA \citep{minja} shows query-only poisoning; MemLineage \citep{memlineage}
+proposes lineage-based action gating; A-MemGuard \citep{amemguard} and MemIncept
+\citep{memincept} are current defence and adaptive-attack baselines.
 
 \paragraph{What is left.}
 No prior work we found measures, under one controlled history, both bitemporal
@@ -144,7 +151,7 @@ never policy; indexes are rebuildable from the ledger.
         separating write acceptance from sensitive-action activation.
 \end{itemize}
 
-\section{Experimental Setup}
+\section{Experimental Setup}\label{sec:setup}
 
 \paragraph{Workload.} A seeded generator emits typed histories over
 entity/attribute state machines with configurable reconfirm, expire and purge
@@ -162,9 +169,23 @@ recorded order and every query is answered at the checkpoint matching its
 transaction time. This costs $O(\text{turns})$ per cell and, unlike single-pass
 ingestion, actually tests whether a store can answer as of a past point.
 
-\paragraph{Scoring.} Deterministic: a returned answer must contain the expected
-value(s) and no superseded value. We report exact-state accuracy, evidence
-recall, stale-use rate and abstention.
+\paragraph{Scoring.} Deterministic. Let $E$ be the expected values at the queried
+$(\text{valid time}, \text{transaction time})$ and $S$ the superseded values for
+the same subject/attribute. A response is \emph{exact} iff every $e \in E$ occurs
+in the returned text and no $s \in S$ does; when $E = \emptyset$ (the fact was
+purged or expired) exactness requires that no $s \in S$ occurs, i.e. correct
+abstention. Evidence recall is $|E \cap \text{returned}| / |E|$, and stale-use is
+the fraction of returned values drawn from $S$. \textbf{Because exactness
+quantifies over the whole returned set, it is a function of the retrieval budget
+$k$}; we set $k{=}5$ throughout and report a sweep over $k$ in
+Figure~\ref{fig:budget}. Rates are case-weighted with Wilson 95\% intervals, and
+abstention is computed only over cells that contain abstention cases.
+
+\paragraph{The oracle defines ground truth.} Expected values are computed by the
+oracle, so an oracle "system" scores $1.0$ by construction; it is not an
+empirical result. We report it only as a scale anchor, and its agreement with the
+independent SQLite implementation is a differential-testing check on our own two
+implementations of one specification, not external validation.
 
 \paragraph{Systems.} Internal baselines (append-only, full/recent context, BM25,
 last-write-wins) and the oracle; external systems Mem0 \texttt{0.1.118} and
@@ -176,16 +197,17 @@ canonical config, environment, source hash and per-file checksums.
 
 \subsection{The oracle is exact; non-temporal baselines are not}
 
-Across 3 profiles $\times$ 3 scales $\times$ 3 revision counts $\times$ 10 seeds
-(90 conditions), the oracle held exact/recall/stale at $1/1/0$ in every
-condition (Table~\ref{tab:baselines}). Append-only and full context retrieve the
+Across 27 conditions (3 profiles $\times$ 3 scales $\times$ 3 revision counts)
+with 10 seeds each --- 270 oracle cells --- the oracle held exact/recall/stale at
+$1/1/0$ throughout, confirming the natural-language rendering and the scorer
+round-trip the intended semantics without loss (Table~\ref{tab:baselines}). Append-only and full context retrieve the
 evidence ($0.915$ recall) but cannot choose among versions ($0.272$ exact).
 Under the high-churn profile append-only falls to $0.255$ exact with $0.662$
 stale.
 
 \begin{table}[t]
 \centering
-\caption{Internal baselines over the 90-condition, ten-seed grid (means).}
+\caption{Internal baselines over 27 conditions (3 profiles $\times$ 3 scales $\times$ 3 revision counts) $\times$ 10 seeds = 270 cells per system. These baselines are deliberate strawmen that establish the harness discriminates; they are not competitive systems.}
 \label{tab:baselines}
 \begin{tabular}{lccc}
 \toprule
@@ -203,50 +225,102 @@ Full context        & 0.272 & 0.915 & 0.624 \\
 
 \subsection{Deployed systems: two distinct failure modes}
 
-Under identical histories (Table~\ref{tab:external}), \textbf{Mem0} consolidates
-to a single current value: strong on transaction-scoped current queries
-($0.949$) but weak on historical valid time ($0.346$), with near-total failures
-on expiry ($0.062$) and purge ($0.121$); overall exact $0.607$, degrading with
-scale from ${\approx}0.70$ to ${\approx}0.52$ across 48 cells.
-\textbf{Graphiti} does the opposite: it retains temporal edges and reaches
-$0.944$ evidence recall, but its default retrieval does not filter by validity,
-returning superseded facts alongside current ones---overall exact $0.223$,
-stale-use $0.530$, with valid-time and expiry at $0.000$ across 20 cells with
-narrow five-seed intervals, replicated in an independent revision-only profile.
+Mem0 and Graphiti were run on overlapping but unequal grids (48 and 20 cells).
+All comparisons below are restricted to the \textbf{20 matched cells} (484 cases
+per system) so both columns describe the same histories; we report case-weighted
+(micro) rates with denominators and Wilson 95\% intervals, since several
+categories rest on few cases.
 
 \begin{table}[t]
 \centering
-\caption{Exact accuracy by lifecycle category under identical histories.}
+\caption{Exact accuracy by lifecycle category over 20 matched cells, 484 cases
+per system. Rates are case-weighted with Wilson 95\% intervals. The oracle
+defines ground truth and is $1.0$ by construction (\S\ref{sec:setup}); it is a
+scale anchor, not a competitor.}
 \label{tab:external}
-\begin{tabular}{lccc}
+\begin{tabular}{lcc}
 \toprule
-Category & Mem0 & Graphiti & Oracle \\
+Category & Mem0 & Graphiti \\
 \midrule
-\texttt{transaction\_as\_of} & 0.949 & 0.470 & 1.000 \\
-\texttt{valid\_time}         & 0.346 & 0.000 & 1.000 \\
-\texttt{expiry\_boundary}    & 0.062 & 0.000 & 1.000 \\
-\texttt{purge}               & 0.121 & 0.036 & 1.000 \\
+\texttt{transaction\_as\_of} & 0.956 \scriptsize{(218/228) [.92,.98]} & 0.408 \scriptsize{(93/228) [.35,.47]} \\
+\texttt{valid\_time}         & 0.374 \scriptsize{(73/195) [.31,.44]}  & 0.000 \scriptsize{(0/195) [.00,.02]} \\
+\texttt{expiry\_boundary}    & 0.000 \scriptsize{(0/16) [.00,.19]}    & 0.000 \scriptsize{(0/16) [.00,.19]} \\
+\texttt{purge}               & 0.111 \scriptsize{(5/45) [.05,.24]}    & 0.022 \scriptsize{(1/45) [.00,.12]} \\
 \midrule
-Overall exact                & 0.607 & 0.223 & 1.000 \\
-Evidence recall              & 0.649 & 0.944 & 1.000 \\
-Stale-use                    & 0.379 & 0.530 & 0.000 \\
+Overall exact                & 0.612 \scriptsize{(296/484)}           & 0.194 \scriptsize{(94/484)} \\
+Evidence recall (macro)      & 0.676                                   & 0.944 \\
+Stale-use (macro)            & 0.342                                   & 0.530 \\
+Abstention (cells with cases)& 0.094 \scriptsize{(3/32)}               & 0.000 \scriptsize{(0/32)} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Enabling Graphiti's own valid-time filter raises exact to $0.318$ and cuts
-stale-use to $0.360$, but collapses recall from $0.873$ to $0.318$---precision
-bought by discarding evidence, with valid-time still $0.093$ and expiry $0.067$.
-Two structural limits cap it: \texttt{invalid\_at} is frequently absent on
-superseded edges and occasionally contradictory
-($\texttt{invalid\_at} \le \texttt{valid\_at}$), and
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/categories.pdf}
+\caption{Per-category exact accuracy over the matched cells. Expiry rests on 16
+cases for both systems, so its interval admits accuracies up to $0.19$; the
+valid-time gap is the only category difference that is well separated.}
+\label{fig:categories}
+\end{figure}
+
+\textbf{Mem0 consolidates.} It is strong on transaction-scoped current queries
+($0.956$) and much weaker on historical valid time ($0.374$). Of its non-exact
+cases, 84\% return a stale value with the expected value \emph{absent} --- a
+genuine loss of history rather than a ranking artifact --- and this is stable
+across retrieval budgets (Figure~\ref{fig:budget}).
+
+\textbf{Graphiti retains but does not filter.} It reaches $0.944$ evidence
+recall and places an edge about the queried subject at rank~1 in 99.4\% of
+cases, yet scores $0.194$ exact, because it returns superseded revisions
+alongside the current one. \textbf{This deficit is budget-dependent, and we
+report it as such}: our scorer requires every expected value and no superseded
+value across the returned set, so a system that returns $k$ facts about a
+one-attribute subject is penalised for its own retained history. At $k{=}1$ the
+two systems' valid-time accuracy is \emph{identical} ($0.385$); as $k$ grows
+Graphiti collapses to $0.000$ while Mem0 is nearly flat
+(Figure~\ref{fig:budget}). We therefore do not claim Graphiti cannot represent
+valid time. The defensible claim is narrower and does not depend on $k$: its
+retrieval does not apply the validity metadata it stores, so downstream filtering
+is left to the caller.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/budget.pdf}
+\caption{Exact accuracy versus retrieval budget $k$ on matched cells. The
+all-or-nothing conjunct in our scorer makes Graphiti's measured deficit grow
+with $k$; at $k{=}1$ the two systems are indistinguishable on valid time. Budget
+must be reported for any metric of this shape.}
+\label{fig:budget}
+\end{figure}
+
+\textbf{Does Graphiti's own filter repair it?} Enabling its native valid-time
+\texttt{SearchFilter} raises exact from $0.224$ to $0.318$ and cuts stale-use
+from $0.561$ to $0.360$, but collapses evidence recall from $0.873$ to $0.318$:
+precision is bought by discarding evidence, and valid-time remains $0.093$.
+Two structural limits cap it. First, extracted \texttt{invalid\_at} is absent on
+26 of 80 superseded edges and internally contradictory
+($\texttt{invalid\_at} \le \texttt{valid\_at}$) on 4 of 54 dated invalidations,
+so stale edges satisfy the filter indefinitely. Second,
 \texttt{created\_at}/\texttt{expired\_at} record wall-clock ingestion rather than
-the history's transaction time, so they cannot express an \texttt{as-of} bound at
-all. The ceiling is architectural, not an extraction artifact: swapping
-\texttt{gpt-4o-mini} for \texttt{gpt-4o} leaves valid-time ($0.111 \to 0.111$)
-and expiry ($0.000 \to 0.000$) unchanged.
+the history's transaction time, so no \texttt{as-of} bound is expressible. This
+ceiling is not an extraction-quality artifact: with \texttt{gpt-4o} in place of
+\texttt{gpt-4o-mini} on four matched cells, valid-time is unchanged
+($0.111 \to 0.111$) and expiry stays $0.000$, though \texttt{transaction\_as\_of}
+improves ($0.514 \to 0.625$) and purge degrades ($0.296 \to 0.176$); with two
+seeds these movements are within noise and we draw no conclusion from them.
 
 \subsection{Deletion completeness}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.62\linewidth]{figures/residual.pdf}
+\caption{Where a purged payload survives, split by whether a query path can
+reach the store. Counts are substring occurrences over differently shaped stores
+and are not comparable in magnitude across systems; the reachability split is
+the claim.}
+\label{fig:residual}
+\end{figure}
 
 After the same ingested purge, our substrate's rebuildable projections---
 Markdown, lexical, vector, graph---contain \textbf{zero} occurrences of the
@@ -266,31 +340,35 @@ hashing channel scores $0.0$, quantifying that channel's alias-table-only
 design. Calibrated fusion gave no held-out gain over fixed reciprocal rank
 fusion, and state-level decay did not dominate rank-level decay.
 
-\subsection{External validity}
+\subsection{External validity}\label{sec:external}
 
-On human-written conversations the same asymmetry appears. Across all six
-question types (60 instances, 10 each), mean gold-token recall was
-knowledge-update $0.724$, single-session-user $0.622$, preference $0.314$,
-multi-session $0.287$, temporal-reasoning $0.221$, single-session-assistant
-$0.151$, replicating a smaller run that gave $0.809$ versus $0.188$ for the two
-extreme types. Retrieval quality tracks how much temporal or cross-session
-reasoning a question demands rather than recency alone. Scoring is deterministic
-substring/token presence over retrieved memories and is deliberately \emph{not}
-the benchmark's LLM-judged QA metric.
+On human-written LongMemEval conversations \citep{longmemeval}, retrieval
+quality tracks how much temporal or cross-session reasoning a question demands:
+mean gold-token recall was knowledge-update $0.724$, single-session-user
+$0.622$, preference $0.314$, multi-session $0.287$, temporal-reasoning $0.221$,
+single-session-assistant $0.151$ (10 instances per type).
 
-Distractor pressure lowers the absolute numbers without removing the pattern.
-On the harder split, where each instance carries 42--52 sessions of which most
-are distractors, knowledge-update recall falls $0.724 \to 0.619$ and
-temporal-reasoning $0.221 \to 0.167$, preserving the ratio between them
-($3.3\times \to 3.7\times$). Only three instances per type were run, at roughly
-35--40 minutes each, so we rely on the preserved ordering rather than the point
-estimates.
+We flag three limits that keep this a pilot rather than a result. First, scoring
+is deterministic substring/token presence over retrieved memories and is
+deliberately \emph{not} the benchmark's LLM-judged QA metric, so these numbers
+are incomparable to any published figure. Second, the ranking is sensitive to
+protocol: LongMemEval's official retrieval scoring excludes no-evidence
+abstention instances, and excluding them here reorders the top two types
+(single-session-user $0.810$ above knowledge-update $0.794$). Third, gold answers
+range from 1 to 46 scoreable tokens across types, and several temporal-reasoning
+golds are computed quantities carrying rubric text, which caps attainable recall
+on those instances --- so the cross-type gap is partly a property of the answer
+format, not only of retrieval difficulty. A distractor-laden run on the harder
+split was attempted but is \textbf{retracted}: it compared three instances
+against a ten-instance mean, and on matched instances the effect disappears
+(temporal-reasoning in fact rises, $0.125 \to 0.167$).
 
-These numbers are conservative for Mem0: during ingestion it silently dropped 15
-memory \texttt{UPDATE}/\texttt{DELETE} actions across these 60 conversations, a
-defect we traced to an unvalidated id lookup swallowed by a broad exception
-handler. Dropped updates leave superseded values in place, so the true system
-would score no worse than reported.
+Separately, Mem0 silently dropped memory \texttt{UPDATE}/\texttt{DELETE} actions
+during ingestion --- 15 across these 60 conversations, and 23 across 6
+conversations of the longer split --- which we traced to an unvalidated
+positional-id lookup swallowed by a broad exception handler while
+\texttt{add()} reports success. Dropped updates leave superseded values in
+place, so Mem0's scores here are conservative.
 
 \subsection{Provenance security}
 
@@ -335,5 +413,8 @@ Runs are sealed with canonical config, environment, source-tree hash and
 per-file checksums, and verified by an aggregate checker. The frozen synthetic
 fixture is byte-reproducible and split-disjoint. Tests and lint pass on CPython
 3.11. Third-party datasets are used locally and never redistributed.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
 
 \end{document}
