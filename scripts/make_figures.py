@@ -27,8 +27,10 @@ from temvera.reanalysis import (  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 RUNS = ROOT / "experiments" / "runs"
 OUT = ROOT / "paper" / "figures"
-MEM0 = RUNS / "external-mem0-grid-v1"
-GRAPHITI = RUNS / "external-graphiti-scale-v1"
+# Latest runs: matched grid by design, isolated Mem0 database, and Graphiti
+# under the hybrid retrieval it actually ships.
+MEM0 = RUNS / "external-mem0-grid-v2"
+GRAPHITI = RUNS / "external-graphiti-hybrid-v1"
 CATEGORIES = ("transaction_as_of", "valid_time", "expiry_boundary", "purge")
 LABELS = {
     "transaction_as_of": "transaction\nas-of",

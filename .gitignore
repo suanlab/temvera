@@ -39,6 +39,8 @@ experiments/runs/*
 !experiments/runs/longmemeval-e7-v1/
 !experiments/runs/longmemeval-s-v1/
 !experiments/runs/purge-residual-v3-api/
+!experiments/runs/external-mem0-grid-v2/
+!experiments/runs/external-graphiti-hybrid-v1/
 !experiments/runs/purge-residual-v3-nl/
 
 .env
