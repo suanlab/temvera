@@ -1,7 +1,13 @@
-% Temvera - ICLR 2027 submission draft.
-% Build: latexmk -pdf main.tex   (falls back to article class if iclr2027 style
-% is unavailable; drop iclr2027_conference.sty next to this file when released).
-\documentclass{article}
+% ARR (ACL Rolling Review) submission draft.
+%
+% TO SUBMIT: download acl.sty + acl_natbib.bst from
+% https://github.com/acl-org/acl-style-files and replace the two lines below with
+%     \documentclass[11pt]{article}
+%     \usepackage[review]{acl}
+% then set \bibliographystyle{acl_natbib}. Everything else is already ARR-compliant:
+% anonymous, unnumbered Limitations and Ethics sections, references excluded from
+% the page limit. The twocolumn stand-in below approximates ACL page counts.
+\documentclass[11pt,twocolumn]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -348,7 +354,7 @@ verbatim was penalised by construction. We now run two conditions with a
 non-restating instruction (Figure~\ref{fig:residual}).
 
 Under a \textbf{natural-language instruction}, residual occurrences of the
-purged value are Temvera 3 (audit ledger only), Mem0 15 (exposed memories 3,
+purged value are our substrate 3 (audit ledger only), Mem0 15 (exposed memories 3,
 vector store 3, history 9), Graphiti 18 (edges 3, entity nodes 9, episodes 6).
 Under each system's \textbf{native deletion API} (\texttt{Memory.delete},
 \texttt{remove\_episode}) the picture changes completely: Mem0 falls to 12 with
@@ -419,7 +425,7 @@ activating $0/4$, with benign utility preserved---but it fails once a trusted
 signer is compromised: provenance proves origin, not signer honesty. This is a
 mechanism study; GPU-bound defences were out of scope.
 
-\section{Negative Results, Corrections, and Limitations}
+\section{Negative Results and Corrections}
 
 We preserve results that did not go our way: state-level decay did not beat
 rank-level decay, fusion calibration gave no held-out gain, signed provenance
@@ -435,26 +441,55 @@ Mem0 at zero residual because it read Graphiti's raw database but only Mem0's
 API-exposed memories; the corrected scan adds Mem0's vector store and history
 database with a per-run database path.
 
-\paragraph{Limitations.} Histories are synthetic with hand-specified operation
-profiles; contradiction density is approximated by operation mix and revision
-count. Two external systems, one backbone, and LLM extraction that is not
-bit-reproducible. The literature review is single-reviewer. Purge claims cover
-declared stores and tested failure points, not backups, OS caches or
-provider-side copies.
-
-\paragraph{Future work.} Whether provenance-linked diffs actually help human
-auditors is the largest untested claim. A preregisterable protocol, a seeded
-planted-fault generator, a crossover assignment and a deterministic scorer are
-included in the artifact, but no participants were recruited, so we make no
-human-effectiveness claim. Running it requires ethics review or a documented
-exemption, a pilot for variance, and an a priori power analysis.
-
 \section{Reproducibility}
 
 Runs are sealed with canonical config, environment, source-tree hash and
 per-file checksums, and verified by an aggregate checker. The frozen synthetic
 fixture is byte-reproducible and split-disjoint. Tests and lint pass on CPython
 3.11. Third-party datasets are used locally and never redistributed.
+
+\section*{Limitations}
+
+Histories are synthetic with hand-specified operation
+profiles; contradiction density is approximated by operation mix and revision
+count. Two external systems, one backbone, and LLM extraction that is not
+bit-reproducible. The literature review is single-reviewer. Purge claims cover
+declared stores and tested failure points, not backups, OS caches or
+provider-side copies.
+
+Three further limits bound every number above. Histories are synthetic with
+hand-specified operation profiles, so contradiction density is approximated by
+operation mix and revision count rather than sampled from real usage. All runs
+use a single backbone (\texttt{gpt-4o-mini}) with LLM extraction that is not
+bit-reproducible; our one same-protocol replication moved a small-denominator
+category by 0.125, which is why we draw no conclusion from expiry. And the
+deletion result rests on a single seeded history, so it establishes a direction,
+not a rate.
+
+\section*{Ethics Statement}
+
+This work evaluates three open-source memory libraries on fully synthetic
+histories and on a public benchmark, and reports defects we found in them. We
+report an implementation defect in one system that causes silent loss of memory
+updates; because it biases that system's measured scores downward, our reported
+numbers are conservative rather than unfairly harsh, and we state this in the
+text. No user data was collected. The public benchmark is used locally under its
+own terms and is not redistributed; its licence status is unresolved, which we
+disclose rather than assume. No human subjects participated: a protocol for a
+human audit study is released with the artifact but was not run, and we make no
+human-effectiveness claim. Finally, the deletion result has a user-facing
+consequence we want stated plainly --- an assistant asked in conversation to
+forget something may not do so --- which is a privacy risk for deployments that
+treat conversational deletion requests as effective.
+
+\section*{Future Work}
+
+Whether provenance-linked diffs actually help human
+auditors is the largest untested claim. A preregisterable protocol, a seeded
+planted-fault generator, a crossover assignment and a deterministic scorer are
+included in the artifact, but no participants were recruited, so we make no
+human-effectiveness claim. Running it requires ethics review or a documented
+exemption, a pilot for variance, and an a priori power analysis.
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
