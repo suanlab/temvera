@@ -1,0 +1,812 @@
+{
+  "backbone": {
+    "embed_model": "text-embedding-3-small",
+    "langmem_version": "0.0.30",
+    "llm_model": "gpt-4o-mini",
+    "naturalized": true,
+    "replay": "transaction_checkpoint",
+    "store": "langgraph InMemoryStore (no server)",
+    "system": "langmem",
+    "worker_errors": 0
+  },
+  "naturalized": true,
+  "replay": "transaction_checkpoint",
+  "rows": [
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 0.8,
+        "valid_time": 0.3333333333333333
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 0.8181818181818182,
+      "exact_state_accuracy": 0.5454545454545454,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.35714285714285715,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 0.5
+      },
+      "cases": 10,
+      "entities": 3,
+      "evidence_recall": 0.7,
+      "exact_state_accuracy": 0.7,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 13,
+      "stale_use_rate": 0.3,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 10,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 13,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 0.8,
+        "valid_time": 0.5
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 0.6363636363636364,
+      "exact_state_accuracy": 0.6363636363636364,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.3,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 0.3333333333333333
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 0.8181818181818182,
+      "exact_state_accuracy": 0.6363636363636364,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 23,
+      "stale_use_rate": 0.3076923076923077,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 23,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 0.4,
+        "valid_time": 0.5
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 0.5454545454545454,
+      "exact_state_accuracy": 0.45454545454545453,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.4,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 11,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 0.9411764705882353,
+        "valid_time": 0.3333333333333333
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 0.6571428571428571,
+      "exact_state_accuracy": 0.6285714285714286,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 7,
+      "stale_use_rate": 0.3611111111111111,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 0.3333333333333333
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 0.6571428571428571,
+      "exact_state_accuracy": 0.6571428571428571,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 13,
+      "stale_use_rate": 0.34285714285714286,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 13,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 0.8235294117647058,
+        "valid_time": 0.2777777777777778
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 0.6,
+      "exact_state_accuracy": 0.5428571428571428,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 17,
+      "stale_use_rate": 0.4,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 0.2777777777777778
+      },
+      "cases": 34,
+      "entities": 6,
+      "evidence_recall": 0.6764705882352942,
+      "exact_state_accuracy": 0.6176470588235294,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 23,
+      "stale_use_rate": 0.3783783783783784,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 34,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 23,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 0.7647058823529411,
+        "valid_time": 0.2222222222222222
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 0.6857142857142857,
+      "exact_state_accuracy": 0.4857142857142857,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 42,
+      "stale_use_rate": 0.4418604651162791,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 35,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "revision_only",
+      "revisions": 3,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 2,
+      "by_category_exact": {
+        "purge": 0.5,
+        "transaction_as_of": 1.0,
+        "valid_time": 0.5
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 0.75,
+      "exact_state_accuracy": 0.75,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.125,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 2,
+      "by_category_exact": {
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "purge": 0.5,
+        "transaction_as_of": 0.8333333333333334,
+        "valid_time": 0.25
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 0.5833333333333334,
+      "exact_state_accuracy": 0.5833333333333334,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 13,
+      "stale_use_rate": 0.14285714285714285,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 13,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 0.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 0.5
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 0.6923076923076923,
+      "exact_state_accuracy": 0.6923076923076923,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.3076923076923077,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 0.8333333333333334,
+        "valid_time": 0.5
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 0.6666666666666666,
+      "exact_state_accuracy": 0.6666666666666666,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 23,
+      "stale_use_rate": 0.2727272727272727,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 0,
+      "by_category_exact": {
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 23,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 0.0,
+        "transaction_as_of": 0.6666666666666666,
+        "valid_time": 0.5
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 0.5384615384615384,
+      "exact_state_accuracy": 0.5384615384615384,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.36363636363636365,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.0,
+      "abstention_cases": 5,
+      "by_category_exact": {
+        "expiry_boundary": 0.0,
+        "purge": 0.16666666666666666,
+        "transaction_as_of": 0.8333333333333334,
+        "valid_time": 0.3333333333333333
+      },
+      "cases": 39,
+      "entities": 6,
+      "evidence_recall": 0.5641025641025641,
+      "exact_state_accuracy": 0.5128205128205128,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 7,
+      "stale_use_rate": 0.45,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 5,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 39,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.6666666666666666,
+      "abstention_cases": 3,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 0.3333333333333333,
+        "transaction_as_of": 0.8333333333333334,
+        "valid_time": 0.2
+      },
+      "cases": 38,
+      "entities": 6,
+      "evidence_recall": 0.6578947368421053,
+      "exact_state_accuracy": 0.5526315789473685,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 13,
+      "stale_use_rate": 0.3783783783783784,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 3,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 38,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 13,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.2,
+      "abstention_cases": 5,
+      "by_category_exact": {
+        "expiry_boundary": 0.0,
+        "purge": 0.1111111111111111,
+        "transaction_as_of": 1.0,
+        "valid_time": 0.3333333333333333
+      },
+      "cases": 38,
+      "entities": 6,
+      "evidence_recall": 0.5789473684210527,
+      "exact_state_accuracy": 0.5789473684210527,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 17,
+      "stale_use_rate": 0.4,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 5,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 38,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.25,
+      "abstention_cases": 8,
+      "by_category_exact": {
+        "expiry_boundary": 0.5,
+        "purge": 0.0,
+        "transaction_as_of": 0.8888888888888888,
+        "valid_time": 0.3333333333333333
+      },
+      "cases": 40,
+      "entities": 6,
+      "evidence_recall": 0.55,
+      "exact_state_accuracy": 0.5,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 23,
+      "stale_use_rate": 0.4594594594594595,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 8,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 40,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 23,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.5,
+      "abstention_cases": 6,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 0.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 0.1111111111111111
+      },
+      "cases": 39,
+      "entities": 6,
+      "evidence_recall": 0.5641025641025641,
+      "exact_state_accuracy": 0.5641025641025641,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 42,
+      "stale_use_rate": 0.36666666666666664,
+      "system": "langmem"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 6,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 39,
+      "entities": 6,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    }
+  ],
+  "summary": {
+    "by_category_exact": {
+      "langmem": {
+        "expiry_boundary": 0.35714285714285715,
+        "purge": 0.23015873015873017,
+        "transaction_as_of": 0.8709150326797387,
+        "valid_time": 0.35861111111111105
+      },
+      "oracle": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      }
+    },
+    "by_condition": {
+      "profile=mixed_lifecycle,entities=3,revisions=2": {
+        "langmem": {
+          "ci95_high": 0.7102564102564102,
+          "ci95_low": 0.582051282051282,
+          "exact_mean": 0.6461538461538461,
+          "n_seeds": 5
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 5
+        }
+      },
+      "profile=mixed_lifecycle,entities=6,revisions=3": {
+        "langmem": {
+          "ci95_high": 0.5677462887989204,
+          "ci95_low": 0.5130904183535763,
+          "exact_mean": 0.5417004048582996,
+          "n_seeds": 5
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 5
+        }
+      },
+      "profile=revision_only,entities=3,revisions=2": {
+        "langmem": {
+          "ci95_high": 0.6618181818181817,
+          "ci95_low": 0.5218181818181817,
+          "exact_mean": 0.5945454545454545,
+          "n_seeds": 5
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 5
+        }
+      },
+      "profile=revision_only,entities=6,revisions=3": {
+        "langmem": {
+          "ci95_high": 0.6378151260504201,
+          "ci95_low": 0.5257142857142857,
+          "exact_mean": 0.5863865546218487,
+          "n_seeds": 5
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 5
+        }
+      }
+    },
+    "overall": {
+      "langmem": {
+        "abstention_accuracy": 0.7308333333333332,
+        "evidence_recall": 0.6470234435327316,
+        "exact_state_accuracy": 0.5921965650448622,
+        "stale_use_rate": 0.3427729926857833
+      },
+      "oracle": {
+        "abstention_accuracy": 1.0,
+        "evidence_recall": 1.0,
+        "exact_state_accuracy": 1.0,
+        "stale_use_rate": 0.0
+      }
+    }
+  }
+}

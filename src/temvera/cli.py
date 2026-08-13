@@ -76,6 +76,9 @@ def main() -> None:
     external_graphiti = subparsers.add_parser("external-graphiti")
     external_graphiti.add_argument("config")
     external_graphiti.add_argument("output")
+    external_langmem = subparsers.add_parser("external-langmem")
+    external_langmem.add_argument("config")
+    external_langmem.add_argument("output")
     longmemeval = subparsers.add_parser("longmemeval-eval")
     longmemeval.add_argument("config")
     longmemeval.add_argument("output")
@@ -405,6 +408,18 @@ def main() -> None:
         result = run_graphiti_comparison(config)
         _write_external_run(output, config, result, "external-graphiti", arguments)
         print(json.dumps(result, sort_keys=True))
+    elif arguments.command == "external-langmem":
+        from pathlib import Path
+
+        from .external_experiment import run_langmem_comparison
+
+        config = json.loads(Path(arguments.config).read_text(encoding="utf-8"))
+        output = Path(arguments.output)
+        if output.exists():
+            raise SystemExit(f"refusing to overwrite: {output}")
+        result = run_langmem_comparison(config)
+        _write_external_run(output, config, result, "external-langmem", arguments)
+        print(json.dumps({k: v for k, v in result.items() if k != "rows"}, sort_keys=True))
     elif arguments.command == "longmemeval-eval":
         from pathlib import Path
 

@@ -34,11 +34,12 @@ memory. We ask whether those features deliver the semantics they name.
 
 We build a deterministic lifecycle generator whose ground truth is computed by
 an oracle cross-checked against an independent SQLite implementation, render the
-same histories into natural language, and replay them into two widely-used
-open-source systems---Mem0 \citep{mem0} and Graphiti \citep{graphiti,zep}---under
-forward-checkpoint transaction-time replay.
+same histories into natural language, and replay them into three widely-used
+open-source systems---Mem0 \citep{mem0}, LangMem, and Graphiti
+\citep{graphiti,zep}---under forward-checkpoint transaction-time replay.
 
-On 20 matched conditions the two systems fail in different ways. Mem0
+On 20 matched conditions two designs emerge. Mem0 and LangMem, built
+independently, share one failure; Graphiti has the opposite one. Mem0
 consolidates to a single current value: it answers transaction-scoped current
 queries well ($0.956$) but historical valid-time poorly ($0.374$), and never
 correctly withholds an expired or purged fact ($0.000$ expiry, $0.111$ purge).
@@ -93,8 +94,9 @@ agents actually perform}. We answer it by measurement:
 \end{enumerate}
 
 \paragraph{Contributions.}
-(i) An identical-history comparison of two deployed memory systems showing two
-distinct, previously unquantified failure modes.
+(i) An identical-history comparison of three deployed memory systems showing two
+distinct, previously unquantified failure modes, with the taxonomy confirmed on a
+system held out from its construction.
 (ii) A cross-store deletion-completeness measurement, which the closest prior
 systems describe as a feature but do not measure.
 (iii) A reproducible, sealed harness, including preserved negative results and
@@ -225,9 +227,9 @@ Full context        & 0.272 & 0.915 & 0.624 \\
 \end{tabular}
 \end{table}
 
-\subsection{Deployed systems: two distinct failure modes}
+\subsection{Deployed systems: two failure modes, three systems}
 
-Both systems run the \textbf{same 20-cell grid by design} (5 seeds $\times$ 2
+All three systems run the \textbf{same 20-cell grid by design} (5 seeds $\times$ 2
 scales $\times$ 2 profiles, 484 cases per system), with Graphiti under the hybrid
 retrieval it actually ships and Mem0 with a per-run isolated history database; we report case-weighted
 (micro) rates with denominators and Wilson 95\% intervals, since several
@@ -236,23 +238,25 @@ categories rest on few cases.
 \begin{table}[t]
 \centering
 \caption{Exact accuracy by lifecycle category over the matched 20-cell grid, 484
-cases per system. Rates are case-weighted; Wilson 95\% intervals are shown where
+cases per system. LangMem is included because a two-system taxonomy cannot be
+evidence for itself. Rates are case-weighted; Wilson 95\% intervals are shown where
 the denominator is small. The oracle
 defines ground truth and is $1.0$ by construction (\S\ref{sec:setup}); it is a
 scale anchor, not a competitor.}
 \label{tab:external}
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-Category & Mem0 & Graphiti \\
+Category & Mem0 & LangMem & Graphiti \\
 \midrule
-\texttt{transaction\_as\_of} & 0.952 \scriptsize{(217/228)} & 0.412 \scriptsize{(94/228)} \\
-\texttt{valid\_time}         & 0.364 \scriptsize{(71/195)}  & 0.000 \scriptsize{(0/195) [.00,.02]} \\
-\texttt{expiry\_boundary}    & 0.125 \scriptsize{(2/16) [.03,.36]} & 0.000 \scriptsize{(0/16) [.00,.19]} \\
-\texttt{purge}               & 0.044 \scriptsize{(2/45)}    & 0.022 \scriptsize{(1/45)} \\
+\texttt{transaction\_as\_of} & 0.952 & 0.890 & 0.412 \\
+\texttt{valid\_time}         & 0.364 & 0.323 & 0.000 \scriptsize{[.00,.02]} \\
+\texttt{expiry\_boundary}    & 0.125 \scriptsize{(2/16)} & 0.438 \scriptsize{(7/16)} & 0.000 \scriptsize{(0/16)} \\
+\texttt{purge}               & 0.044 & 0.133 & 0.022 \\
 \midrule
-Overall exact                & 0.603 \scriptsize{(292/484)} & 0.196 \scriptsize{(95/484)} \\
-Evidence recall (macro)      & 0.666                        & 0.937 \\
-Stale-use (macro)            & 0.356                        & 0.528 \\
+Overall exact                & 0.603 & 0.576 & 0.196 \\
+Evidence recall (macro)      & 0.666 & 0.647 & 0.937 \\
+Stale-use (macro)            & 0.356 & 0.343 & 0.528 \\
+Exact at $k{=}1$             & 0.630 & 0.595 & 0.442 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -265,6 +269,16 @@ cases for both systems, so its interval admits accuracies up to $0.19$; the
 valid-time gap is the only category difference that is well separated.}
 \label{fig:categories}
 \end{figure}
+
+\textbf{Two systems consolidate; one retains without filtering.} LangMem was
+added precisely because a typology drawn from the same two systems it describes
+is not evidence. It lands in the Mem0 class on every axis --- exact $0.576$,
+recall $0.647$, stale-use $0.343$, high \texttt{transaction\_as\_of} ($0.890$)
+against low \texttt{valid\_time} ($0.323$), and budget-stability ($0.595 \to
+0.576$) --- despite an independent implementation and no database server. It is
+not uniformly weaker: it handles expiry better than either ($0.438$ against
+$0.125$ and $0.000$), so the consolidation signature is specific rather than
+general weakness.
 
 \textbf{Mem0 consolidates.} It is strong on transaction-scoped current queries
 ($0.956$) and much weaker on historical valid time ($0.374$). Of its non-exact

@@ -31,6 +31,7 @@ OUT = ROOT / "paper" / "figures"
 # under the hybrid retrieval it actually ships.
 MEM0 = RUNS / "external-mem0-grid-v2"
 GRAPHITI = RUNS / "external-graphiti-hybrid-v1"
+LANGMEM = RUNS / "external-langmem-v1"
 CATEGORIES = ("transaction_as_of", "valid_time", "expiry_boundary", "purge")
 LABELS = {
     "transaction_as_of": "transaction\nas-of",
@@ -41,25 +42,26 @@ LABELS = {
 
 
 def _cells():
-    return matched_cells(load_run(MEM0), load_run(GRAPHITI))
+    return matched_cells(load_run(MEM0), load_run(GRAPHITI), load_run(LANGMEM))
 
 
 def figure_categories(cells) -> None:
     """Per-category exact accuracy with Wilson intervals, matched cells."""
-    mem0 = category_counts(load_transcript(MEM0), cells=cells)
-    graphiti = category_counts(load_transcript(GRAPHITI), cells=cells)
+    series = (
+        ("Mem0", category_counts(load_transcript(MEM0), cells=cells), "#3b6ea5"),
+        ("LangMem", category_counts(load_transcript(LANGMEM), cells=cells), "#4f8f5b"),
+        ("Graphiti", category_counts(load_transcript(GRAPHITI), cells=cells), "#c2703d"),
+    )
     fig, ax = plt.subplots(figsize=(7.2, 3.4))
-    width = 0.38
-    for offset, (name, data, colour) in enumerate(
-        (("Mem0", mem0, "#3b6ea5"), ("Graphiti", graphiti, "#c2703d"))
-    ):
+    width = 0.27
+    for offset, (name, data, colour) in enumerate(series):
         xs, ys, lo, hi = [], [], [], []
         for index, category in enumerate(CATEGORIES):
             p = data.get(category)
             if p is None:
                 continue
             low, high = p.wilson()
-            xs.append(index + (offset - 0.5) * width)
+            xs.append(index + (offset - 1) * width)
             ys.append(p.rate)
             lo.append(p.rate - low)
             hi.append(high - p.rate)
@@ -86,6 +88,7 @@ def figure_budget(cells) -> None:
     budgets = (1, 2, 3, 5)
     mem0 = k_sweep(load_transcript(MEM0), budgets=budgets, cells=cells)
     graphiti = k_sweep(load_transcript(GRAPHITI), budgets=budgets, cells=cells)
+    langmem = k_sweep(load_transcript(LANGMEM), budgets=budgets, cells=cells)
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), sharey=True)
     for ax, metric, title in (
         (axes[0], "overall", "overall exact"),
@@ -93,6 +96,7 @@ def figure_budget(cells) -> None:
     ):
         for name, data, colour, marker in (
             ("Mem0", mem0, "#3b6ea5", "o"),
+            ("LangMem", langmem, "#4f8f5b", "^"),
             ("Graphiti", graphiti, "#c2703d", "s"),
         ):
             ys = []
@@ -111,7 +115,7 @@ def figure_budget(cells) -> None:
     axes[0].set_ylabel("exact accuracy")
     axes[0].legend(frameon=False)
     fig.suptitle(
-        "Scoring is budget-dependent: Graphiti's deficit appears only as $k$ grows",
+        "Consolidating stores are budget-stable; Graphiti's deficit appears only as $k$ grows",
         fontsize=10,
     )
     fig.tight_layout()

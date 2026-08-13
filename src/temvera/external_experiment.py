@@ -402,6 +402,40 @@ def run_purge_residual(config: dict[str, Any], workdir: Any) -> dict[str, Any]:
     }
 
 
+def run_langmem_comparison(config: dict[str, Any]) -> dict[str, Any]:
+    """LangMem on the same grid, via the isolated-interpreter worker."""
+    from .langmem_adapter import LangMemSystem
+
+    model = config.get("model", "gpt-4o-mini")
+    embed_model = config.get("embed_model", "text-embedding-3-small")
+    search_limit = int(config.get("search_limit", 5))
+    made: list[LangMemSystem] = []
+
+    def factory(label: str) -> MemorySystem:
+        system = LangMemSystem(
+            model=model, embed_model=embed_model, search_limit=search_limit
+        )
+        made.append(system)
+        return system
+
+    try:
+        result = run_external_comparison(config, factory, system_name="langmem")
+    finally:
+        for system in made:
+            system.close()
+    result["backbone"] = {
+        "system": "langmem",
+        "langmem_version": made[0].version if made else "unknown",
+        "store": "langgraph InMemoryStore (no server)",
+        "llm_model": model,
+        "embed_model": embed_model,
+        "replay": result["replay"],
+        "naturalized": result["naturalized"],
+        "worker_errors": sum(s.worker_errors for s in made),
+    }
+    return result
+
+
 def projected_ingests(config: dict[str, Any]) -> dict[str, int]:
     """Offline projection of ingest/query call volume (no API calls)."""
     naturalize = bool(config.get("naturalize", True))
