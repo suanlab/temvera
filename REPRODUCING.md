@@ -29,6 +29,25 @@ source-tree hash, and per-file checksums. Compare regenerated metrics rather
 than expecting byte-identical `environment.json`, which records creation time
 and platform.
 
+## Verifying the paper's numbers without credentials
+
+Every figure the paper reports is an aggregation over sealed per-case
+transcripts, so the arithmetic can be checked with no API key, no Neo4j, and no
+dataset download:
+
+```bash
+python scripts/recompute_paper_numbers.py --check
+```
+
+This verifies each cited run's seal, then recomputes the per-category table with
+denominators and Wilson intervals, the retrieval-budget sweep, and the deletion
+residual for both conditions. Regenerating the runs is a separate, credentialed
+step described below; the two are deliberately decoupled so a reviewer can
+confirm what we computed before deciding whether to re-run generation.
+
+Figures are regenerated from the same sealed runs with
+`python scripts/make_figures.py`.
+
 ## External-system experiments (require credentials)
 
 Sections of the paper that compare deployed systems need resources the local
@@ -53,9 +72,6 @@ release. Its code is MIT, but the benchmark-data licence is unresolved
 (evidence ledger E-001, E-036), so confirm your own terms of use. Our scorer is
 deterministic substring/token presence over retrieved memories and is **not**
 the benchmark's LLM-judged QA metric; the two must not be compared.
-
-Regenerate the paper figures from sealed runs with
-`python scripts/make_figures.py`.
 
 The ForgetEval compatibility run additionally requires a clone of
 `deeplethe/lethe` at commit

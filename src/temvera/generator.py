@@ -8,6 +8,14 @@ from datetime import datetime, timedelta, timezone
 from .model import Authority, MemoryEvent, Operation
 
 
+# Attribute names the generator can emit. The default of one attribute keeps
+# every previously sealed run byte-identical; asking for more is opt-in. A
+# single attribute per entity makes semantic retrieval degenerate — every stored
+# fact about a subject is near-identical text — so multi-attribute histories are
+# needed before any retrieval claim generalises.
+ATTRIBUTES = ("location", "employer", "device", "diet", "role")
+
+
 def generate_histories(
     *,
     seed: int,
@@ -17,9 +25,12 @@ def generate_histories(
     reconfirm_probability: float = 0.0,
     expire_probability: float = 0.0,
     purge_probability: float = 0.0,
+    attributes: int = 1,
 ) -> tuple[MemoryEvent, ...]:
     if entities < 1 or revisions < 1:
         raise ValueError("entities and revisions must be positive")
+    if not 1 <= attributes <= len(ATTRIBUTES):
+        raise ValueError(f"attributes must be between 1 and {len(ATTRIBUTES)}")
     if namespace and not all(
         character.isalnum() or character == "-" for character in namespace
     ):
@@ -39,10 +50,15 @@ def generate_histories(
     events: list[MemoryEvent] = []
     sequence = 0
     for entity_number in range(entities):
+      for attribute_index in range(attributes):
+        attribute = ATTRIBUTES[attribute_index]
+        # Single-attribute histories keep their original identifiers so earlier
+        # sealed runs remain byte-reproducible.
+        suffix = "" if attributes == 1 else f"-{attribute_index:02d}"
         previous: str | None = None
         for revision in range(revisions):
             sequence += 1
-            belief_id = f"{prefix}b-{entity_number:03d}-{revision:03d}"
+            belief_id = f"{prefix}b-{entity_number:03d}-{revision:03d}{suffix}"
             valid_from = start + timedelta(days=revision * 30 + rng.randint(0, 5))
             recorded_at = valid_from + timedelta(days=rng.randint(0, 3))
             if previous is not None:
@@ -62,8 +78,10 @@ def generate_histories(
                     operation=Operation.INGEST,
                     belief_id=belief_id,
                     subject=f"{prefix}entity-{entity_number:03d}",
-                    attribute="location",
-                    value=f"place-{rng.randrange(100):02d}",
+                    attribute=attribute,
+                    value=f"{attribute[:5]}-{rng.randrange(100):02d}"
+                    if attributes > 1
+                    else f"place-{rng.randrange(100):02d}",
                     valid_from=valid_from,
                     recorded_at=recorded_at,
                     sources=(f"{prefix}source-{sequence:05d}",),

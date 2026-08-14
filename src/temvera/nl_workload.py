@@ -45,6 +45,48 @@ _CITIES = (
 )
 
 
+# Per-attribute value pools. A single pool (cities) makes every stored fact
+# about a subject near-identical text, so cosine retrieval cannot separate
+# revisions and the comparison degenerates. Drawing each attribute from a
+# different semantic class removes that artifact.
+_VALUE_POOLS: dict[str, tuple[str, ...]] = {
+    "home city": _CITIES,
+    "employer": (
+        "Aurora Labs", "Bellwether", "Cobalt Foods", "Dunlin Press", "Everly Bank",
+        "Fernwood Clinic", "Granite Freight", "Harlow Studio", "Ionic Systems",
+        "Juniper Mills", "Kestrel Air", "Lumen Retail", "Marrow Foundry",
+        "Nettle Farms", "Orchid Media", "Pinehall Legal", "Quarry Analytics",
+        "Ridgeway Rail", "Sablefish Co", "Thistle Energy",
+    ),
+    "phone model": (
+        "Pixel 7a", "Galaxy S22", "iPhone 13", "Xperia 5", "Nord 3", "Reno 8",
+        "Moto G84", "Zenfone 9", "Find X5", "Magic 5", "Edge 40", "Nova 11",
+        "Poco F5", "Redmi 12", "Velvet 2", "Aquos R7", "Rog 7", "Mate 50",
+        "Vivo V29", "Honor 90",
+    ),
+    "dietary preference": (
+        "pescatarian", "vegan", "low-sodium", "gluten-free", "keto",
+        "vegetarian", "halal", "kosher", "dairy-free", "nut-free",
+        "high-protein", "low-FODMAP", "paleo", "raw-food", "flexitarian",
+        "sugar-free", "soy-free", "shellfish-free", "low-carb", "whole-food",
+    ),
+    "job title": (
+        "radiographer", "site foreman", "sommelier", "actuary", "arborist",
+        "cartographer", "luthier", "paralegal", "audiologist", "millwright",
+        "epidemiologist", "sound editor", "glazier", "hydrologist", "chandler",
+        "typesetter", "farrier", "conservator", "ergonomist", "cooper",
+    ),
+}
+# Synthetic attribute name -> natural attribute name.
+_ATTRIBUTE_NAMES = {
+    "location": "home city",
+    "employer": "employer",
+    "device": "phone model",
+    "diet": "dietary preference",
+    "role": "job title",
+}
+
+
 def _pick(pool: tuple[str, ...], index: int, kind: str) -> str:
     return pool[index] if index < len(pool) else f"{kind}-{index}"
 
@@ -56,9 +98,23 @@ def naturalize_events(events: tuple[MemoryEvent, ...]) -> tuple[MemoryEvent, ...
     collapse to one name. Belief and event identifiers are unchanged.
     """
     subjects = sorted({e.subject for e in events if e.subject})
-    values = sorted({e.value for e in events if e.value})
     subject_map = {name: _pick(_PERSONS, i, "Person") for i, name in enumerate(subjects)}
-    value_map = {name: _pick(_CITIES, i, "City") for i, name in enumerate(values)}
+
+    # Values are relabelled per attribute so each attribute draws from its own
+    # semantic class. Belief ids carry the attribute, so a value string is
+    # resolved through the attribute of the ingest that introduced it.
+    attribute_of: dict[str, str] = {}
+    for event in events:
+        if event.operation is Operation.INGEST and event.value:
+            attribute_of.setdefault(event.value, event.attribute or "location")
+    value_map: dict[str, str] = {}
+    per_attribute: dict[str, int] = {}
+    for value in sorted(attribute_of):
+        natural = _ATTRIBUTE_NAMES.get(attribute_of[value], "home city")
+        pool = _VALUE_POOLS.get(natural, _CITIES)
+        index = per_attribute.get(natural, 0)
+        per_attribute[natural] = index + 1
+        value_map[value] = _pick(pool, index, natural.replace(" ", "-"))
     out: list[MemoryEvent] = []
     for event in events:
         out.append(
@@ -70,8 +126,8 @@ def naturalize_events(events: tuple[MemoryEvent, ...]) -> tuple[MemoryEvent, ...
                 value=value_map.get(event.value, event.value)
                 if event.value
                 else event.value,
-                attribute="home city"
-                if event.attribute == "location"
+                attribute=_ATTRIBUTE_NAMES.get(event.attribute, event.attribute)
+                if event.attribute
                 else event.attribute,
             )
         )

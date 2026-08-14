@@ -68,5 +68,48 @@ class NLWorkloadTest(unittest.TestCase):
             self.assertFalse(case.expected_values & case.stale_values)
 
 
+
+
+class MultiAttributeTest(unittest.TestCase):
+    def test_default_is_unchanged_so_sealed_runs_stay_valid(self) -> None:
+        from temvera.generator import generate_histories as gen
+
+        self.assertEqual(
+            gen(seed=17, entities=3, revisions=2),
+            gen(seed=17, entities=3, revisions=2, attributes=1),
+        )
+
+    def test_each_attribute_draws_from_its_own_value_class(self) -> None:
+        from temvera.generator import generate_histories as gen
+        from temvera.model import Operation
+
+        events = naturalize_events(
+            gen(seed=17, entities=3, revisions=2, attributes=4)
+        )
+        by_attribute: dict[str, set[str]] = {}
+        for event in events:
+            if event.operation is Operation.INGEST:
+                by_attribute.setdefault(event.attribute, set()).add(event.value)
+        self.assertGreaterEqual(len(by_attribute), 4)
+        # No value may be shared between two attributes, or retrieval could not
+        # separate them and the workload would stay degenerate.
+        seen: set[str] = set()
+        for values in by_attribute.values():
+            self.assertFalse(seen & values)
+            seen |= values
+
+    def test_oracle_stays_exact_on_multi_attribute_histories(self) -> None:
+        from temvera.generator import generate_histories as gen
+
+        events = naturalize_events(
+            gen(seed=23, entities=3, revisions=3, attributes=3,
+                expire_probability=0.3, purge_probability=0.3)
+        )
+        cases = cases_from_oracle(events)
+        result = evaluate(LifecycleOracle(events), cases)
+        self.assertEqual(result.exact_state_accuracy, 1.0)
+        self.assertEqual(result.evidence_recall, 1.0)
+
+
 if __name__ == "__main__":
     unittest.main()
