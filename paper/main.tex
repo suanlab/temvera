@@ -1,12 +1,11 @@
-% ARR (ACL Rolling Review) submission draft.
+% PVLDB Experiments, Analysis & Benchmark (EA&B) submission draft.
 %
-% TO SUBMIT: download acl.sty + acl_natbib.bst from
-% https://github.com/acl-org/acl-style-files and replace the two lines below with
-%     \documentclass[11pt]{article}
-%     \usepackage[review]{acl}
-% then set \bibliographystyle{acl_natbib}. Everything else is already ARR-compliant:
-% anonymous, unnumbered Limitations and Ethics sections, references excluded from
-% the page limit. The twocolumn stand-in below approximates ACL page counts.
+% TO SUBMIT: drop in the PVLDB style (vldb.cls / vldb.sty from the PVLDB
+% author kit) in place of the twocolumn stand-in below. EA&B requires the
+% category tag in the title, all experimental data and software to be released,
+% and submission to the PVLDB Reproducibility Committee; the artifact ships
+% sealed per-case transcripts so every reported number can be recomputed
+% offline, without API access. Limit is 12 pages excluding references.
 \documentclass[11pt,twocolumn]{article}
 
 \usepackage[utf8]{inputenc}
@@ -21,7 +20,8 @@
 \usepackage[margin=1in]{geometry}
 
 \title{Temporal Fields Are Not Temporal Correctness:\\
-Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory}
+Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory\\
+\large [Experiment, Analysis \& Benchmark]}
 
 \author{Anonymous submission}
 \date{}
@@ -161,6 +161,85 @@ never policy; indexes are rebuildable from the ledger.
         separating write acceptance from sensitive-action activation.
 \end{itemize}
 
+\section{Which fragment of bitemporal semantics does each system implement?}
+\label{sec:fragment}
+
+The query we need is standard \citep{snodgrass1985}: for subject $s$ and
+attribute $a$, return the value valid at event time $V$ according to what the
+store had recorded by transaction time $T$. Answering it requires six
+capabilities, and the systems differ less in whether they \emph{have} temporal
+metadata than in what can be \emph{predicated} on it. We therefore classify
+support into five levels, which turn out to explain every measurement in
+\S\ref{sec:results}:
+
+\begin{description}
+  \item[\textsc{absent}] the information is not stored;
+  \item[\textsc{prose}] stored, but only inside free text, so no predicate can
+        filter on it;
+  \item[\textsc{off}] a queryable field exists and a filter is available, but is
+        not applied by the default retrieval path;
+  \item[\textsc{mismatch}] a queryable field exists and is applied, but denotes a
+        different timeline than the query requires;
+  \item[\textsc{yes}] representable, queryable, and applied.
+\end{description}
+
+\begin{table}[t]
+\centering
+\caption{Support for the six capabilities a bitemporal point query requires.
+Levels are defined above. Entries are what we observed in the shipped versions,
+not what documentation claims.}
+\label{tab:fragment}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Capability & Ref.\ impl. & Mem0 & LangMem & Graphiti \\
+\midrule
+C1 valid-time interval    & \textsc{yes} & \textsc{absent} & \textsc{prose} & \textsc{yes} \\
+C2 transaction time       & \textsc{yes} & \textsc{absent} & \textsc{absent} & \textsc{mismatch} \\
+C3 supersession closes    & \textsc{yes} & overwrite & overwrite & partial \\
+C4 valid-time predicate   & \textsc{yes} & --- & --- & \textsc{off} \\
+C5 as-of predicate        & \textsc{yes} & --- & --- & \textsc{absent} \\
+C6 deletion clears serving& \textsc{yes} & \textsc{yes} & n/m & \textsc{yes} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three entries in Table~\ref{tab:fragment} carry most of the explanatory weight.
+
+\textbf{C2 \textsc{mismatch} is an expressiveness limit, not a bug.} Graphiti
+stores \texttt{created\_at} and \texttt{expired\_at}, which look like a
+transaction-time axis. They record \emph{wall-clock ingestion}: in our runs they
+carry 2026 timestamps for a history whose modelled transaction times lie in
+2025. No predicate over them can express ``as of what was known on
+2025-02-18''. This is why we enforce the transaction-time axis structurally, by
+forward-checkpoint replay, rather than by asking any system to filter on it ---
+and why C5 is \textsc{absent} rather than \textsc{off}.
+
+\textbf{C1 \textsc{prose} is the distinction a capability checklist misses.}
+LangMem does retain validity information --- its stored memories contain strings
+such as ``valid from January 3, 2025''. But the store holds opaque values under
+a namespace, so validity is legible to a reader and invisible to a query
+planner. A survey that asked ``does the system record when a fact became true''
+would score LangMem as supporting valid time; no predicate can use it.
+
+\textbf{C3 separates closing an interval from overwriting a row.} Mem0 and
+LangMem consolidate: a superseding fact replaces its predecessor, so the prior
+value is destroyed rather than bounded. Graphiti closes intervals by setting
+\texttt{invalid\_at}, but does so unreliably --- absent on 26 of 80 superseded
+edges and internally contradictory ($\texttt{invalid\_at} \le
+\texttt{valid\_at}$) on 4 of 54 dated invalidations. C3 is therefore the axis on
+which the two design families separate, and \S\ref{sec:results} measures the
+consequence: consolidating stores lose history outright, while Graphiti retains
+it and fails to filter it.
+
+The reader should note where the causal chain terminates. C2 and C1 are
+data-model properties. C3's unreliability in Graphiti is not: it is a property of
+the LLM extraction step that populates the store, and it does not improve with a
+stronger extractor (\S\ref{sec:results}). For LLM-backed temporal stores the
+extraction layer, not the schema, is the binding constraint --- which is a
+statement about the pipeline that fills a temporal database, and the reason a
+schema-level capability audit would mis-rank all three systems.
+
 \section{Experimental Setup}\label{sec:setup}
 
 \paragraph{Workload.} A seeded generator emits typed histories over
@@ -203,7 +282,7 @@ Graphiti \texttt{0.29.2} on Neo4j~5.26, both with \texttt{gpt-4o-mini} at
 temperature~0 and \texttt{text-embedding-3-small}. Runs are sealed with
 canonical config, environment, source hash and per-file checksums.
 
-\section{Results}
+\section{Results}\label{sec:results}
 
 \subsection{The oracle is exact; non-temporal baselines are not}
 
@@ -353,8 +432,18 @@ restated the value it asked to delete --- so any system storing its input
 verbatim was penalised by construction. We now run two conditions with a
 non-restating instruction (Figure~\ref{fig:residual}).
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/residual.pdf}
+\caption{Where a purged payload survives, split by whether a query path can
+reach the store. Counts are substring occurrences over differently shaped stores
+and are not comparable in magnitude across systems; the reachability split is
+the claim.}
+\label{fig:residual}
+\end{figure}
+
 Under a \textbf{natural-language instruction}, residual occurrences of the
-purged value are our substrate 3 (audit ledger only), Mem0 15 (exposed memories 3,
+purged value are the reference implementation 3 (audit ledger only), Mem0 15 (exposed memories 3,
 vector store 3, history 9), Graphiti 18 (edges 3, entity nodes 9, episodes 6).
 Under each system's \textbf{native deletion API} (\texttt{Memory.delete},
 \texttt{remove\_episode}) the picture changes completely: Mem0 falls to 12 with

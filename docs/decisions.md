@@ -139,3 +139,29 @@
 - **Limit:** This is a venue decision, not a judgement that the corrected
   findings are weaker; several corrections made the surviving claims narrower
   and better supported.
+
+## D-014 — Target VLDB Experiments, Analysis & Benchmark track
+
+- **Status:** accepted 2026-08-14 by user decision; supersedes D-013 (COLM)
+- **Decision:** Target the PVLDB **Experiments, Analysis & Benchmark (EA&B)**
+  track, using its monthly rolling deadlines (VLDB 2027 closes 2027-03-01). No
+  arXiv preprint will be posted.
+- **Reason:** EA&B matches this work on the two dimensions where every other
+  venue penalised it. It *requires* releasing all experimental data and software
+  and submitting to the PVLDB Reproducibility Committee, which turns our sealed
+  runs, checksums, and evidence ledger from a footnote into a scored criterion;
+  and it exists specifically for rigorous comparison of existing systems, so
+  "we claim no novelty" stops being a liability. The 12-page limit also leaves
+  room for the depth reviewers asked for, against roughly 6.5 pages of current
+  content.
+- **Known gaps, accepted as work:** three systems where DB reviewers expect
+  more; no scale, latency, or cost dimension; and no formal statement of which
+  fragment of bitemporal query semantics each system implements.
+- **Known risk:** several of our causal explanations bottom out in LLM
+  extraction quality rather than data-management design, which a DB reviewer may
+  read as off-topic. The mitigation is to frame the extraction layer as the weak
+  link in the pipeline that populates a temporal store, and to say so explicitly
+  rather than let a reviewer discover it.
+- **Consequence:** our own substrate must be demoted from a compared system to a
+  reference implementation, since an EA&B paper comparing systems where one is
+  the authors' own invites a conflict-of-interest reading.
