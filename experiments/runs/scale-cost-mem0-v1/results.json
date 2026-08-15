@@ -1,0 +1,476 @@
+{
+  "backbone": {
+    "embed_model": "text-embedding-3-small",
+    "history_db_isolated": true,
+    "llm_model": "gpt-4o-mini",
+    "mem0_version": "0.1.118",
+    "naturalized": true,
+    "replay": "transaction_checkpoint",
+    "system": "mem0"
+  },
+  "naturalized": true,
+  "replay": "transaction_checkpoint",
+  "rows": [
+    {
+      "abstention_accuracy": 0.0,
+      "abstention_cases": 5,
+      "by_category_exact": {
+        "expiry_boundary": 0.0,
+        "purge": 0.25,
+        "transaction_as_of": 1.0,
+        "valid_time": 0.5
+      },
+      "cases": 27,
+      "entities": 2,
+      "evidence_recall": 0.6296296296296297,
+      "exact_state_accuracy": 0.6296296296296297,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.37037037037037035,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 5,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 27,
+      "entities": 2,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.14285714285714285,
+      "abstention_cases": 7,
+      "by_category_exact": {
+        "expiry_boundary": 0.14285714285714285,
+        "transaction_as_of": 1.0,
+        "valid_time": 0.4166666666666667
+      },
+      "cases": 31,
+      "entities": 2,
+      "evidence_recall": 0.5806451612903226,
+      "exact_state_accuracy": 0.5806451612903226,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.39285714285714285,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 7,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 31,
+      "entities": 2,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.3333333333333333,
+      "abstention_cases": 6,
+      "by_category_exact": {
+        "expiry_boundary": 0.4,
+        "purge": 0.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 0.4
+      },
+      "cases": 29,
+      "entities": 2,
+      "evidence_recall": 0.6206896551724138,
+      "exact_state_accuracy": 0.6206896551724138,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.36,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 6,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 29,
+      "entities": 2,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.3076923076923077,
+      "abstention_cases": 13,
+      "by_category_exact": {
+        "expiry_boundary": 0.5,
+        "purge": 0.06666666666666667,
+        "transaction_as_of": 0.9722222222222222,
+        "valid_time": 0.19047619047619047
+      },
+      "cases": 80,
+      "entities": 4,
+      "evidence_recall": 0.55,
+      "exact_state_accuracy": 0.55,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 7,
+      "stale_use_rate": 0.3939393939393939,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 13,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 80,
+      "entities": 4,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.18181818181818182,
+      "abstention_cases": 11,
+      "by_category_exact": {
+        "expiry_boundary": 0.3333333333333333,
+        "purge": 0.0,
+        "transaction_as_of": 0.9166666666666666,
+        "valid_time": 0.2857142857142857
+      },
+      "cases": 78,
+      "entities": 4,
+      "evidence_recall": 0.5512820512820513,
+      "exact_state_accuracy": 0.5256410256410257,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 17,
+      "stale_use_rate": 0.4533333333333333,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 11,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 78,
+      "entities": 4,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.14285714285714285,
+      "abstention_cases": 14,
+      "by_category_exact": {
+        "expiry_boundary": 0.2222222222222222,
+        "purge": 0.0,
+        "transaction_as_of": 0.9444444444444444,
+        "valid_time": 0.23809523809523808
+      },
+      "cases": 81,
+      "entities": 4,
+      "evidence_recall": 0.5432098765432098,
+      "exact_state_accuracy": 0.5061728395061729,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 42,
+      "stale_use_rate": 0.48148148148148145,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 14,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 81,
+      "entities": 4,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 3,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.45454545454545453,
+      "abstention_cases": 22,
+      "by_category_exact": {
+        "expiry_boundary": 0.6666666666666666,
+        "purge": 0.0,
+        "transaction_as_of": 0.90625,
+        "valid_time": 0.17647058823529413
+      },
+      "cases": 207,
+      "entities": 8,
+      "evidence_recall": 0.5700483091787439,
+      "exact_state_accuracy": 0.5265700483091788,
+      "profile": "mixed_lifecycle",
+      "revisions": 4,
+      "seed": 7,
+      "stale_use_rate": 0.43455497382198954,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 22,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 207,
+      "entities": 8,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 4,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.25,
+      "abstention_cases": 20,
+      "by_category_exact": {
+        "expiry_boundary": 0.29411764705882354,
+        "purge": 0.0,
+        "transaction_as_of": 0.9166666666666666,
+        "valid_time": 0.21428571428571427
+      },
+      "cases": 209,
+      "entities": 8,
+      "evidence_recall": 0.5502392344497608,
+      "exact_state_accuracy": 0.5311004784688995,
+      "profile": "mixed_lifecycle",
+      "revisions": 4,
+      "seed": 17,
+      "stale_use_rate": 0.4270833333333333,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 20,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 209,
+      "entities": 8,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 4,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.25,
+      "abstention_cases": 20,
+      "by_category_exact": {
+        "expiry_boundary": 0.3333333333333333,
+        "purge": 0.0,
+        "transaction_as_of": 0.9791666666666666,
+        "valid_time": 0.2236842105263158
+      },
+      "cases": 207,
+      "entities": 8,
+      "evidence_recall": 0.5652173913043478,
+      "exact_state_accuracy": 0.5603864734299517,
+      "profile": "mixed_lifecycle",
+      "revisions": 4,
+      "seed": 42,
+      "stale_use_rate": 0.4105263157894737,
+      "system": "mem0"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 20,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 207,
+      "entities": 8,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 4,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    }
+  ],
+  "summary": {
+    "by_category_exact": {
+      "mem0": {
+        "expiry_boundary": 0.3213922606079469,
+        "purge": 0.03958333333333333,
+        "transaction_as_of": 0.9594907407407409,
+        "valid_time": 0.2939325437777451
+      },
+      "oracle": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      }
+    },
+    "by_condition": {
+      "profile=mixed_lifecycle,entities=2,revisions=2": {
+        "mem0": {
+          "ci95_high": 0.6296296296296297,
+          "ci95_low": 0.5806451612903226,
+          "exact_mean": 0.6103214820307886,
+          "n_seeds": 3
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 3
+        }
+      },
+      "profile=mixed_lifecycle,entities=4,revisions=3": {
+        "mem0": {
+          "ci95_high": 0.55,
+          "ci95_low": 0.5061728395061729,
+          "exact_mean": 0.5272712883823996,
+          "n_seeds": 3
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 3
+        }
+      },
+      "profile=mixed_lifecycle,entities=8,revisions=4": {
+        "mem0": {
+          "ci95_high": 0.5603864734299517,
+          "ci95_low": 0.5265700483091788,
+          "exact_mean": 0.5393523334026767,
+          "n_seeds": 3
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 3
+        }
+      }
+    },
+    "overall": {
+      "mem0": {
+        "abstention_accuracy": 0.2292337292337292,
+        "evidence_recall": 0.573440145427831,
+        "exact_state_accuracy": 0.5589817012719549,
+        "stale_use_rate": 0.4137940383251688
+      },
+      "oracle": {
+        "abstention_accuracy": 1.0,
+        "evidence_recall": 1.0,
+        "exact_state_accuracy": 1.0,
+        "stale_use_rate": 0.0
+      }
+    }
+  },
+  "telemetry": {
+    "cost_usd_total": 0.5319645000000001,
+    "ingest_latency": {
+      "mean_s": 4.7328505586805765,
+      "n": 1035,
+      "p50_s": 4.4102430352941155,
+      "p95_s": 7.038777467794716,
+      "total_s": 4898.500328234397
+    },
+    "prices_usd_per_million": {
+      "gpt-4o": [
+        2.5,
+        10.0
+      ],
+      "gpt-4o-mini": [
+        0.15,
+        0.6
+      ],
+      "text-embedding-3-small": [
+        0.02,
+        0.0
+      ]
+    },
+    "query_latency": {
+      "mean_s": 0.2998617300420246,
+      "n": 949,
+      "p50_s": 0.281589281745255,
+      "p95_s": 0.4191988781094551,
+      "total_s": 284.56878180988133
+    },
+    "usage": {
+      "gpt-4o-mini": {
+        "calls": 2036,
+        "completion_tokens": 288450,
+        "cost_usd": 0.5310348,
+        "prompt_tokens": 2386432,
+        "total_tokens": 2674882
+      },
+      "text-embedding-3-small": {
+        "calls": 2456,
+        "completion_tokens": 0,
+        "cost_usd": 0.0009297,
+        "prompt_tokens": 46485,
+        "total_tokens": 46485
+      }
+    }
+  }
+}

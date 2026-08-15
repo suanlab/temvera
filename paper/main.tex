@@ -477,6 +477,52 @@ hashing channel scores $0.0$, quantifying that channel's alias-table-only
 design. Calibrated fusion gave no held-out gain over fixed reciprocal rank
 fusion, and state-level decay did not dominate rank-level decay.
 
+\subsection{Where cost and latency live}
+
+An LLM-backed memory store inverts the usual read/write cost profile, and the
+inversion is large enough to matter for design. Instrumenting the provider's
+API calls directly --- accumulating each response's usage block rather than
+estimating --- over 1035 ingests and 949 queries on multi-attribute histories:
+
+\begin{table}[t]
+\centering
+\caption{Measured write/read asymmetry, 9 cells, 3 attributes per entity,
+\texttt{gpt-4o-mini}. Ingest is an extraction plus consolidation round trip;
+a query is a vector lookup.}
+\label{tab:cost}
+\small
+\begin{tabular}{lrr}
+\toprule
+& ingest & query \\
+\midrule
+samples              & 1035 & 949 \\
+mean latency         & 4.733\,s & 0.300\,s \\
+p50 / p95            & 4.41 / 7.04\,s & 0.28 / 0.42\,s \\
+\midrule
+chat calls           & \multicolumn{2}{c}{2036 ($\approx$2 per ingest)} \\
+tokens in / out      & \multicolumn{2}{c}{2.39\,M / 288\,K} \\
+cost (chat)          & \multicolumn{2}{c}{\$0.5310} \\
+cost (embeddings)    & \multicolumn{2}{c}{\$0.0009 (0.2\%)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ingest is roughly $16\times$ slower than query, and embeddings account for
+0.2\% of spend: essentially all cost is the extraction and consolidation the
+write path performs. At these rates an ingested turn costs about
+\$0.0005. The practical consequence is that consolidating designs pay their
+price on every write, in exchange for the current-state accuracy
+\S\ref{sec:results} measures --- and that a store which retains history without
+filtering it, like Graphiti, is not cheaper at read time either, since its cost
+is also incurred on write.
+
+We report accuracy on this sweep only as a sanity check and do not compare it
+with Table~\ref{tab:external}: it is the first multi-attribute configuration
+(three attributes per entity, each drawn from a different semantic class) and
+therefore a different workload. Exact accuracy moved $0.610 \to 0.527 \to 0.539$
+as entities grew $2 \to 4 \to 8$, which is not monotone and rests on three seeds
+per scale.
+
 \subsection{External validity}\label{sec:external}
 
 On human-written LongMemEval conversations \citep{longmemeval}, retrieval

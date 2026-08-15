@@ -20,6 +20,7 @@
     "longmemeval-s-v1",
     "purge-residual-v3-api",
     "purge-residual-v3-nl",
+    "scale-cost-mem0-v1",
     "security-evaluation-v0"
   ],
   "schema_version": 1

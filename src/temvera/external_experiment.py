@@ -25,6 +25,7 @@ from .external_harness import MemorySystem, OracleMemorySystem, score_answer
 from .generator import generate_histories
 from .mem0_adapter import Mem0System, default_mem0_config
 from .nl_workload import build_nl_cases, naturalize_events, render_turns
+from .telemetry import Meter, measure_openai
 
 _METRICS = ("exact_state_accuracy", "evidence_recall", "stale_use_rate")
 
@@ -48,12 +49,18 @@ def _cells(config: dict[str, Any]):
 
 
 def _events_for(
-    seed: int, entities: int, revisions: int, profile: dict[str, Any], naturalize: bool
+    seed: int,
+    entities: int,
+    revisions: int,
+    profile: dict[str, Any],
+    naturalize: bool,
+    attributes: int = 1,
 ):
     events = generate_histories(
         seed=seed,
         entities=entities,
         revisions=revisions,
+        attributes=attributes,
         reconfirm_probability=float(profile.get("reconfirm_probability", 0.0)),
         expire_probability=float(profile.get("expire_probability", 0.0)),
         purge_probability=float(profile.get("purge_probability", 0.0)),
@@ -69,6 +76,7 @@ def score_on_events(
     transcript: list[dict[str, Any]] | None = None,
     cell: dict[str, Any] | None = None,
     system_name: str = "",
+    meter: Meter | None = None,
 ) -> dict[str, Any]:
     cases = build_nl_cases(events)
     if not cases:
@@ -81,10 +89,18 @@ def score_on_events(
         pending = 0
         for tx in sorted({c.transaction_at for c in cases}):
             while pending < len(turns) and turns[pending].recorded_at <= tx:
-                system.ingest(turns[pending])
+                if meter is not None:
+                    with meter.time_ingest():
+                        system.ingest(turns[pending])
+                else:
+                    system.ingest(turns[pending])
                 pending += 1
             for case in (c for c in cases if c.transaction_at == tx):
-                answers[case.case_id] = system.answer(case)
+                if meter is not None:
+                    with meter.time_query():
+                        answers[case.case_id] = system.answer(case)
+                else:
+                    answers[case.case_id] = system.answer(case)
     elif replay == "single_pass":
         for turn in turns:
             system.ingest(turn)
@@ -144,8 +160,12 @@ def run_external_comparison(
     naturalize = bool(config.get("naturalize", True))
     rows: list[dict[str, Any]] = []
     transcript: list[dict[str, Any]] = []
+    meter = Meter()
     for seed, entities, revisions, profile in _cells(config):
-        events = _events_for(seed, entities, revisions, profile, naturalize)
+        events = _events_for(
+            seed, entities, revisions, profile, naturalize,
+            int(config.get("attributes", 1)),
+        )
         cell = {
             "seed": seed,
             "entities": entities,
@@ -153,14 +173,16 @@ def run_external_comparison(
             "profile": str(profile.get("name", "as_configured")),
         }
         label = f"{cell['profile']}-e{entities}-r{revisions}-s{seed}"
-        target = score_on_events(
-            system_factory(label),
-            events,
-            replay=replay,
-            transcript=transcript,
-            cell=cell,
-            system_name=system_name,
-        )
+        with measure_openai(meter):
+            target = score_on_events(
+                system_factory(label),
+                events,
+                replay=replay,
+                transcript=transcript,
+                cell=cell,
+                system_name=system_name,
+                meter=meter,
+            )
         oracle = score_on_events(OracleMemorySystem(events), events, replay=replay)
         rows.append({**cell, "system": system_name, **target})
         rows.append({**cell, "system": "oracle", **oracle})
@@ -170,6 +192,7 @@ def run_external_comparison(
         "naturalized": naturalize,
         "rows": rows,
         "summary": summary,
+        "telemetry": meter.as_dict(),
         "transcript": transcript,
     }
 
