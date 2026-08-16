@@ -1,0 +1,8 @@
+{
+  "command": "temvera external-cognee experiments/configs/external-cognee-chunks.json experiments/runs/external-cognee-chunks-v1",
+  "created_at": "2026-08-16T04:51:18.346378+00:00",
+  "git_revision": "942eda3257786cc81e3cb0cc508ae58f1f1c8424",
+  "platform": "Linux-6.8.0-101-generic-x86_64-with-glibc2.35",
+  "python": "3.11.15 (main, Jun 23 2026, 15:19:43) [Clang 22.1.3 ]",
+  "source_sha256": "26701f69147ca4b777e3564e4eda4d4718678298d7e8ea6d432dc0cdde965e37"
+}

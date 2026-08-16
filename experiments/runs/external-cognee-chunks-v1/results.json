@@ -1,0 +1,203 @@
+{
+  "backbone": {
+    "cognee_version": "1.4.2",
+    "embed_model": "text-embedding-3-small",
+    "llm_model": "gpt-4o-mini",
+    "naturalized": true,
+    "replay": "transaction_checkpoint",
+    "search_type": "CHUNKS",
+    "store": "local (sqlite + embedded vector/graph, no server)",
+    "system": "cognee",
+    "worker_errors": 0
+  },
+  "naturalized": true,
+  "replay": "transaction_checkpoint",
+  "rows": [
+    {
+      "abstention_accuracy": 0.0,
+      "abstention_cases": 2,
+      "by_category_exact": {
+        "purge": 0.25,
+        "transaction_as_of": 0.6666666666666666,
+        "valid_time": 0.0
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 0.8333333333333334,
+      "exact_state_accuracy": 0.4166666666666667,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.4444444444444444,
+      "system": "cognee"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 2,
+      "by_category_exact": {
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 12,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 7,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 0.0,
+        "transaction_as_of": 0.5,
+        "valid_time": 0.0
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 0.9230769230769231,
+      "exact_state_accuracy": 0.23076923076923078,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.4782608695652174,
+      "system": "cognee"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 17,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    },
+    {
+      "abstention_accuracy": 0.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 0.0,
+        "transaction_as_of": 0.5,
+        "valid_time": 0.0
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 0.9230769230769231,
+      "exact_state_accuracy": 0.23076923076923078,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.4782608695652174,
+      "system": "cognee"
+    },
+    {
+      "abstention_accuracy": 1.0,
+      "abstention_cases": 1,
+      "by_category_exact": {
+        "expiry_boundary": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      },
+      "cases": 13,
+      "entities": 3,
+      "evidence_recall": 1.0,
+      "exact_state_accuracy": 1.0,
+      "profile": "mixed_lifecycle",
+      "revisions": 2,
+      "seed": 42,
+      "stale_use_rate": 0.0,
+      "system": "oracle"
+    }
+  ],
+  "summary": {
+    "by_category_exact": {
+      "cognee": {
+        "expiry_boundary": 0.0,
+        "purge": 0.25,
+        "transaction_as_of": 0.5555555555555555,
+        "valid_time": 0.0
+      },
+      "oracle": {
+        "expiry_boundary": 1.0,
+        "purge": 1.0,
+        "transaction_as_of": 1.0,
+        "valid_time": 1.0
+      }
+    },
+    "by_condition": {
+      "profile=mixed_lifecycle,entities=3,revisions=2": {
+        "cognee": {
+          "ci95_high": 0.4166666666666667,
+          "ci95_low": 0.23076923076923075,
+          "exact_mean": 0.29273504273504275,
+          "n_seeds": 3
+        },
+        "oracle": {
+          "ci95_high": 1.0,
+          "ci95_low": 1.0,
+          "exact_mean": 1.0,
+          "n_seeds": 3
+        }
+      }
+    },
+    "overall": {
+      "cognee": {
+        "abstention_accuracy": 0.0,
+        "evidence_recall": 0.8931623931623932,
+        "exact_state_accuracy": 0.29273504273504275,
+        "stale_use_rate": 0.4669887278582931
+      },
+      "oracle": {
+        "abstention_accuracy": 1.0,
+        "evidence_recall": 1.0,
+        "exact_state_accuracy": 1.0,
+        "stale_use_rate": 0.0
+      }
+    }
+  },
+  "telemetry": {
+    "cost_usd_total": 0,
+    "ingest_latency": {
+      "mean_s": 0.7974905346495074,
+      "n": 37,
+      "p50_s": 0.5136286485940218,
+      "p95_s": 3.801518010906875,
+      "total_s": 29.507149782031775
+    },
+    "prices_usd_per_million": {
+      "gpt-4o": [
+        2.5,
+        10.0
+      ],
+      "gpt-4o-mini": [
+        0.15,
+        0.6
+      ],
+      "text-embedding-3-small": [
+        0.02,
+        0.0
+      ]
+    },
+    "query_latency": {
+      "mean_s": 5.000518129648347,
+      "n": 38,
+      "p50_s": 5.214239913038909,
+      "p95_s": 8.45139738265425,
+      "total_s": 190.01968892663717
+    },
+    "usage": {}
+  }
+}

@@ -459,6 +459,61 @@ def run_langmem_comparison(config: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def run_cognee_comparison(config: dict[str, Any]) -> dict[str, Any]:
+    """Cognee on the same grid, via the isolated-interpreter worker."""
+    import os
+
+    from .stdio_system import CogneeSystem
+
+    search_limit = int(config.get("search_limit", 5))
+    model = config.get("model", "gpt-4o-mini")
+    embed_model = config.get("embed_model", "text-embedding-3-small")
+    root = config.get("cognee_root") or os.environ.get(
+        "COGNEE_ROOT", "/tmp/temvera-cognee"
+    )
+    key = os.environ.get("OPENAI_API_KEY", "")
+    made: list[CogneeSystem] = []
+
+    def factory(label: str) -> MemorySystem:
+        # Each cell gets its own store root; Cognee persists locally, so sharing
+        # one would let an earlier cell's graph leak into a later one.
+        cell_env = {
+            "COGNEE_SYSTEM_ROOT_DIRECTORY": f"{root}/{label}",
+            "COGNEE_DATA_ROOT_DIRECTORY": f"{root}/{label}/data",
+            "LLM_API_KEY": key,
+            "LLM_PROVIDER": "openai",
+            "LLM_MODEL": model,
+            "EMBEDDING_PROVIDER": "openai",
+            "EMBEDDING_MODEL": embed_model,
+            "EMBEDDING_API_KEY": key,
+        }
+        system = CogneeSystem(
+            search_limit=search_limit,
+            env=cell_env,
+            extra_config={"search_type": config.get("search_type", "GRAPH_COMPLETION")},
+        )
+        made.append(system)
+        return system
+
+    try:
+        result = run_external_comparison(config, factory, system_name="cognee")
+    finally:
+        for system in made:
+            system.close()
+    result["backbone"] = {
+        "system": "cognee",
+        "cognee_version": made[0].version if made else "unknown",
+        "store": "local (sqlite + embedded vector/graph, no server)",
+        "search_type": config.get("search_type", "GRAPH_COMPLETION"),
+        "llm_model": model,
+        "embed_model": embed_model,
+        "replay": result["replay"],
+        "naturalized": result["naturalized"],
+        "worker_errors": sum(s.worker_errors for s in made),
+    }
+    return result
+
+
 def projected_ingests(config: dict[str, Any]) -> dict[str, int]:
     """Offline projection of ingest/query call volume (no API calls)."""
     naturalize = bool(config.get("naturalize", True))

@@ -477,6 +477,56 @@ hashing channel scores $0.0$, quantifying that channel's alias-table-only
 design. Calibrated fusion gave no held-out gain over fixed reciprocal rank
 fusion, and state-level decay did not dominate rank-level decay.
 
+
+\subsection{Is the information lost, or merely unfiltered?}
+\label{sec:reader}
+
+A fourth system separates the two explanations, because the same store can be
+read two ways. Cognee stages text and builds a graph, then answers either by
+returning retrieved passages (\textsc{chunks}) or by having an LLM answer over
+the graph (\textsc{graph-completion}, its default). On three cells shared with
+all four systems (38 cases):
+
+\begin{table}[t]
+\centering
+\caption{The same Cognee store, read two ways, against the other three systems.
+All non-Cognee systems are scored at the retrieval layer, so \textsc{chunks} is
+the comparable column and \textsc{graph-completion} is an upper bound on what a
+reader can recover.}
+\label{tab:reader}
+\small
+\begin{tabular}{lcc}
+\toprule
+Configuration & overall & \texttt{valid\_time} \\
+\midrule
+Mem0 (consolidates)             & 0.684 & 0.50 \\
+LangMem (consolidates)          & 0.658 & 0.50 \\
+Graphiti (retains)              & 0.289 & 0.000 \\
+Cognee \textsc{chunks} (retains)& 0.289 & 0.000 \\
+\midrule
+Cognee \textsc{graph-completion}& \textbf{0.895} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Read as passages, Cognee scores exactly what Graphiti scores --- $0.289$ overall
+and $0.000$ on valid time. Read by an LLM over the same graph, it answers every
+valid-time case correctly, distinguishing ``as of 2025-01-03'' from ``as of
+2025-01-31'' for one subject. The information was therefore present all along;
+what fails in the retaining systems is the filter, not the store.
+
+That distinction does not rescue the consolidating systems. Mem0 and LangMem sit
+at $0.50$ whichever way they are read, because a superseding write destroys its
+predecessor: there is nothing for a reader to recover. \textbf{Retention versus
+consolidation decides whether correctness is recoverable at all; retrieval-layer
+filtering is broken in every retaining system we measured.} A deployment that
+puts a reader over a retaining store can be correct today; one built on a
+consolidating store cannot, without changing the store.
+
+This rests on three cells and fourteen valid-time cases, and the two Cognee
+configurations differ in whether an LLM synthesises the answer, so they are not
+interchangeable with the other columns.
+
 \subsection{Where cost and latency live}
 
 An LLM-backed memory store inverts the usual read/write cost profile, and the
