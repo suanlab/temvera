@@ -32,6 +32,8 @@ OUT = ROOT / "paper" / "figures"
 MEM0 = RUNS / "external-mem0-grid-v2"
 GRAPHITI = RUNS / "external-graphiti-hybrid-v1"
 LANGMEM = RUNS / "external-langmem-v1"
+COGNEE = RUNS / "external-cognee-chunks-grid-v1"  # retrieval layer, comparable
+COGNEE_READER = RUNS / "external-cognee-grid-v1"  # LLM reader, upper bound
 CATEGORIES = ("transaction_as_of", "valid_time", "expiry_boundary", "purge")
 LABELS = {
     "transaction_as_of": "transaction\nas-of",
@@ -42,7 +44,10 @@ LABELS = {
 
 
 def _cells():
-    return matched_cells(load_run(MEM0), load_run(GRAPHITI), load_run(LANGMEM))
+    return matched_cells(
+        load_run(MEM0), load_run(GRAPHITI), load_run(LANGMEM),
+        load_run(COGNEE), load_run(COGNEE_READER),
+    )
 
 
 def figure_categories(cells) -> None:
@@ -51,9 +56,11 @@ def figure_categories(cells) -> None:
         ("Mem0", category_counts(load_transcript(MEM0), cells=cells), "#3b6ea5"),
         ("LangMem", category_counts(load_transcript(LANGMEM), cells=cells), "#4f8f5b"),
         ("Graphiti", category_counts(load_transcript(GRAPHITI), cells=cells), "#c2703d"),
+        ("Cognee (chunks)", category_counts(load_transcript(COGNEE), cells=cells), "#8a6bbf"),
+        ("Cognee (reader)", category_counts(load_transcript(COGNEE_READER), cells=cells), "#3f7f7f"),
     )
     fig, ax = plt.subplots(figsize=(7.2, 3.4))
-    width = 0.27
+    width = 0.17
     for offset, (name, data, colour) in enumerate(series):
         xs, ys, lo, hi = [], [], [], []
         for index, category in enumerate(CATEGORIES):
@@ -61,7 +68,7 @@ def figure_categories(cells) -> None:
             if p is None:
                 continue
             low, high = p.wilson()
-            xs.append(index + (offset - 1) * width)
+            xs.append(index + (offset - 2) * width)
             ys.append(p.rate)
             lo.append(p.rate - low)
             hi.append(high - p.rate)

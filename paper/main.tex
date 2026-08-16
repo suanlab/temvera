@@ -484,8 +484,8 @@ fusion, and state-level decay did not dominate rank-level decay.
 A fourth system separates the two explanations, because the same store can be
 read two ways. Cognee stages text and builds a graph, then answers either by
 returning retrieved passages (\textsc{chunks}) or by having an LLM answer over
-the graph (\textsc{graph-completion}, its default). On three cells shared with
-all four systems (38 cases):
+the graph (\textsc{graph-completion}, its default). Both configurations run the
+same 20-cell grid as the other systems (484 cases each):
 
 \begin{table}[t]
 \centering
@@ -495,37 +495,44 @@ the comparable column and \textsc{graph-completion} is an upper bound on what a
 reader can recover.}
 \label{tab:reader}
 \small
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-Configuration & overall & \texttt{valid\_time} \\
+Configuration & overall & \texttt{valid\_time} & \texttt{purge} \\
 \midrule
-Mem0 (consolidates)             & 0.684 & 0.50 \\
-LangMem (consolidates)          & 0.658 & 0.50 \\
-Graphiti (retains)              & 0.289 & 0.000 \\
-Cognee \textsc{chunks} (retains)& 0.289 & 0.000 \\
+Mem0 (consolidates)              & 0.603 & 0.364 \scriptsize{(71/195)} & 0.044 \\
+LangMem (consolidates)           & 0.576 & 0.323 \scriptsize{(63/195)} & 0.133 \\
+Graphiti (retains)               & 0.196 & 0.000 \scriptsize{(0/195)}  & 0.022 \\
+Cognee \textsc{chunks} (retains) & 0.207 & 0.015 \scriptsize{(3/195)}  & 0.089 \\
 \midrule
-Cognee \textsc{graph-completion}& \textbf{0.895} & \textbf{1.00} \\
+Cognee \textsc{graph-completion} & \textbf{0.930} & \textbf{0.985} \scriptsize{(192/195)} & \textbf{0.622} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Read as passages, Cognee scores exactly what Graphiti scores --- $0.289$ overall
-and $0.000$ on valid time. Read by an LLM over the same graph, it answers every
-valid-time case correctly, distinguishing ``as of 2025-01-03'' from ``as of
+Read as passages, Cognee scores what Graphiti scores: $0.207$ against $0.196$
+overall, and $0.015$ against $0.000$ on valid time. Read by an LLM over the same
+graph, the identical store answers 192 of 195 valid-time cases and all 228
+transaction-scoped cases, distinguishing ``as of 2025-01-03'' from ``as of
 2025-01-31'' for one subject. The information was therefore present all along;
-what fails in the retaining systems is the filter, not the store.
+what fails in the retaining systems is the filter, not the store. Transaction
+time is perfect by construction here --- forward-checkpoint replay means the
+store holds only what was known by that point, so any reader over it is
+transaction-correct.
 
-That distinction does not rescue the consolidating systems. Mem0 and LangMem sit
-at $0.50$ whichever way they are read, because a superseding write destroys its
-predecessor: there is nothing for a reader to recover. \textbf{Retention versus
+That distinction does not rescue the consolidating systems. Mem0 ($0.364$) and
+LangMem ($0.323$) sit in the middle whichever way they are read, because a
+superseding write destroys its predecessor: there is nothing for a reader to
+recover. \textbf{Retention versus
 consolidation decides whether correctness is recoverable at all; retrieval-layer
 filtering is broken in every retaining system we measured.} A deployment that
 puts a reader over a retaining store can be correct today; one built on a
 consolidating store cannot, without changing the store.
 
-This rests on three cells and fourteen valid-time cases, and the two Cognee
-configurations differ in whether an LLM synthesises the answer, so they are not
-interchangeable with the other columns.
+The two Cognee configurations differ in whether an LLM synthesises the answer,
+so \textsc{graph-completion} is an upper bound on what a reader can recover
+rather than a like-for-like win over the other columns, all of which are scored
+at the retrieval layer. Expiry remains low for every configuration
+($0.125$ at best over 16 cases), so we draw no conclusion there.
 
 \subsection{Where cost and latency live}
 
@@ -565,6 +572,15 @@ price on every write, in exchange for the current-state accuracy
 \S\ref{sec:results} measures --- and that a store which retains history without
 filtering it, like Graphiti, is not cheaper at read time either, since its cost
 is also incurred on write.
+
+The write/read split is a design choice, not a constant. Cognee inverts it:
+\texttt{add} only stages text and averages $0.76$\,s, while its query path
+averages $7.93$\,s because the graph build runs at the first query of each
+checkpoint ($5.00$\,s under \textsc{chunks}, so roughly $3$\,s of the remainder
+is the reader LLM). Mem0 pays at write, Cognee at read, for comparable work. We
+measure cost only for the in-process systems: Cognee and LangMem run in separate
+interpreters, so their token usage falls outside our instrumentation and is not
+reported.
 
 We report accuracy on this sweep only as a sanity check and do not compare it
 with Table~\ref{tab:external}: it is the first multi-attribute configuration
