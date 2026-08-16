@@ -76,6 +76,9 @@ def main() -> None:
     external_graphiti = subparsers.add_parser("external-graphiti")
     external_graphiti.add_argument("config")
     external_graphiti.add_argument("output")
+    external_hindsight = subparsers.add_parser("external-hindsight")
+    external_hindsight.add_argument("config")
+    external_hindsight.add_argument("output")
     external_cognee = subparsers.add_parser("external-cognee")
     external_cognee.add_argument("config")
     external_cognee.add_argument("output")
@@ -411,6 +414,18 @@ def main() -> None:
         result = run_graphiti_comparison(config)
         _write_external_run(output, config, result, "external-graphiti", arguments)
         print(json.dumps(result, sort_keys=True))
+    elif arguments.command == "external-hindsight":
+        from pathlib import Path
+
+        from .external_experiment import run_hindsight_comparison
+
+        config = json.loads(Path(arguments.config).read_text(encoding="utf-8"))
+        output = Path(arguments.output)
+        if output.exists():
+            raise SystemExit(f"refusing to overwrite: {output}")
+        result = run_hindsight_comparison(config)
+        _write_external_run(output, config, result, "external-hindsight", arguments)
+        print(json.dumps({k: v for k, v in result.items() if k != "rows"}, sort_keys=True))
     elif arguments.command == "external-cognee":
         from pathlib import Path
 

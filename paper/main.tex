@@ -300,14 +300,20 @@ stale.
 \label{tab:baselines}
 \begin{tabular}{lccc}
 \toprule
-System & Exact & Recall & Stale-use \\
+Configuration & overall & \texttt{valid\_time} & \texttt{purge} \\
 \midrule
-Oracle              & \textbf{1.000} & \textbf{1.000} & \textbf{0.000} \\
-Last-write-wins     & 0.603 & 0.603 & 0.397 \\
-Recent context      & 0.576 & 0.576 & 0.424 \\
-BM25@1              & 0.576 & 0.576 & 0.424 \\
-Append-only         & 0.272 & 0.915 & 0.624 \\
-Full context        & 0.272 & 0.915 & 0.624 \\
+\multicolumn{4}{l}{\emph{consolidating stores}}\\
+Mem0                          & 0.603 & 0.364 \scriptsize{(71/195)} & 0.044 \\
+LangMem                       & 0.576 & 0.323 \scriptsize{(63/195)} & 0.133 \\
+\midrule
+\multicolumn{4}{l}{\emph{retaining stores, read at the retrieval layer}}\\
+Graphiti                      & 0.196 & 0.000 \scriptsize{(0/195)} & 0.022 \\
+Cognee \textsc{chunks}        & 0.207 & 0.015 \scriptsize{(3/195)} & 0.089 \\
+Hindsight \textsc{recall}     & 0.194 & 0.000 \scriptsize{(0/195)} & 0.022 \\
+\midrule
+\multicolumn{4}{l}{\emph{the same retaining stores, read by an LLM}}\\
+Hindsight \textsc{reflect}    & 0.407 & 0.344 \scriptsize{(67/195)} & 0.311 \\
+Cognee \textsc{graph-compl.}  & \textbf{0.930} & \textbf{0.985} \scriptsize{(192/195)} & \textbf{0.622} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -489,10 +495,10 @@ same 20-cell grid as the other systems (484 cases each):
 
 \begin{table}[t]
 \centering
-\caption{The same Cognee store, read two ways, against the other three systems.
-All non-Cognee systems are scored at the retrieval layer, so \textsc{chunks} is
-the comparable column and \textsc{graph-completion} is an upper bound on what a
-reader can recover.}
+\caption{Five systems, and two of them read both ways. Retrieval-layer rows are
+mutually comparable; reader rows are scored on synthesised text and bound what a
+reader could recover rather than competing directly. Hindsight's retrieval
+budget is qualitative and cannot be set to the $k$ used elsewhere.}
 \label{tab:reader}
 \small
 \begin{tabular}{lccc}
@@ -509,27 +515,36 @@ Cognee \textsc{graph-completion} & \textbf{0.930} & \textbf{0.985} \scriptsize{(
 \end{tabular}
 \end{table}
 
-Read as passages, Cognee scores what Graphiti scores: $0.207$ against $0.196$
-overall, and $0.015$ against $0.000$ on valid time. Read by an LLM over the same
-graph, the identical store answers 192 of 195 valid-time cases and all 228
-transaction-scoped cases, distinguishing ``as of 2025-01-03'' from ``as of
-2025-01-31'' for one subject. The information was therefore present all along;
-what fails in the retaining systems is the filter, not the store. Transaction
-time is perfect by construction here --- forward-checkpoint replay means the
-store holds only what was known by that point, so any reader over it is
-transaction-correct.
+\textbf{The retrieval layer fails uniformly.} Three independently built
+retaining systems land within noise of each other --- Graphiti $0.196$, Cognee
+$0.207$, Hindsight $0.194$ overall, with valid-time $0.000$, $0.015$ and $0.000$
+over 195 cases each. Retaining history but not filtering it is therefore a
+property of the design class, not of one implementation.
+
+\textbf{The reader layer does not.} Read by an LLM over the same graph, Cognee
+answers 192 of 195 valid-time cases and all 228 transaction-scoped ones,
+distinguishing ``as of 2025-01-03'' from ``as of 2025-01-31'' for one subject.
+Hindsight's reader, over its own retained store, reaches only $0.344$ --- below
+Mem0's $0.364$, a store that has thrown the history away. So the information is
+present in every retaining system, and a reader \emph{can} exploit it, but
+attaching an LLM does not reliably do so: recovery varies by nearly a factor of
+three between two systems that both retain. Transaction time is the exception
+that proves the mechanism: it is perfect for Cognee by construction, because
+forward-checkpoint replay leaves only what was known in the store.
 
 That distinction does not rescue the consolidating systems. Mem0 ($0.364$) and
 LangMem ($0.323$) sit in the middle whichever way they are read, because a
 superseding write destroys its predecessor: there is nothing for a reader to
-recover. \textbf{Retention versus
-consolidation decides whether correctness is recoverable at all; retrieval-layer
-filtering is broken in every retaining system we measured.} A deployment that
-puts a reader over a retaining store can be correct today; one built on a
-consolidating store cannot, without changing the store.
+recover. \textbf{Retention decides whether correctness is
+recoverable at all; it does not make recovery automatic.} Retrieval-layer
+filtering is broken in every retaining system we measured, and whether a reader
+repairs it is a property of that reader's context and prompting rather than of
+retention alone. A deployment on a consolidating store cannot be made correct
+without changing the store; a deployment on a retaining store can be, but only
+if the read path is built to use what the store kept.
 
-The two Cognee configurations differ in whether an LLM synthesises the answer,
-so \textsc{graph-completion} is an upper bound on what a reader can recover
+The reader configurations differ from the rest in whether an LLM synthesises the
+answer, so they are an upper bound on what a reader can recover
 rather than a like-for-like win over the other columns, all of which are scored
 at the retrieval layer. Expiry remains low for every configuration
 ($0.125$ at best over 16 cases), so we draw no conclusion there.

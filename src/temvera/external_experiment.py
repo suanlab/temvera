@@ -514,6 +514,41 @@ def run_cognee_comparison(config: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def run_hindsight_comparison(config: dict[str, Any]) -> dict[str, Any]:
+    """Hindsight on the same grid, via its local daemon's HTTP API."""
+    from .hindsight_adapter import HindsightSystem
+
+    read_mode = config.get("read_mode", "recall")
+    budget = config.get("hindsight_budget", "mid")
+    base_url = config.get("hindsight_url", "http://localhost:8888")
+    made: list[HindsightSystem] = []
+
+    def factory(label: str) -> MemorySystem:
+        system = HindsightSystem(
+            base_url=base_url,
+            bank=f"{config.get('bank_prefix', 'temvera')}-{label}",
+            search_limit=int(config.get("search_limit", 5)),
+            read_mode=read_mode,
+            budget=budget,
+        )
+        made.append(system)
+        return system
+
+    result = run_external_comparison(config, factory, system_name="hindsight")
+    result["backbone"] = {
+        "system": "hindsight",
+        "hindsight_version": made[0].version if made else "unknown",
+        "store": "local daemon with embedded PostgreSQL (no Docker)",
+        "read_mode": read_mode,
+        # Hindsight's budget is qualitative, so it is not the k used elsewhere.
+        "budget": budget,
+        "replay": result["replay"],
+        "naturalized": result["naturalized"],
+        "worker_errors": sum(s.worker_errors for s in made),
+    }
+    return result
+
+
 def projected_ingests(config: dict[str, Any]) -> dict[str, int]:
     """Offline projection of ingest/query call volume (no API calls)."""
     naturalize = bool(config.get("naturalize", True))

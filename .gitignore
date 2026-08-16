@@ -47,6 +47,8 @@ experiments/runs/*
 !experiments/runs/external-cognee-v1/
 !experiments/runs/external-cognee-chunks-grid-v1/
 !experiments/runs/external-cognee-grid-v1/
+!experiments/runs/external-hindsight-reflect-v1/
+!experiments/runs/external-hindsight-recall-v1/
 !experiments/runs/purge-residual-v3-nl/
 
 .env

@@ -34,6 +34,8 @@ GRAPHITI = RUNS / "external-graphiti-hybrid-v1"
 LANGMEM = RUNS / "external-langmem-v1"
 COGNEE = RUNS / "external-cognee-chunks-grid-v1"  # retrieval layer, comparable
 COGNEE_READER = RUNS / "external-cognee-grid-v1"  # LLM reader, upper bound
+HINDSIGHT = RUNS / "external-hindsight-recall-v1"  # retrieval layer
+HINDSIGHT_READER = RUNS / "external-hindsight-reflect-v1"  # LLM reader
 CATEGORIES = ("transaction_as_of", "valid_time", "expiry_boundary", "purge")
 LABELS = {
     "transaction_as_of": "transaction\nas-of",
@@ -47,6 +49,7 @@ def _cells():
     return matched_cells(
         load_run(MEM0), load_run(GRAPHITI), load_run(LANGMEM),
         load_run(COGNEE), load_run(COGNEE_READER),
+        load_run(HINDSIGHT), load_run(HINDSIGHT_READER),
     )
 
 
@@ -57,10 +60,12 @@ def figure_categories(cells) -> None:
         ("LangMem", category_counts(load_transcript(LANGMEM), cells=cells), "#4f8f5b"),
         ("Graphiti", category_counts(load_transcript(GRAPHITI), cells=cells), "#c2703d"),
         ("Cognee (chunks)", category_counts(load_transcript(COGNEE), cells=cells), "#8a6bbf"),
+        ("Hindsight (chunks)", category_counts(load_transcript(HINDSIGHT), cells=cells), "#b08a3e"),
         ("Cognee (reader)", category_counts(load_transcript(COGNEE_READER), cells=cells), "#3f7f7f"),
+        ("Hindsight (reader)", category_counts(load_transcript(HINDSIGHT_READER), cells=cells), "#7f5f9f"),
     )
     fig, ax = plt.subplots(figsize=(7.2, 3.4))
-    width = 0.17
+    width = 0.12
     for offset, (name, data, colour) in enumerate(series):
         xs, ys, lo, hi = [], [], [], []
         for index, category in enumerate(CATEGORIES):
@@ -68,7 +73,7 @@ def figure_categories(cells) -> None:
             if p is None:
                 continue
             low, high = p.wilson()
-            xs.append(index + (offset - 2) * width)
+            xs.append(index + (offset - 3) * width)
             ys.append(p.rate)
             lo.append(p.rate - low)
             hi.append(high - p.rate)
@@ -80,7 +85,7 @@ def figure_categories(cells) -> None:
     ax.set_xticklabels([LABELS[c] for c in CATEGORIES], fontsize=9)
     ax.set_ylabel("exact accuracy")
     ax.set_ylim(0, 1.12)
-    ax.legend(frameon=False, loc="upper right")
+    ax.legend(frameon=False, loc="upper right", fontsize=7, ncol=2)
     ax.set_title(
         "Per-category exact accuracy, 20 matched cells (Wilson 95% intervals)",
         fontsize=10,
