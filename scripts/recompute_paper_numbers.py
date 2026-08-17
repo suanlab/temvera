@@ -36,6 +36,10 @@ SYSTEMS = {
     "Mem0": "external-mem0-grid-v2",
     "LangMem": "external-langmem-v1",
     "Graphiti": "external-graphiti-hybrid-v1",
+    "Cognee-retr": "external-cognee-chunks-grid-v1",
+    "Hindsight-retr": "external-hindsight-recall-v1",
+    "Cognee-read": "external-cognee-grid-v1",
+    "Hindsight-read": "external-hindsight-reflect-v1",
 }
 CATEGORIES = ("transaction_as_of", "valid_time", "expiry_boundary", "purge")
 DELETION = {"natural-language": "purge-residual-v3-nl", "native API": "purge-residual-v3-api"}
@@ -72,27 +76,27 @@ def main() -> int:
     transcripts = {name: load_transcript(RUNS / path) for name, path in SYSTEMS.items()}
     cells = matched_cells(*runs.values())
     print(f"== Table 2: per-category exact accuracy, {len(cells)} matched cells ==")
-    header = f"{'category':<20}" + "".join(f"{n:>28}" for n in SYSTEMS)
+    header = f"{'category':<18}" + "".join(f"{n:>17}" for n in SYSTEMS)
     print(header)
     for category in CATEGORIES:
-        row = f"{category:<20}"
+        row = f"{category:<18}"
         for name in SYSTEMS:
             counts = category_counts(transcripts[name], cells=cells)
             p = counts.get(category)
             if p is None:
-                row += f"{'--':>28}"
+                row += f"{'--':>17}"
                 continue
             low, high = p.wilson()
-            cell = f"{p.rate:.3f} {p.successes}/{p.total} [{low:.2f},{high:.2f}]"
-            row += cell.rjust(28)
+            cell = f"{p.rate:.3f} {p.successes}/{p.total}"
+            row += cell.rjust(17)
         print(row)
     print()
-    print(f"{'overall exact':<20}", end="")
+    print(f"{'overall exact':<18}", end="")
     for name in SYSTEMS:
         o = overall_counts(transcripts[name], cells=cells)
-        print(f"{o.rate:.3f} {o.successes}/{o.total}".rjust(28), end="")
+        print(f"{o.rate:.3f} {o.successes}/{o.total}".rjust(17), end="")
     print()
-    print(f"{'abstention':<20}", end="")
+    print(f"{'abstention':<18}", end="")
     for name in SYSTEMS:
         rows = [
             r for r in runs[name]["rows"]
@@ -100,14 +104,14 @@ def main() -> int:
             and (r["profile"], r["entities"], r["revisions"], r["seed"]) in cells
         ]
         a = abstention(rows)
-        print(f"{a.rate:.3f} {a.successes}/{a.total}".rjust(28), end="")
+        print(f"{a.rate:.3f} {a.successes}/{a.total}".rjust(17), end="")
     print("\n")
 
     print("== budget sweep (overall exact) ==")
-    print(f"{'k':<6}" + "".join(f"{n:>12}" for n in SYSTEMS))
+    print(f"{'k':<6}" + "".join(f"{n:>17}" for n in SYSTEMS))
     sweeps = {n: k_sweep(transcripts[n], budgets=(1, 2, 3, 5), cells=cells) for n in SYSTEMS}
     for k in (1, 2, 3, 5):
-        print(f"{k:<6}" + "".join(f"{sweeps[n][k]['overall']['rate']:>12.3f}" for n in SYSTEMS))
+        print(f"{k:<6}" + "".join(f"{sweeps[n][k]['overall']['rate']:>17.3f}" for n in SYSTEMS))
     print()
 
     print("== deletion residual by condition ==")
