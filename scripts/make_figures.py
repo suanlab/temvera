@@ -139,7 +139,9 @@ def figure_residual() -> None:
     """Where purged payloads survive, split by reachability class."""
     import json
 
-    label = {"temvera": "Temvera", "mem0": "Mem0", "graphiti": "Graphiti"}
+    # The reference implementation is anonymised: the paper is submitted for
+    # double-blind review and the project name would identify the authors.
+    label = {"temvera": "Reference impl.", "mem0": "Mem0", "graphiti": "Graphiti"}
     # Append-only audit logs are not read by any query path; everything else is
     # reachable from retrieval.
     audit_stores = {"raw_ledger_jsonl", "mem0_history_sqlite"}
@@ -151,8 +153,8 @@ def figure_residual() -> None:
         data = json.loads(
             (RUNS / f"purge-residual-v3-{tag}" / "results.json").read_text("utf-8")
         )
-        reach = {"Temvera": 0, "Mem0": 0, "Graphiti": 0}
-        audit = {"Temvera": 0, "Mem0": 0, "Graphiti": 0}
+        reach = {"Reference impl.": 0, "Mem0": 0, "Graphiti": 0}
+        audit = {"Reference impl.": 0, "Mem0": 0, "Graphiti": 0}
         for report in data["reports"]:
             name = label[report["system"]]
             for store in report["stores"]:

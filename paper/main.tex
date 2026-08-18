@@ -6,17 +6,28 @@
 % and submission to the PVLDB Reproducibility Committee; the artifact ships
 % sealed per-case transcripts so every reported number can be recomputed
 % offline, without API access. Limit is 12 pages excluding references.
-% acmart/sigconf stands in for PVLDB's vldb.cls, which could not be fetched in
-% this environment. PVLDB's format derives from the same ACM lineage, so page
-% counts here are a close approximation to the 12-page EA&B limit. Replace with
-% vldb.cls from the PVLDB author kit before submitting.
-\documentclass[sigconf,nonacm,natbib=true]{acmart}
+% PVLDB Experiments, Analysis & Benchmark (EA&B) submission.
+% PVLDB's template is the ACM acmart class with these options; the VLDB blocks
+% below are copied verbatim from the official template (cwida/pvldbstyle) and
+% must not be modified. Fill in doi/pages/volume/issue/year for a final version.
+\documentclass[sigconf, nonacm]{acmart}
 
 \usepackage{booktabs}
 \usepackage{graphicx}
 
-\settopmatter{printacmref=false}
-\renewcommand\footnotetextcopyrightpermission[1]{}
+%% paper-specific: supplied by PVLDB on acceptance
+\newcommand\vldbdoi{XX.XX/XXX.XX}
+\newcommand\vldbpages{XXX-XXX}
+%% issue-specific: supplied by PVLDB on acceptance
+\newcommand\vldbvolume{XX}
+\newcommand\vldbissue{X}
+\newcommand\vldbyear{2027}
+\newcommand\vldbauthors{\authors}
+\newcommand\vldbtitle{\shorttitle}
+%% Empty for the anonymous review version; set to the artifact URL on acceptance.
+\newcommand\vldbavailabilityurl{}
+%% 'plain' for review, 'empty' for camera ready.
+\newcommand\vldbpagestyle{plain}
 
 \title{Temporal Fields Are Not Temporal Correctness:\\
 Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory\\
@@ -24,6 +35,7 @@ Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory\\
 
 \author{Anonymous submission}
 \affiliation{\institution{Anonymous}\country{}}
+\email{anonymous@example.org}
 
 \begin{document}
 \begin{abstract}
@@ -74,6 +86,32 @@ without answering temporal queries correctly.
 \end{abstract}
 
 \maketitle
+
+%%% do not modify the following VLDB block %%
+%%% VLDB block start %%%
+\pagestyle{\vldbpagestyle}
+\begingroup\small\noindent\raggedright\textbf{PVLDB Reference Format:}\\
+\vldbauthors. \vldbtitle. PVLDB, \vldbvolume(\vldbissue): \vldbpages, \vldbyear.\\
+\href{https://doi.org/\vldbdoi}{doi:\vldbdoi}
+\endgroup
+\begingroup
+\renewcommand\thefootnote{}\footnote{\noindent
+This work is licensed under the Creative Commons BY-NC-ND 4.0 International License. Visit \url{https://creativecommons.org/licenses/by-nc-nd/4.0/} to view a copy of this license. For any use beyond those covered by this license, obtain permission by emailing \href{mailto:info@vldb.org}{info@vldb.org}. Copyright is held by the owner/author(s). Publication rights licensed to the VLDB Endowment. \\
+\raggedright Proceedings of the VLDB Endowment, Vol. \vldbvolume, No. \vldbissue\ %
+ISSN 2150-8097. \\
+\href{https://doi.org/\vldbdoi}{doi:\vldbdoi} \\
+}\addtocounter{footnote}{-1}\endgroup
+%%% VLDB block end %%%
+
+%%% do not modify the following VLDB block %%
+%%% VLDB block start %%%
+\ifdefempty{\vldbavailabilityurl}{}{
+\vspace{.3cm}
+\begingroup\small\noindent\raggedright\textbf{PVLDB Artifact Availability:}\\
+The source code, data, and/or other artifacts have been made available at \url{\vldbavailabilityurl}.
+\endgroup
+}
+%%% VLDB block end %%%
 
 \section{Introduction}
 

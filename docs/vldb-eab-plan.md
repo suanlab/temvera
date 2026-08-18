@@ -81,16 +81,25 @@ is therefore satisfiable without dropping the external-validity section, and the
 dataset could be shipped with the artifact if the committee wants it
 self-contained. We still download rather than redistribute it.
 
-## Formatting status
+## Formatting: done
 
-The paper now builds under `acmart` in `sigconf` mode, which shares PVLDB's ACM
-lineage and gives realistic page counts: **7 pages against the 12-page EA&B
-limit**, so there is room for the depth reviewers asked for. PVLDB's own
-`vldb.cls` could not be fetched in this environment (the author-kit URLs
-redirect to an HTML index), so before submitting, download it from the PVLDB
-author kit and replace the `\documentclass` line flagged at the top of
-`paper/main.tex`. Note that `acmart` requires the abstract *before*
-`\maketitle`, which the source already does.
+There is no separate `vldb.cls`. PVLDB's template **is** the ACM `acmart` class
+with `[sigconf, nonacm]`, plus two verbatim VLDB blocks after `\maketitle` (the
+reference-format line, the CC BY-NC-ND copyright footnote, and a conditional
+artifact-availability block). The official template is at `cwida/pvldbstyle`;
+the earlier failure to fetch a `vldb.cls` was looking for a file that does not
+exist. `paper/main.tex` now carries the correct class options and both blocks
+copied unmodified, with the paper-specific and issue-specific macros left as
+placeholders for acceptance.
+
+Two settings are review-version choices to revisit at camera-ready:
+`\vldbpagestyle` is `plain` (page numbers on) and `\vldbavailabilityurl` is
+empty, which suppresses the artifact-availability block — it should carry the
+artifact URL once the work is no longer anonymous.
+
+The submission builds clean at **7 pages against the 12-page EA&B limit**, with
+no undefined references or citations, and `pdftotext` finds no author,
+institution, or project name anywhere in the output.
 
 ## Sequencing
 
