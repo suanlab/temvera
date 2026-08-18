@@ -6,29 +6,26 @@
 % and submission to the PVLDB Reproducibility Committee; the artifact ships
 % sealed per-case transcripts so every reported number can be recomputed
 % offline, without API access. Limit is 12 pages excluding references.
-\documentclass[11pt,twocolumn]{article}
+% acmart/sigconf stands in for PVLDB's vldb.cls, which could not be fetched in
+% this environment. PVLDB's format derives from the same ACM lineage, so page
+% counts here are a close approximation to the 12-page EA&B limit. Replace with
+% vldb.cls from the PVLDB author kit before submitting.
+\documentclass[sigconf,nonacm,natbib=true]{acmart}
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{hyperref}
-\usepackage{url}
 \usepackage{booktabs}
-\usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{microtype}
-\usepackage[round]{natbib}
-\usepackage[margin=1in]{geometry}
+
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
 
 \title{Temporal Fields Are Not Temporal Correctness:\\
 Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory\\
 \large [Experiment, Analysis \& Benchmark]}
 
 \author{Anonymous submission}
-\date{}
+\affiliation{\institution{Anonymous}\country{}}
 
 \begin{document}
-\maketitle
-
 \begin{abstract}
 Long-running agents accumulate facts that change, expire, and must sometimes be
 deleted. Answering \emph{what was true then} and \emph{what did the agent know
@@ -76,6 +73,8 @@ finding that a system can expose temporal fields, and even filter on them,
 without answering temporal queries correctly.
 \end{abstract}
 
+\maketitle
+
 \section{Introduction}
 
 An agent that remembers must also revise, expire, and forget. Two questions
@@ -119,7 +118,7 @@ instruction and each system's native API, which the closest prior systems
 describe as a feature but do not measure.
 (iv) Measured write/read cost and latency, and a reproducible sealed harness
 whose every reported number recomputes offline from per-case transcripts,
-including preserved negative results and four retracted measurements.
+including preserved negative results and three retracted measurements.
 
 \section{Related Work}
 
@@ -150,29 +149,25 @@ system's derived stores. Our literature review is single-reviewer with a
 deterministic 10\% rescreen; searches, exclusions and rescreens are logged and
 frozen with the artifact.
 
-\section{Design}
+\section{Reference implementation}
 
-Raw events are immutable and interpretations derived; valid time is distinct
-from transaction time; current truth is a view over history; retrieval is scoped
-before ranking; every derived memory cites evidence; untrusted content is data,
-never policy; indexes are rebuildable from the ledger.
+Ground truth has to come from somewhere, and one component of the comparison is
+ours, so we state exactly what it does and how far its role extends. It keeps a
+typed append-only event log (\texttt{ingest}, \texttt{reconfirm},
+\texttt{supersede}, \texttt{expire}, \texttt{purge}) and folds it into beliefs
+carrying both a valid-time interval and a transaction time; a second,
+independent SQLite implementation of the same specification is used as a
+differential check on that fold. Retrieval projections are rebuilt from
+materialised beliefs rather than mutated in place, which is what lets the
+deletion scan ask whether a purged payload survives anywhere a query can reach.
 
-\begin{itemize}
-  \item \textbf{Event ledger.} Typed events (\texttt{ingest}, \texttt{reconfirm},
-        \texttt{supersede}, \texttt{expire}, \texttt{purge}), append-only, over
-        JSONL or a git transaction adapter.
-  \item \textbf{Bitemporal oracle.} A fold over events produces beliefs; an
-        independent SQLite implementation serves purely as a correctness
-        cross-check, not an operational baseline.
-  \item \textbf{Disposable projections.} Exact, lexical, hashing-vector,
-        learned-vector and graph indexes rebuilt from materialised beliefs;
-        reciprocal rank fusion, then validity, authority and poisoning gates.
-  \item \textbf{Deletion.} Purge tombstones with receipts, plus an
-        encrypted-payload profile whose per-belief key destruction is verified
-        after a git clone.
-  \item \textbf{Provenance gate.} Signed, tenant-scoped ingestion quarantine
-        separating write acceptance from sensitive-action activation.
-\end{itemize}
+It is not a system under test. It supplies the expected answers, so its own
+accuracy is $1.0$ by construction and never reported as a result
+(\S\ref{sec:setup}), and it appears in the comparison only as the reference
+column of the deletion scan. Its other machinery --- an encrypted-payload
+profile, provenance-gated ingestion --- is exercised by the artifact's test
+suite but plays no part in the measurements below, and we make no claim for it
+here.
 
 \section{Which fragment of bitemporal semantics does each system implement?}
 \label{sec:fragment}
@@ -492,15 +487,6 @@ stores and are not comparable in magnitude; the reachability split is the claim.
 This rests on a single seeded history (12 events, three purged values) and one
 backbone, with extraction that is not bit-reproducible.
 
-\subsection{Retrieval channels}
-
-A hard fixture isolates one necessary channel per category. A learned dense
-channel resolves held-out synonyms at recall@1 $1.0$ where the dependency-free
-hashing channel scores $0.0$, quantifying that channel's alias-table-only
-design. Calibrated fusion gave no held-out gain over fixed reciprocal rank
-fusion, and state-level decay did not dominate rank-level decay.
-
-
 \subsection{Is the information lost, or merely unfiltered?}
 \label{sec:reader}
 
@@ -651,12 +637,20 @@ positional-id lookup swallowed by a broad exception handler while
 \texttt{add()} reports success. Dropped updates leave superseded values in
 place, so Mem0's scores here are conservative.
 
-\subsection{Provenance security}
+\subsection{Measurements outside the thesis}
 
-Signed, tenant-scoped gating admitted $3/4$ attacks as inert data while
-activating $0/4$, with benign utility preserved---but it fails once a trusted
-signer is compromised: provenance proves origin, not signer honesty. This is a
-mechanism study; GPU-bound defences were out of scope.
+The same harness produced results that do not bear on the question this paper
+asks, and we summarise rather than develop them. On a hand-built retrieval
+fixture, a learned dense channel resolved held-out synonyms at recall@1 $1.0$
+where a dependency-free hashing channel scored $0.0$; calibrated channel
+weighting gave no held-out gain over fixed reciprocal rank fusion; and
+state-level confidence decay did not dominate rank-level decay. On a seeded
+threat fixture, signed tenant-scoped gating admitted $3/4$ attacks as inert data
+while activating $0/4$, then failed once a trusted signer was compromised ---
+provenance proves origin, not signer honesty. All are mechanism studies on our
+own reference implementation, and none is evidence about the systems compared
+above. They are recorded here because the artifact contains them and because two
+are negative.
 
 \section{Negative Results and Corrections}
 
@@ -665,12 +659,15 @@ rank-level decay, fusion calibration gave no held-out gain, signed provenance
 failed under signer compromise, and an early channel ablation saturated at $1.0$
 and had to be redesigned.
 
-Two measurements were \textbf{retracted rather than quietly fixed}. Graphiti
-cell group ids repeated across runs while the Neo4j reset did not wipe the
-group, so later runs queried graphs still holding earlier episodes (36 per cell
-where one run produces 12); the affected filtered and extractor runs are marked
-invalid and were re-run under verified isolation. A first purge scan reported
-Mem0 at zero residual because it read Graphiti's raw database but only Mem0's
+Three measurements were \textbf{retracted rather than quietly fixed}, and a
+fourth claim was narrowed. Graphiti cell group ids repeated across runs while
+the Neo4j reset did not wipe the group, so later runs queried graphs still
+holding earlier episodes (36 per cell where one run produces 12); the affected
+filtered and extractor runs are marked invalid and were re-run under verified
+isolation. A distractor-pressure comparison set three instances against a
+ten-instance mean and reversed under matching, so it was withdrawn rather than
+reported. And a first purge scan reported Mem0 at zero residual because it read
+Graphiti's raw database but only Mem0's
 API-exposed memories; the corrected scan adds Mem0's vector store and history
 database with a per-run database path.
 
@@ -707,8 +704,8 @@ report an implementation defect in one system that causes silent loss of memory
 updates; because it biases that system's measured scores downward, our reported
 numbers are conservative rather than unfairly harsh, and we state this in the
 text. No user data was collected. The public benchmark is used locally under its
-own terms and is not redistributed; its licence status is unresolved, which we
-disclose rather than assume. No human subjects participated: a protocol for a
+own terms; the split we use is MIT-licensed, which we verified against the
+dataset's published metadata rather than assuming. No human subjects participated: a protocol for a
 human audit study is released with the artifact but was not run, and we make no
 human-effectiveness claim. Finally, the deletion result has a user-facing
 consequence we want stated plainly --- an assistant asked in conversation to
@@ -724,7 +721,7 @@ included in the artifact, but no participants were recruited, so we make no
 human-effectiveness claim. Running it requires ethics review or a documented
 exemption, a pilot for variance, and an a priori power analysis.
 
-\bibliographystyle{plainnat}
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
 
 \end{document}

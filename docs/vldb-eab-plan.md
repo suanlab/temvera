@@ -75,10 +75,22 @@ Only *regenerating* runs needs an OpenAI key, a Neo4j server, and — for LangMe
 Graphiti require `openai==1.x`. Ship a one-command offline verification path and
 say plainly which numbers it covers.
 
-Unresolved: the LongMemEval data licence, which we disclose rather than assume.
-Under a track that mandates releasing all experimental data, this needs a
-decision — either obtain clarification, or drop the external-validity section to
-an appendix that the release does not depend on.
+**Resolved (2026-08-17):** the LongMemEval split we use is MIT-licensed,
+verified against the published dataset metadata (E-074). The release requirement
+is therefore satisfiable without dropping the external-validity section, and the
+dataset could be shipped with the artifact if the committee wants it
+self-contained. We still download rather than redistribute it.
+
+## Formatting status
+
+The paper now builds under `acmart` in `sigconf` mode, which shares PVLDB's ACM
+lineage and gives realistic page counts: **7 pages against the 12-page EA&B
+limit**, so there is room for the depth reviewers asked for. PVLDB's own
+`vldb.cls` could not be fetched in this environment (the author-kit URLs
+redirect to an HTML index), so before submitting, download it from the PVLDB
+author kit and replace the `\documentclass` line flagged at the top of
+`paper/main.tex`. Note that `acmart` requires the abstract *before*
+`\maketitle`, which the source already does.
 
 ## Sequencing
 
