@@ -1,10 +1,29 @@
 # VLDB EA&B submission plan
 
 > Decision D-014 (2026-08-14). Target: PVLDB **Experiments, Analysis & Benchmark**
-> track, monthly rolling deadlines; VLDB 2027 closes 2027-03-01, abstracts on the
-> 25th of the prior month. No arXiv preprint (user decision).
-> **Verify the CFP directly before submitting** — the requirements below come
-> from the 2027 call as read on 2026-08-14 and may change.
+> track. No arXiv preprint (user decision).
+
+## Submission rules, verified against the CFP (2026-08-19)
+
+Read from the PVLDB Volume 19 submission page, correcting two errors this plan
+previously carried:
+
+- **12 pages excluding references**, with no limit on reference pages. (As
+  assumed; now verified.)
+- **Single-blind, not anonymous.** "VLDB is a single-blind conference.
+  Therefore, authors MUST include their names and affiliations on the first page
+  of the manuscript." The earlier plan prepared an anonymous submission, which
+  would have been non-compliant. `paper/main.tex` now carries the author block;
+  the institution is a `TODO` placeholder the author must fill in.
+- **Rolling deadline on the 1st of each month**, 5:00 PM Pacific. There is *no
+  separate abstract deadline* — the earlier note about abstracts on the 25th of
+  the prior month was wrong. Initial reviews arrive around the 15th of the
+  following month.
+
+Single-blind also means the artifact URL need not be withheld. EA&B requires
+releasing data and software, so `\vldbavailabilityurl` should carry a public
+repository or archival DOI before submission; it is empty only because no such
+URL exists yet.
 
 ## Why this track
 
@@ -115,14 +134,12 @@ manifest promises. The paper source is not packaged; it is submitted separately.
 
 ## Sequencing
 
-Rolling deadlines mean we choose when to submit. Targeting a **January or
-February 2027 cycle** leaves time for G1–G3 without racing, and keeps the March
-close as a fallback rather than a plan.
-
-1. G3 (generator change, no API cost) and G4 (packaging) — immediate, offline.
-2. G2 instrumentation, then a scale sweep sized to budget.
-3. G1 as far as infrastructure allows; two additional systems would put us at
-   five, which is defensible even if six is the norm.
+G1–G4 are closed: five systems over seven configurations, cost and latency
+measured, multi-attribute workloads, and a verified artifact package. The
+remaining blockers are not research work but two author decisions — the
+institution in the author block, and a public artifact URL — plus choosing a
+month. Any 1st-of-month deadline now works; a cycle one or two months out
+leaves room to use the five pages of headroom rather than submitting thin.
 
 ## Standing risk
 

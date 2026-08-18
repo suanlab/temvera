@@ -13,7 +13,9 @@
 %% Set per paper; volume/issue/year defaults live in pvldb.sty.
 \renewcommand\vldbdoi{XX.XX/XXX.XX}
 \renewcommand\vldbpages{XXX-XXX}
-%% Empty for anonymous review; set to the artifact URL for camera ready.
+%% EA&B requires releasing data and software, so this should carry the public
+%% artifact URL (repository or archival DOI). Empty until that URL exists;
+%% an empty value suppresses the availability block entirely.
 \renewcommand\vldbavailabilityurl{}
 
 \usepackage{booktabs}
@@ -23,9 +25,15 @@
 Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory\\
 \large [Experiment, Analysis \& Benchmark]}
 
-\author{Anonymous submission}
-\affiliation{\institution{Anonymous}\country{}}
-\email{anonymous@example.org}
+%% PVLDB is SINGLE-BLIND: names and affiliations are mandatory on page 1, not
+%% withheld until camera ready. Fill in the institution before submitting.
+\author{Suan Lee}
+\affiliation{%
+  \institution{TODO: institution}
+  \city{TODO: city}
+  \country{TODO: country}
+}
+\email{pitchscore1@gmail.com}
 
 \begin{document}
 \begin{abstract}
