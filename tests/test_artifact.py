@@ -92,3 +92,35 @@ def test_artifact_verification_detects_envelope_corruption(tmp_path) -> None:
         payload[offset] ^= 1
         archive.write_bytes(payload)
         assert not verify_artifact_archive(archive), f"missed corruption at {offset}"
+
+
+def test_artifact_excludes_third_party_data_and_bytecode(tmp_path) -> None:
+    """Redistribution scope is a claim, so the exclusions are tested, not assumed.
+
+    `data/raw` holds third-party datasets we download rather than redistribute,
+    and `__pycache__` is interpreter-dependent noise that would also break the
+    byte-for-byte determinism the manifest promises. Both live under packaged
+    roots, so only an explicit rule keeps them out.
+    """
+    root = tmp_path / "repo"
+    root.mkdir()
+    _fixture(root)
+    raw = root / "data" / "raw"
+    raw.mkdir()
+    (raw / "third_party.json").write_text("{}\n", encoding="utf-8")
+    cache = root / "src" / "__pycache__"
+    cache.mkdir()
+    (cache / "fixture.cpython-311.pyc").write_bytes(b"\x00")
+
+    archive = tmp_path / "artifact.tar.gz"
+    manifest = create_artifact_archive(root, archive)
+
+    assert verify_artifact_archive(archive)
+    packaged = set(manifest["files"])
+    assert "data/fixture.txt" in packaged, "packaged roots must still be included"
+    assert not [name for name in packaged if name.startswith("data/raw")]
+    assert not [name for name in packaged if "__pycache__" in name]
+    with tarfile.open(archive, mode="r:gz") as tar:
+        names = tar.getnames()
+    assert not [name for name in names if name.startswith("data/raw")]
+    assert not [name for name in names if "__pycache__" in name]

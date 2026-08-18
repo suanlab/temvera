@@ -83,23 +83,35 @@ self-contained. We still download rather than redistribute it.
 
 ## Formatting: done
 
-There is no separate `vldb.cls`. PVLDB's template **is** the ACM `acmart` class
-with `[sigconf, nonacm]`, plus two verbatim VLDB blocks after `\maketitle` (the
-reference-format line, the CC BY-NC-ND copyright footnote, and a conditional
-artifact-availability block). The official template is at `cwida/pvldbstyle`;
-the earlier failure to fetch a `vldb.cls` was looking for a file that does not
-exist. `paper/main.tex` now carries the correct class options and both blocks
-copied unmodified, with the paper-specific and issue-specific macros left as
-placeholders for acceptance.
+The official template is `vldbproceedings/VLDB-Template`, not the third-party
+`cwida/pvldbstyle` an earlier revision of this plan named. There is no separate
+`vldb.cls`: the template is ACM `acmart` with `[sigconf, nonacm]`, plus a
+**`pvldb.sty`** that emits the VLDB front matter — the reference-format line, the
+CC BY-NC-ND footnote, and a conditional artifact-availability block — from a
+single `\vldbtopmatter` call after `\maketitle`. `paper/` vendors `pvldb.sty`,
+`acmart.cls` (v2.19, the version the template pins), and
+`ACM-Reference-Format.bst` so the build does not depend on the local TeX
+distribution's `acmart` version.
 
 Two settings are review-version choices to revisit at camera-ready:
 `\vldbpagestyle` is `plain` (page numbers on) and `\vldbavailabilityurl` is
-empty, which suppresses the artifact-availability block — it should carry the
-artifact URL once the work is no longer anonymous.
+empty, which deliberately suppresses the artifact-availability block — it should
+carry the artifact URL once the work is no longer anonymous.
 
 The submission builds clean at **7 pages against the 12-page EA&B limit**, with
 no undefined references or citations, and `pdftotext` finds no author,
 institution, or project name anywhere in the output.
+
+## Artifact package: done
+
+`temvera artifact-package` emits a deterministic, checksum-manifested archive
+(310 files, 0.7 MB) that `verify-artifact-package` validates, covering the
+source tree, tests, docs, fixtures, experiment configs, and every accepted
+sealed run. Two exclusions are explicit and tested rather than incidental:
+`data/raw` (third-party datasets we download rather than redistribute — this is
+what keeps the archive at 0.7 MB instead of 83 MB) and `__pycache__`, whose
+interpreter-dependent bytes would break the byte-for-byte determinism the
+manifest promises. The paper source is not packaged; it is submitted separately.
 
 ## Sequencing
 

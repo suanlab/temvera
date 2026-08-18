@@ -24,6 +24,11 @@ ROOT_FILES = (
     "pyproject.toml",
 )
 ROOT_DIRECTORIES = ("src", "tests", "docs", "data", "experiments/configs")
+# Paths never packaged. `data/raw` holds third-party datasets we download but do
+# not redistribute, and compiled bytecode is noise that also breaks byte
+# determinism across interpreters.
+EXCLUDED_PARTS = ("__pycache__", ".pytest_cache", ".ruff_cache")
+EXCLUDED_PREFIXES = ("data/raw",)
 
 
 def create_artifact_archive(root: Path, output: Path) -> dict[str, Any]:
@@ -42,7 +47,16 @@ def create_artifact_archive(root: Path, output: Path) -> dict[str, Any]:
     paths.append(accepted_manifest)
     for run_id in accepted:
         paths.extend(_files(runs_root / run_id))
-    files = tuple(sorted(set(paths), key=lambda path: str(path.relative_to(root))))
+    files = tuple(
+        sorted(
+            (
+                path
+                for path in set(paths)
+                if not str(path.relative_to(root)).startswith(EXCLUDED_PREFIXES)
+            ),
+            key=lambda path: str(path.relative_to(root)),
+        )
+    )
     if any(not path.is_file() or path.is_symlink() for path in files):
         raise ValueError("artifact inputs must be regular files")
     file_hashes = {
@@ -116,7 +130,11 @@ def verify_artifact_archive(archive: Path) -> bool:
 
 
 def _files(directory: Path) -> list[Path]:
-    return [path for path in directory.rglob("*") if path.is_file()]
+    return [
+        path
+        for path in directory.rglob("*")
+        if path.is_file() and not any(part in EXCLUDED_PARTS for part in path.parts)
+    ]
 
 
 def _add_bytes(tar: tarfile.TarFile, name: str, payload: bytes) -> None:

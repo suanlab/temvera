@@ -1,33 +1,23 @@
-% PVLDB Experiments, Analysis & Benchmark (EA&B) submission draft.
-%
-% TO SUBMIT: drop in the PVLDB style (vldb.cls / vldb.sty from the PVLDB
-% author kit) in place of the twocolumn stand-in below. EA&B requires the
-% category tag in the title, all experimental data and software to be released,
-% and submission to the PVLDB Reproducibility Committee; the artifact ships
-% sealed per-case transcripts so every reported number can be recomputed
-% offline, without API access. Limit is 12 pages excluding references.
 % PVLDB Experiments, Analysis & Benchmark (EA&B) submission.
-% PVLDB's template is the ACM acmart class with these options; the VLDB blocks
-% below are copied verbatim from the official template (cwida/pvldbstyle) and
-% must not be modified. Fill in doi/pages/volume/issue/year for a final version.
+% Uses the official VLDB template (github.com/vldbproceedings/VLDB-Template):
+% acmart.cls v2.19 and pvldb.sty are vendored here because the template pins
+% them to guarantee consistent formatting across submissions. pvldb.sty emits
+% the PVLDB reference-format block, license footer, and artifact-availability
+% block via \vldbtopmatter; do not hand-copy those.
 \documentclass[sigconf, nonacm]{acmart}
+%%% do not modify the following VLDB block %%
+%%% VLDB block start %%%
+\usepackage{pvldb}
+%%% VLDB block end %%%
+
+%% Set per paper; volume/issue/year defaults live in pvldb.sty.
+\renewcommand\vldbdoi{XX.XX/XXX.XX}
+\renewcommand\vldbpages{XXX-XXX}
+%% Empty for anonymous review; set to the artifact URL for camera ready.
+\renewcommand\vldbavailabilityurl{}
 
 \usepackage{booktabs}
 \usepackage{graphicx}
-
-%% paper-specific: supplied by PVLDB on acceptance
-\newcommand\vldbdoi{XX.XX/XXX.XX}
-\newcommand\vldbpages{XXX-XXX}
-%% issue-specific: supplied by PVLDB on acceptance
-\newcommand\vldbvolume{XX}
-\newcommand\vldbissue{X}
-\newcommand\vldbyear{2027}
-\newcommand\vldbauthors{\authors}
-\newcommand\vldbtitle{\shorttitle}
-%% Empty for the anonymous review version; set to the artifact URL on acceptance.
-\newcommand\vldbavailabilityurl{}
-%% 'plain' for review, 'empty' for camera ready.
-\newcommand\vldbpagestyle{plain}
 
 \title{Temporal Fields Are Not Temporal Correctness:\\
 Measuring Bitemporal and Deletion Semantics in Deployed Agent Memory\\
@@ -89,28 +79,7 @@ without answering temporal queries correctly.
 
 %%% do not modify the following VLDB block %%
 %%% VLDB block start %%%
-\pagestyle{\vldbpagestyle}
-\begingroup\small\noindent\raggedright\textbf{PVLDB Reference Format:}\\
-\vldbauthors. \vldbtitle. PVLDB, \vldbvolume(\vldbissue): \vldbpages, \vldbyear.\\
-\href{https://doi.org/\vldbdoi}{doi:\vldbdoi}
-\endgroup
-\begingroup
-\renewcommand\thefootnote{}\footnote{\noindent
-This work is licensed under the Creative Commons BY-NC-ND 4.0 International License. Visit \url{https://creativecommons.org/licenses/by-nc-nd/4.0/} to view a copy of this license. For any use beyond those covered by this license, obtain permission by emailing \href{mailto:info@vldb.org}{info@vldb.org}. Copyright is held by the owner/author(s). Publication rights licensed to the VLDB Endowment. \\
-\raggedright Proceedings of the VLDB Endowment, Vol. \vldbvolume, No. \vldbissue\ %
-ISSN 2150-8097. \\
-\href{https://doi.org/\vldbdoi}{doi:\vldbdoi} \\
-}\addtocounter{footnote}{-1}\endgroup
-%%% VLDB block end %%%
-
-%%% do not modify the following VLDB block %%
-%%% VLDB block start %%%
-\ifdefempty{\vldbavailabilityurl}{}{
-\vspace{.3cm}
-\begingroup\small\noindent\raggedright\textbf{PVLDB Artifact Availability:}\\
-The source code, data, and/or other artifacts have been made available at \url{\vldbavailabilityurl}.
-\endgroup
-}
+\vldbtopmatter
 %%% VLDB block end %%%
 
 \section{Introduction}
