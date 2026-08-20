@@ -19,6 +19,7 @@ experiments/runs/*
 !experiments/runs/hard-channel-ablation-v0/
 !experiments/runs/lifecycle-grid-v4/
 !experiments/runs/lifecycle-dd14d8b3be5b/
+!experiments/runs/lifecycle-operations-v1/
 !experiments/runs/lifecycle-operations-v2/
 !experiments/runs/security-evaluation-v0/
 # Systems-paper (ICLR) evidence: robustness grid and E1 external comparisons.

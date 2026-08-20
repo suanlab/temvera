@@ -248,9 +248,12 @@ would score LangMem as supporting valid time; no predicate can use it.
 \textbf{C3 separates closing an interval from overwriting a row.} Mem0 and
 LangMem consolidate: a superseding fact replaces its predecessor, so the prior
 value is destroyed rather than bounded. Graphiti closes intervals by setting
-\texttt{invalid\_at}, but does so unreliably --- absent on 26 of 80 superseded
-edges and internally contradictory ($\texttt{invalid\_at} \le
-\texttt{valid\_at}$) on 4 of 54 dated invalidations. C3 is therefore the axis on
+\texttt{invalid\_at}, but does so unreliably: direct inspection of the edge
+metadata found supersessions that leave the field unset, and dated
+invalidations that are self-contradictory ($\texttt{invalid\_at} \le
+\texttt{valid\_at}$). We give no counts because that inspection ran against a
+graph later retracted for cross-run contamination
+(\S\ref{sec:negative}). C3 is therefore the axis on
 which the two design families separate, and \S\ref{sec:results} measures the
 consequence: consolidating stores lose history outright, while Graphiti retains
 it and fails to filter it.
@@ -294,7 +297,10 @@ the fraction of returned values drawn from $S$. \textbf{Because exactness
 quantifies over the whole returned set, it is a function of the retrieval budget
 $k$}; we set $k{=}5$ throughout and report a sweep over $k$ in
 Figure~\ref{fig:budget}. Rates are case-weighted with Wilson 95\% intervals, and
-abstention is computed only over cells that contain abstention cases.
+abstention is computed only over cells that contain abstention cases. Two
+comparisons are cell-averaged instead, because they aggregate cells whose
+denominators differ --- the internal baselines of Table~\ref{tab:baselines} and
+the filtered-Graphiti runs --- and both are marked where they are used.
 
 \paragraph{The oracle defines ground truth.} Expected values are computed by the
 oracle, so an oracle "system" scores $1.0$ by construction; it is not an
@@ -303,9 +309,12 @@ independent SQLite implementation is a differential-testing check on our own two
 implementations of one specification, not external validation.
 
 \paragraph{Systems.} Internal baselines (append-only, full/recent context, BM25,
-last-write-wins) and the oracle; external systems Mem0 \texttt{0.1.118} and
-Graphiti \texttt{0.29.2} on Neo4j~5.26, both with \texttt{gpt-4o-mini} at
-temperature~0 and \texttt{text-embedding-3-small}. Runs are sealed with
+last-write-wins) and the oracle; external systems Mem0 \texttt{0.1.118}, LangMem,
+Graphiti \texttt{0.29.2} on Neo4j~5.26, Cognee \texttt{1.4.2} and Hindsight, all
+with \texttt{gpt-4o-mini} at temperature~0 and \texttt{text-embedding-3-small}.
+LangMem and Cognee require \texttt{openai} major versions incompatible with the
+pinned Mem0 and Graphiti, so they run in isolated interpreters behind a stdio
+protocol. Runs are sealed with
 canonical config, environment, source hash and per-file checksums.
 
 \section{Results}\label{sec:results}
@@ -318,28 +327,30 @@ $1/1/0$ throughout, confirming the natural-language rendering and the scorer
 round-trip the intended semantics without loss (Table~\ref{tab:baselines}). Append-only and full context retrieve the
 evidence ($0.915$ recall) but cannot choose among versions ($0.272$ exact).
 Under the high-churn profile append-only falls to $0.255$ exact with $0.662$
-stale.
+stale. Two of these strawmen round to the same three digits as external systems
+in Table~\ref{tab:external} --- last-write-wins and Mem0 at $0.603$, BM25@1 and
+LangMem at $0.576$ --- which is coincidence: they are different measurements
+over different workloads and diverge in the fourth decimal.
 
 \begin{table}[t]
 \centering
-\caption{Internal baselines over 27 conditions (3 profiles $\times$ 3 scales $\times$ 3 revision counts) $\times$ 10 seeds = 270 cells per system. These baselines are deliberate strawmen that establish the harness discriminates; they are not competitive systems.}
+\caption{Internal baselines over 27 conditions (3 profiles $\times$ 3 scales
+$\times$ 3 revision counts) $\times$ 10 seeds = 270 cells per system,
+cell-averaged. These are deliberate strawmen that establish the harness
+discriminates; they are not competitive systems. Two pairs coincide on all 270
+cells and are shown merged: returning the whole history is the same retrieval
+whether it is called append-only or full context, and on these histories BM25's
+top hit is always the most recent turn.}
 \label{tab:baselines}
 \begin{tabular}{lccc}
 \toprule
-Configuration & overall & \texttt{valid\_time} & \texttt{purge} \\
+Configuration & exact & evidence recall & stale-use \\
 \midrule
-\multicolumn{4}{l}{\emph{consolidating stores}}\\
-Mem0                          & 0.603 & 0.364 \scriptsize{(71/195)} & 0.044 \\
-LangMem                       & 0.576 & 0.323 \scriptsize{(63/195)} & 0.133 \\
+Oracle (scale anchor)            & 1.000 & 1.000 & 0.000 \\
 \midrule
-\multicolumn{4}{l}{\emph{retaining stores, read at the retrieval layer}}\\
-Graphiti                      & 0.196 & 0.000 \scriptsize{(0/195)} & 0.022 \\
-Cognee \textsc{chunks}        & 0.207 & 0.015 \scriptsize{(3/195)} & 0.089 \\
-Hindsight \textsc{recall}     & 0.194 & 0.000 \scriptsize{(0/195)} & 0.022 \\
-\midrule
-\multicolumn{4}{l}{\emph{the same retaining stores, read by an LLM}}\\
-Hindsight \textsc{reflect}    & 0.407 & 0.344 \scriptsize{(67/195)} & 0.311 \\
-Cognee \textsc{graph-compl.}  & \textbf{0.930} & \textbf{0.985} \scriptsize{(192/195)} & \textbf{0.622} \\
+Last-write-wins                  & 0.603 & 0.603 & 0.397 \\
+BM25@1 $=$ recent context        & 0.576 & 0.576 & 0.424 \\
+Append-only $=$ full context     & 0.272 & 0.915 & 0.624 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -445,10 +456,17 @@ expiry number.
 \texttt{SearchFilter} raises exact from $0.224$ to $0.318$ and cuts stale-use
 from $0.561$ to $0.360$, but collapses evidence recall from $0.873$ to $0.318$:
 precision is bought by discarding evidence, and valid-time remains $0.093$.
-Two structural limits cap it. First, extracted \texttt{invalid\_at} is absent on
-26 of 80 superseded edges and internally contradictory
-($\texttt{invalid\_at} \le \texttt{valid\_at}$) on 4 of 54 dated invalidations,
-so stale edges satisfy the filter indefinitely. Second,
+(Rates in this paragraph are cell-averaged, matching how the filtered runs were
+scored; the case-weighted valid-time is $0.114$.)
+Two structural limits cap it. First, the filter's predicate is only as good as
+the extracted \texttt{invalid\_at} it reads: where supersession leaves that
+field unset, a stale edge satisfies \texttt{invalid\_at IS NULL} at every event
+time and is returned regardless. We inspected the edge metadata directly and
+found both unset and self-contradictory
+($\texttt{invalid\_at} \le \texttt{valid\_at}$) invalidations, but that
+inspection ran against a graph later retracted for cross-run contamination, so
+we report the mechanism and withhold its counts rather than cite numbers drawn
+from a mixed ingestion. Second,
 \texttt{created\_at}/\texttt{expired\_at} record wall-clock ingestion rather than
 the history's transaction time, so no \texttt{as-of} bound is expressible. This
 ceiling is not an extraction-quality artifact: with \texttt{gpt-4o} in place of
@@ -528,8 +546,10 @@ Mem0 (consolidates)              & 0.603 & 0.364 \scriptsize{(71/195)} & 0.044 \
 LangMem (consolidates)           & 0.576 & 0.323 \scriptsize{(63/195)} & 0.133 \\
 Graphiti (retains)               & 0.196 & 0.000 \scriptsize{(0/195)}  & 0.022 \\
 Cognee \textsc{chunks} (retains) & 0.207 & 0.015 \scriptsize{(3/195)}  & 0.089 \\
+Hindsight \textsc{recall} (retains) & 0.194 & 0.000 \scriptsize{(0/195)}  & 0.022 \\
 \midrule
 Cognee \textsc{graph-completion} & \textbf{0.930} & \textbf{0.985} \scriptsize{(192/195)} & \textbf{0.622} \\
+Hindsight \textsc{reflect}       & 0.407 & 0.344 \scriptsize{(67/195)} & 0.311 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -608,10 +628,10 @@ filtering it, like Graphiti, is not cheaper at read time either, since its cost
 is also incurred on write.
 
 The write/read split is a design choice, not a constant. Cognee inverts it:
-\texttt{add} only stages text and averages $0.76$\,s, while its query path
-averages $7.93$\,s because the graph build runs at the first query of each
-checkpoint ($5.00$\,s under \textsc{chunks}, so roughly $3$\,s of the remainder
-is the reader LLM). Mem0 pays at write, Cognee at read, for comparable work. We
+over the same 20-cell grid (477 ingests, 484 queries), \texttt{add} only stages
+text and averages $0.65$\,s, while its query path averages $6.91$\,s because the
+graph build runs at the first query of each checkpoint ($4.53$\,s under
+\textsc{chunks}, so roughly $2.4$\,s of the remainder is the reader LLM). Mem0 pays at write, Cognee at read, for comparable work. We
 measure cost only for the in-process systems: Cognee and LangMem run in separate
 interpreters, so their token usage falls outside our instrumentation and is not
 reported.
@@ -668,7 +688,7 @@ own reference implementation, and none is evidence about the systems compared
 above. They are recorded here because the artifact contains them and because two
 are negative.
 
-\section{Negative Results and Corrections}
+\section{Negative Results and Corrections}\label{sec:negative}
 
 We preserve results that did not go our way: state-level decay did not beat
 rank-level decay, fusion calibration gave no held-out gain, signed provenance
@@ -699,21 +719,16 @@ and which cannot be removed without breaking that run's checksums.
 
 \section*{Limitations}
 
-Histories are synthetic with hand-specified operation
-profiles; contradiction density is approximated by operation mix and revision
-count. Two external systems, one backbone, and LLM extraction that is not
-bit-reproducible. The literature review is single-reviewer. Purge claims cover
-declared stores and tested failure points, not backups, OS caches or
-provider-side copies.
-
-Three further limits bound every number above. Histories are synthetic with
-hand-specified operation profiles, so contradiction density is approximated by
-operation mix and revision count rather than sampled from real usage. All runs
-use a single backbone (\texttt{gpt-4o-mini}) with LLM extraction that is not
+Histories are synthetic with hand-specified operation profiles, so
+contradiction density is approximated by operation mix and revision count rather
+than sampled from real usage. Five external systems in seven configurations, all
+on a single backbone (\texttt{gpt-4o-mini}) with LLM extraction that is not
 bit-reproducible; our one same-protocol replication moved a small-denominator
-category by 0.125, which is why we draw no conclusion from expiry. And the
-deletion result rests on a single seeded history, so it establishes a direction,
-not a rate.
+category by 0.125, which is why we draw no conclusion from expiry. The deletion
+result rests on a single seeded history, so it establishes a direction, not a
+rate. The literature review is single-reviewer. Purge claims cover declared
+stores and tested failure points, not backups, OS caches or provider-side
+copies.
 
 \section*{Ethics Statement}
 

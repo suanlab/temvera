@@ -27,6 +27,10 @@ from temvera.reanalysis import (  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 RUNS = ROOT / "experiments" / "runs"
 OUT = ROOT / "paper" / "figures"
+# matplotlib stamps a CreationDate into every PDF, so regenerating the
+# figures changes their bytes even when the plot is identical. Pin it so a
+# reviewer can diff a regenerated figure against the shipped one.
+_PDF_METADATA = {"CreationDate": None, "Producer": "temvera", "Creator": "temvera"}
 # Latest runs: matched grid by design, isolated Mem0 database, and Graphiti
 # under the hybrid retrieval it actually ships.
 MEM0 = RUNS / "external-mem0-grid-v2"
@@ -91,7 +95,7 @@ def figure_categories(cells) -> None:
         fontsize=10,
     )
     fig.tight_layout()
-    fig.savefig(OUT / "categories.pdf")
+    fig.savefig(OUT / "categories.pdf", metadata=_PDF_METADATA)
     plt.close(fig)
 
 
@@ -131,7 +135,7 @@ def figure_budget(cells) -> None:
         fontsize=10,
     )
     fig.tight_layout()
-    fig.savefig(OUT / "budget.pdf")
+    fig.savefig(OUT / "budget.pdf", metadata=_PDF_METADATA)
     plt.close(fig)
 
 
@@ -177,7 +181,7 @@ def figure_residual() -> None:
         fontsize=10,
     )
     fig.tight_layout()
-    fig.savefig(OUT / "residual.pdf")
+    fig.savefig(OUT / "residual.pdf", metadata=_PDF_METADATA)
     plt.close(fig)
 
 
