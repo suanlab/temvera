@@ -399,21 +399,22 @@ $0.125$ and $0.000$), so the consolidation signature is specific rather than
 general weakness.
 
 \textbf{Mem0 consolidates.} It is strong on transaction-scoped current queries
-($0.956$) and much weaker on historical valid time ($0.374$). Of its non-exact
-cases, 84\% return a stale value with the expected value \emph{absent} --- a
-genuine loss of history rather than a ranking artifact --- and this is stable
-across retrieval budgets (Figure~\ref{fig:budget}).
+($0.952$) and much weaker on historical valid time ($0.364$). Of its non-exact
+cases, 88.5\% (170/192) return a stale value with the expected value
+\emph{absent} --- a genuine loss of history rather than a ranking artifact ---
+and this is stable across retrieval budgets (Figure~\ref{fig:budget}).
 
-\textbf{Graphiti retains but does not filter.} It reaches $0.944$ evidence
-recall and places an edge about the queried subject at rank~1 in 99.4\% of
-cases, yet scores $0.194$ exact, because it returns superseded revisions
-alongside the current one. \textbf{This deficit is budget-dependent, and we
-report it as such}: our scorer requires every expected value and no superseded
-value across the returned set, so a system that returns $k$ facts about a
-one-attribute subject is penalised for its own retained history. At $k{=}1$ the
-two systems' valid-time accuracy is \emph{identical} ($0.385$); as $k$ grows
-Graphiti collapses to $0.000$ while Mem0 is nearly flat
-(Figure~\ref{fig:budget}). We therefore do not claim Graphiti cannot represent
+\textbf{Graphiti retains but does not filter.} It reaches $0.937$ evidence
+recall and returns an item naming the queried subject at rank~1 in 91.3\%
+(442/484) of cases, yet scores $0.196$ exact, because it returns superseded
+revisions alongside the current one. \textbf{This deficit is budget-dependent,
+and we report it as such}: our scorer requires every expected value and no
+superseded value across the returned set, so a system that returns $k$ facts
+about a one-attribute subject is penalised for its own retained history. At
+$k{=}1$ the two systems' valid-time accuracy is statistically indistinguishable
+($0.379$ against $0.354$; Wilson intervals $[0.314, 0.449]$ and
+$[0.290, 0.423]$); as $k$ grows Graphiti collapses to $0.000$ while Mem0 is
+nearly flat (Figure~\ref{fig:budget}). We therefore do not claim Graphiti cannot represent
 valid time. The defensible claim is narrower and does not depend on $k$: its
 retrieval does not apply the validity metadata it stores, so downstream filtering
 is left to the caller.
@@ -691,7 +692,10 @@ database with a per-run database path.
 Runs are sealed with canonical config, environment, source-tree hash and
 per-file checksums, and verified by an aggregate checker. The frozen synthetic
 fixture is byte-reproducible and split-disjoint. Tests and lint pass on CPython
-3.11. Third-party datasets are used locally and never redistributed.
+3.11. The LongMemEval corpus itself is downloaded rather than redistributed;
+one sealed run (\texttt{longmemeval-e7-v2}) does ship a history database of
+LLM-extracted memories derived from it, which the corpus's MIT licence permits
+and which cannot be removed without breaking that run's checksums.
 
 \section*{Limitations}
 
