@@ -1,5 +1,8 @@
 # Reproducing the Local Artifact
 
+Everything below runs from the public artifact at
+<https://github.com/suanlab/temvera>.
+
 The accepted artifact is dependency-free except for development checks and the
 optional cryptographic tests. Use CPython 3.11 or newer.
 

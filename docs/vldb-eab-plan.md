@@ -24,9 +24,9 @@ previously carried:
   following month.
 
 Single-blind also means the artifact URL need not be withheld. EA&B requires
-releasing data and software, so `\vldbavailabilityurl` should carry a public
-repository or archival DOI before submission; it is empty only because no such
-URL exists yet.
+releasing data and software, and `\vldbavailabilityurl` now carries
+<https://github.com/suanlab/temvera>, so the Artifact Availability block renders
+on page 1.
 
 ## Why this track
 
