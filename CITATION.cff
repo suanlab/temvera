@@ -1,6 +1,11 @@
 cff-version: 1.2.0
 title: "Temvera: Temporal, provenance-aware memory for AI agents"
 message: "Please cite the archived release associated with the experiment."
+authors:
+  - family-names: "Lee"
+    given-names: "Suan"
+    affiliation: "Division of Computer Science, Semyung University"
+    email: "pitchscore1@gmail.com"
 type: software
 version: 0.0.1
 date-released: 2026-07-15
