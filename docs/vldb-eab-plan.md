@@ -14,11 +14,10 @@ previously carried:
   Therefore, authors MUST include their names and affiliations on the first page
   of the manuscript." The earlier plan prepared an anonymous submission, which
   would have been non-compliant. `paper/main.tex` carries the author block:
-  Suan Lee, Division of Computer Science, Semyung University, Jecheon, South
-  Korea. Two renderings were chosen rather than sourced and should be confirmed
-  against the university's own English usage: "Division of Computer Science" for
-  컴퓨터학부, and the campus city. The contact address is currently a personal
-  one.
+  Suan Lee, School of Computer Science, Semyung University, Jecheon, South
+  Korea. The school name is the author's own choice of English rendering for
+  컴퓨터학부. The campus city was filled in by us and should still be confirmed,
+  and the contact address is currently a personal one.
 - **Rolling deadline on the 1st of each month**, 5:00 PM Pacific. There is *no
   separate abstract deadline* — the earlier note about abstracts on the 25th of
   the prior month was wrong. Initial reviews arrive around the 15th of the

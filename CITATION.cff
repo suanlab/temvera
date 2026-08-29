@@ -4,7 +4,7 @@ message: "Please cite the archived release associated with the experiment."
 authors:
   - family-names: "Lee"
     given-names: "Suan"
-    affiliation: "Division of Computer Science, Semyung University"
+    affiliation: "School of Computer Science, Semyung University"
     email: "pitchscore1@gmail.com"
 type: software
 version: 0.0.1
