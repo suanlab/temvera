@@ -45,8 +45,25 @@ residual for both conditions. Regenerating the runs is a separate, credentialed
 step described below; the two are deliberately decoupled so a reviewer can
 confirm what we computed before deciding whether to re-run generation.
 
+To check the *paper* rather than the tables, run:
+
+```bash
+python scripts/verify_paper_claims.py     # --list to see every claim
+```
+
+This holds 82 claims, each pairing the value as printed in `paper/main.tex` with
+a function that recomputes it from a sealed run, and fails if either half moves
+--- if the computation stops matching, or if the number stops appearing where
+the paper prints it. Prose claims are anchored to their own sentence, because
+document-wide presence is not enough: the drift this guard exists to catch left
+every number still present somewhere, with correct tables and wrong prose beside
+them. Each claim also declares whether it is case-weighted or cell-averaged,
+since the paper uses both and confusing them makes correct numbers look wrong.
+`tests/test_paper_claims.py` runs it, so `pytest` fails on drift.
+
 Figures are regenerated from the same sealed runs with
-`python scripts/make_figures.py`.
+`python scripts/make_figures.py`, and are byte-reproducible: a regenerated
+figure should be identical to the shipped one.
 
 ## External-system experiments (require credentials)
 

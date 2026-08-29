@@ -105,6 +105,11 @@ This repo has research controls that ordinary codebases don't. Before changing a
   immutable directory instead.
 - Pin datasets, seeds, prompts, and environment versions. Add a deterministic test for
   every memory operation or bug fix.
+- **Any number the paper prints must have a row in `scripts/verify_paper_claims.py`**,
+  declaring both its printed form and how it is recomputed from a sealed run, and
+  naming its aggregation (case-weighted vs cell-averaged). `pytest` fails otherwise.
+  Prose drifting onto a superseded run is the failure this guards against, and it
+  has happened.
 - Prefer rebuildable indexes over introducing hidden sources of truth; avoid adding
   external services before a local baseline exists.
 
