@@ -1,3 +1,18 @@
-6fd242e6b9966c9e86a88169be281de1d4a2bb6e45547702d879ac4e536dba54  temvera_research-0.0.1-py3-none-any.whl
-6461d678676cc4d862d9fa4e657eba4c984f3f495360e0c23ebe4a46cd605c1f  temvera_research-0.0.1.tar.gz
-f8fd2e150fd8a300a8bf4eef93c6997e41850530248bd874b34ed620f624c5d3  temvera-local-artifact.tar.gz
+# Deterministic artifact package for the PVLDB EA&B submission.
+#
+# The archive is byte-reproducible: building it twice from the same tree yields
+# the same bytes, so this checksum is a claim you can falsify rather than a
+# record of one build. Regenerate and compare with:
+#
+#   temvera artifact-package . /tmp/temvera-artifact.tar.gz
+#   sha256sum /tmp/temvera-artifact.tar.gz
+#
+# Verify the archive's own internal manifest with:
+#
+#   temvera verify-artifact-package /tmp/temvera-artifact.tar.gz
+#
+# Contents: source, tests, docs, fixtures, experiment configs and every accepted
+# sealed run. Excluded by design: data/raw (third-party corpora we download
+# rather than redistribute) and compiled bytecode.
+
+dd67fcec33f54b9d02ca3326927f4e01922197c09d37ecb7b3e4204ae8d40f9b  temvera-artifact.tar.gz
