@@ -364,8 +364,23 @@ CLAIMS: list[Claim] = [
     Claim("5.6", "temporal-reasoning, distractor split", "0.167",
           lambda: _matched_temporal("longmemeval-s-v1"),
           near="temporal-reasoning in fact rises"),
+    # -- 4.1 claims-vs-documentation table -------------------------------------
+    Claim("Tab.claims", "Graphiti valid_time beside its claim", "0.000",
+          lambda: micro("external-graphiti-hybrid-v1", "valid_time", cells()),
+          near="what was true at any point in time"),
+    Claim("Tab.claims", "Hindsight valid_time beside its claim", "0.000",
+          lambda: micro("external-hindsight-recall-v1", "valid_time", cells()),
+          near="Temporal + Semantic + Entity Memory Architecture"),
+    Claim("Tab.claims", "Cognee valid_time beside its claim", "0.015",
+          lambda: micro("external-cognee-chunks-grid-v1", "valid_time", cells()),
+          near="documents a \\texttt{forget} operation"),
+    Claim("Tab.claims", "Mem0 valid_time beside its claim", "0.364",
+          lambda: micro("external-mem0-grid-v2", "valid_time", cells()),
+          near="none; ``long-term memory''"),
+    Claim("Tab.claims", "LangMem valid_time beside its claim", "0.323",
+          lambda: micro("external-langmem-v1", "valid_time", cells()),
+          near="none; ``extracts, consolidates''"),
 ]
-
 
 def _x_cells():
     return matched_cells(

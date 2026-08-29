@@ -1,0 +1,56 @@
+{
+  "captured": "2026-08-20",
+  "note": "Verbatim capability claims from each system's own packaged documentation, at the version measured where that version is known. Each quote is checked against the METADATA byte stream whose sha256 is recorded here, with whitespace normalised.",
+  "systems": {
+    "cognee": {
+      "metadata_sha256": "0a3aca503c16466b74a84014d75a28923013eb6f913d8c78f219b9392ac5a68c",
+      "package": "cognee",
+      "quotes": [
+        "Cognee's API gives you four operations — `remember`, `recall`, `forget`, and `improve`"
+      ],
+      "source": "PyPI wheel METADATA",
+      "version": "1.4.2"
+    },
+    "graphiti": {
+      "metadata_sha256": "f7ce25e7bbe9d051a8c3f2c2022e9087f4e8c6d125544ef58235772f4302bb85",
+      "package": "graphiti-core",
+      "quotes": [
+        "Explicit bi-temporal tracking with automatic fact invalidation",
+        "each fact in a context graph has a validity window: when it became true, and when (if ever) it was superseded",
+        "old facts are invalidated — not deleted. Query what's true now, or what was true at any point in time."
+      ],
+      "source": "installed in .venv",
+      "version": "0.29.2"
+    },
+    "hindsight": {
+      "metadata_sha256": "88c5d610dc747591d72bd0cfc2e4dd3f71f26827bb478a83d22f359e5c0f4814",
+      "package": "hindsight-api",
+      "quotes": [
+        "**Memory System for AI Agents** — Temporal + Semantic + Entity Memory Architecture using PostgreSQL with pgvector."
+      ],
+      "source": "PyPI wheel METADATA",
+      "version": "0.9.2",
+      "version_caveat": "The sealed run recorded hindsight_version as 'unknown', so this is the current published release and may not be the exact build measured."
+    },
+    "langmem": {
+      "metadata_sha256": "053d64a00bd169b67c5a961bc7d7a68891d83e64e9afb796b58f45ec0818cbec",
+      "package": "langmem",
+      "quotes": [
+        "LangMem helps agents learn and adapt from their interactions over time.",
+        "**Background memory manager** that automatically extracts, consolidates, and updates agent knowledge"
+      ],
+      "source": "PyPI wheel METADATA",
+      "version": "0.0.30"
+    },
+    "mem0": {
+      "metadata_sha256": "5be1ca1fb4159dcec1d310246d2f578a5d8a93cc9d02a7743fca89caad5ebd23",
+      "package": "mem0ai",
+      "quotes": [
+        "Long-term memory for AI Agents",
+        "enhances AI assistants and agents with an intelligent memory layer, enabling personalized AI interactions"
+      ],
+      "source": "installed in .venv",
+      "version": "0.1.118"
+    }
+  }
+}

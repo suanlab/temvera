@@ -269,6 +269,57 @@ Table~\ref{tab:fragment}. That table covers the three systems whose stores we
 inspected directly; Cognee and Hindsight enter in \S\ref{sec:reader} and are
 characterised by measured behaviour rather than by schema inspection.
 
+\subsection{What the systems say they do}
+\label{sec:claims}
+
+A capability audit asks what a store can represent. A prospective user asks
+something cheaper: what does the project say it does? Table~\ref{tab:claims}
+puts each system's own packaged documentation beside the measurement, quoting
+the \texttt{METADATA} shipped with the version we ran.
+
+\begin{table}[t]
+\centering
+\caption{Documented temporal claim against measured retrieval-layer
+\texttt{valid\_time}. Quotes are verbatim from the distribution's own
+\texttt{METADATA} at the version measured. $\dagger$: the Hindsight run did not
+record its version, so that quote is from the current release rather than
+provably the build we measured.
+Claim text and checksums are archived with the artifact.}
+\label{tab:claims}
+\small
+\begin{tabular}{@{}lp{4.1cm}c@{}}
+\toprule
+System & Documented temporal claim & \texttt{valid\_time} \\
+\midrule
+Graphiti  & ``Query what's true now, or what was true at any point in time'' & 0.000 \\
+Hindsight$^\dagger$ & ``Temporal + Semantic + Entity Memory Architecture'' & 0.000 \\
+Cognee    & none; documents a \texttt{forget} operation & 0.015 \\
+Mem0      & none; ``long-term memory'' & 0.364 \\
+LangMem   & none; ``extracts, consolidates'' & 0.323 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ordering inverts. The two systems that advertise temporal capability are the
+two whose retrieval answered no valid-time query at all, while the two that
+advertise none --- one of which, LangMem, describes its own manager as
+consolidating, and so tells the reader plainly that history is not kept --- score
+highest. We do not read this as five systems' worth of evidence for a general
+law, and the mechanism in each case is the one \S\ref{sec:results} measures
+rather than anything about marketing. What it does establish is that
+documentation is not a usable proxy here: on this sample, reading the project's
+own description of its temporal support would have ranked the systems
+\emph{backwards}. That is the practical form of the paper's claim --- a system
+can expose temporal fields, document them accurately, and still not answer a
+temporal query --- and it is why we measure rather than survey.
+
+Two honest limits. Mem0 and LangMem are not failing a promise they made, so
+their low valid-time is a design consequence and not a discrepancy; the
+discrepancy rows are Graphiti and Hindsight. And Cognee documents a
+\texttt{forget} operation that our deletion protocol (\S\ref{sec:results}) never
+exercised, since that experiment covered Mem0 and Graphiti only --- so the one
+claim in this table we could have tested against deletion, we did not.
+
 \section{Experimental Setup}\label{sec:setup}
 
 \paragraph{Workload.} A seeded generator emits typed histories over
