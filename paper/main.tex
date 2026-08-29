@@ -315,10 +315,11 @@ temporal query --- and it is why we measure rather than survey.
 
 Two honest limits. Mem0 and LangMem are not failing a promise they made, so
 their low valid-time is a design consequence and not a discrepancy; the
-discrepancy rows are Graphiti and Hindsight. And Cognee documents a
-\texttt{forget} operation that our deletion protocol (\S\ref{sec:results}) never
-exercised, since that experiment covered Mem0 and Graphiti only --- so the one
-claim in this table we could have tested against deletion, we did not.
+discrepancy rows are Graphiti and Hindsight. And Cognee's documented
+\texttt{forget} is the one claim here our residual protocol never exercised,
+since that experiment covered Mem0 and Graphiti only; \S\ref{sec:results}
+examines its API surface instead, which is weaker evidence than a measurement
+and is reported as such.
 
 \section{Experimental Setup}\label{sec:setup}
 
@@ -571,6 +572,43 @@ is uniquely clean. Counts are substring occurrences over differently shaped
 stores and are not comparable in magnitude; the reachability split is the claim.
 This rests on a single seeded history (12 events, three purged values) and one
 backbone, with extraction that is not bit-reproducible.
+
+\textbf{Why the instruction has nothing to bind to.} The measurement above says
+prose deletion is ignored; reading the deletion surface of each library says why.
+We inspected the installed distributions rather than their documentation:
+
+\begin{table}[t]
+\centering
+\caption{Finest unit each deletion API can name, read from the distribution.
+None accepts a condition over content, so ``forget what you know about this
+subject's home city'' is not an expressible request in any of them. Hindsight is
+omitted: it was not installed for this inspection.}
+\label{tab:deletion-api}
+\small
+\begin{tabular}{@{}lp{4.3cm}@{}}
+\toprule
+System & Finest nameable unit \\
+\midrule
+Mem0      & one memory id (\texttt{delete}), or a whole user/agent/run scope \\
+Graphiti  & one episode, i.e.\ one ingested turn \\
+Cognee    & one data item, one dataset, or everything the user owns \\
+LangMem   & one memory key \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every operation is identified by an opaque handle or by a scope that wipes far
+more than was asked. The request an assistant actually receives falls between
+them, and satisfying it requires the caller to enumerate the handles first ---
+that is, to hold the subject-to-record index the memory system exists to
+provide. This is the deletion analogue of the retrieval finding: the store keeps
+what is needed and leaves the predicate to the caller. It also settles the case
+\S\ref{sec:claims} left open. Cognee documents \texttt{forget} as one of four
+core operations, and \texttt{forget} is real --- but it takes a
+\texttt{data\_id}, a dataset, or \texttt{everything}, never a condition, so the
+documented operation does not answer the documented use. We did not run Cognee
+through the residual protocol, so this is a statement about its API surface and
+not a measurement of what survives in its stores.
 
 \subsection{Is the information lost, or merely unfiltered?}
 \label{sec:reader}
