@@ -3,30 +3,53 @@
 > Decision D-014 (2026-08-14). Target: PVLDB **Experiments, Analysis & Benchmark**
 > track. No arXiv preprint (user decision).
 
-## Submission rules, verified against the CFP (2026-08-19)
+## Submission rules, verified against the Volume 20 CFP (2026-09-05)
 
-Read from the PVLDB Volume 19 submission page, correcting two errors this plan
-previously carried:
+Target: the **1 October 2026** rolling deadline, which falls in **PVLDB Volume
+20** (first deadline 2026-04-01, final 2027-03-01). Read from
+<https://vldb.org/pvldb/volumes/20/submission/>.
 
-- **12 pages excluding references**, with no limit on reference pages. (As
-  assumed; now verified.)
-- **Single-blind, not anonymous.** "VLDB is a single-blind conference.
-  Therefore, authors MUST include their names and affiliations on the first page
-  of the manuscript." The earlier plan prepared an anonymous submission, which
-  would have been non-compliant. `paper/main.tex` carries the author block:
-  Suan Lee, School of Computer Science, Semyung University, Jecheon, South
-  Korea. The school name is the author's own choice of English rendering for
-  컴퓨터학부. The campus city was filled in by us and should still be confirmed,
-  and the contact address is currently a personal one.
-- **Rolling deadline on the 1st of each month**, 5:00 PM Pacific. There is *no
-  separate abstract deadline* — the earlier note about abstracts on the 25th of
-  the prior month was wrong. Initial reviews arrive around the 15th of the
-  following month.
+- **An abstract is mandatory on 25 September 2026**, 5:00 PM Pacific: "Mandatory
+  abstract submission by 25th of the previous month for a paper submission on
+  the 1st of a month." The full paper follows on **1 October 2026**, same hour.
+  Missing the abstract is a desk rejection.
+- **12 pages excluding references.** Appendices and acknowledgements count
+  against the cap; only references may run over.
+- **Single-blind.** "VLDB is a single-blind conference. Therefore, authors MUST
+  include their names and affiliations on the first page of the manuscript."
+  `paper/main.tex` carries: Suan Lee, School of Computer Science, Semyung
+  University, Jecheon, South Korea. The contact address is currently a personal
+  one.
+- **Title tag** `[Experiment, Analysis & Benchmark]` must appear **both in the
+  PDF and in the CMT submission title**.
+- **Reproducibility package at initial submission**, not at camera-ready: "For
+  PVLDB volume 20, already the initial submission must include a link to the
+  full reproducibility package of all experiments, data, and artifacts with
+  meaningful instructions on how to run the experiments." EA&B additionally must
+  "make available all experimental data and related software (there are no
+  excuses)."
+- **Conflicts of interest.** "All authors of a paper (listed in the pdf) must
+  register themselves in CMT and declare their individual domain and PC
+  conflicts at the time of submission."
+- **Submission system:** <https://cmt3.research.microsoft.com/PVLDBv20_2027/>
+  — note the volume-20 site, not the v19 one.
 
-Single-blind also means the artifact URL need not be withheld. EA&B requires
-releasing data and software, and `\vldbavailabilityurl` now carries
-<https://github.com/suanlab/temvera>, so the Artifact Availability block renders
-on page 1.
+Desk-rejection triggers named by the CFP: incomplete abstract, unattested COIs,
+violated formatting, exceeded caps. These do not fall under the 12-month
+embargo.
+
+### Correction to this plan
+
+The 2026-08-19 revision asserted there is *no* separate abstract deadline and
+recorded the earlier note about "abstracts on the 25th of the prior month" as an
+error. That was itself the error: it was read off the **Volume 19** page, which
+was already closed (its final deadline was 2026-03-01). The original note was
+right for Volume 20, which is the volume we are submitting to. Verifying against
+a CFP is not enough if it is the wrong year's CFP.
+
+Single-blind also means the artifact URL need not be withheld.
+`\vldbavailabilityurl` carries <https://github.com/suanlab/temvera>, so the
+Artifact Availability block renders on page 1.
 
 ## Why this track
 

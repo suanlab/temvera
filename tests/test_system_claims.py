@@ -31,6 +31,11 @@ def test_claim_file_covers_every_compared_system() -> None:
 
 @pytest.mark.parametrize("name", ["mem0", "graphiti"])
 def test_installed_package_still_contains_its_quotes(name: str) -> None:
+    # The compared systems are not dependencies of this package -- they are
+    # heavy, mutually incompatible, and needed only to regenerate runs. A
+    # reviewer installing '.[dev]' does not have them, so this skips rather than
+    # failing; it guards the quotes in the environment that can check them.
+    pytest.importorskip({"mem0": "mem0", "graphiti": "graphiti_core"}[name])
     entry = _record()["systems"][name]
     dist = md.distribution(entry["package"])
     assert dist.version == entry["version"], "quotes were captured from another version"
@@ -66,6 +71,8 @@ def test_no_compared_system_exposes_predicate_scoped_deletion() -> None:
 
 
 def test_recorded_deletion_signatures_match_the_installed_packages() -> None:
+    pytest.importorskip("mem0")
+    pytest.importorskip("graphiti_core")
     import inspect
 
     from graphiti_core import Graphiti

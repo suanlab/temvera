@@ -20,7 +20,10 @@ temvera = "temvera.cli:main"
 dev = [
   "cryptography>=42.0",
   "pytest>=8.0",
-  "ruff>=0.9",
+  # Pinned to a minor range: ruff's default rule set changes between releases,
+  # so an unpinned reviewer gets findings we never saw. The rule set is also
+  # declared explicitly below, which is the version-independent half of the fix.
+  "ruff>=0.9,<0.17",
 ]
 crypto = ["cryptography>=42.0"]
 learned = ["fastembed>=0.8,<1", "numpy>=1.21,<2.3"]
@@ -35,3 +38,8 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 88
 target-version = "py311"
+
+[tool.ruff.lint]
+# Declared rather than inherited, so `ruff check .` gives the same answer on any
+# supported ruff version. These are the checks the codebase is written against.
+select = ["E4", "E7", "E9", "F"]

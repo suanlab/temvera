@@ -6,6 +6,46 @@ Temvera is a research project investigating how long-running AI agents should
 store, revise, retrieve, forget, and audit memory. The project treats memory as
 an evolving data-management problem rather than a flat vector store.
 
+## Paper artifact (PVLDB, Experiment, Analysis & Benchmark)
+
+*Temporal Fields Are Not Temporal Correctness: Measuring Bitemporal and Deletion
+Semantics in Deployed Agent Memory.*
+
+Every number the paper reports is an aggregation over sealed per-case
+transcripts, so **the whole paper can be checked without an API key, a database
+server, or a dataset download**:
+
+**Requires CPython 3.11 or newer.** Check before anything else — on an older
+interpreter `pip` spends fifteen minutes backtracking through dependency
+versions before it reports the real problem:
+
+```bash
+python3 -V          # must be >= 3.11; if not, use python3.11 below
+```
+
+```bash
+git clone https://github.com/suanlab/temvera && cd temvera
+python3.11 -m venv .venv && source .venv/bin/activate
+pip install -e '.[dev]'
+
+temvera verify-artifacts experiments/accepted-runs.json experiments/runs  # 30 sealed runs
+python scripts/recompute_paper_numbers.py --check    # rebuild every table
+python scripts/verify_paper_claims.py                # 87 printed figures vs. their runs
+pytest && ruff check .
+```
+
+`verify_paper_claims.py` is the one to run if you only run one: it pairs each
+figure as printed in the paper with a recomputation from a sealed run, and fails
+if either half moves.
+
+Regenerating the runs is a separate, credentialed step — it needs an OpenAI key,
+a Neo4j server, and a second interpreter for LangMem, whose `openai` requirement
+conflicts with the pinned Mem0 and Graphiti. The two paths are deliberately
+decoupled: you can confirm what we computed before deciding whether to re-run
+generation. [REPRODUCING.md](REPRODUCING.md) has the full protocol, and a frozen
+snapshot with checksums is attached to the
+[`pvldb-eab-v1` release](https://github.com/suanlab/temvera/releases/tag/pvldb-eab-v1).
+
 ## Research thesis
 
 Git-native, bitemporal memory can make agent beliefs inspectable, reversible,

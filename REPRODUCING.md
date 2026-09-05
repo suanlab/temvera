@@ -4,10 +4,14 @@ Everything below runs from the public artifact at
 <https://github.com/suanlab/temvera>.
 
 The accepted artifact is dependency-free except for development checks and the
-optional cryptographic tests. Use CPython 3.11 or newer.
+optional cryptographic tests. **It requires CPython 3.11 or newer, and this is
+worth checking first**: on an older interpreter pip backtracks through hundreds
+of dependency versions for many minutes before finally reporting `requires a
+different Python`. Many systems still ship 3.10 as `python3`.
 
 ```bash
-python -m venv .venv
+python3 -V                    # must be >= 3.11
+python3.11 -m venv .venv      # name the interpreter explicitly if it is not
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
 pytest
