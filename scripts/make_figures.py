@@ -14,6 +14,11 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
+# matplotlib defaults to Type 3 fonts, which are bitmapped: they render blurry,
+# leave figure text unsearchable, and are what publisher format checkers reject.
+# 42 is TrueType.
+matplotlib.rcParams["pdf.fonttype"] = 42
+matplotlib.rcParams["ps.fonttype"] = 42
 import matplotlib.pyplot as plt  # noqa: E402
 
 from temvera.reanalysis import (  # noqa: E402

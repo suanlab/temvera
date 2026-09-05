@@ -34,6 +34,14 @@ README and `REPRODUCING.md`, frozen snapshot at the `pvldb-eab-v1` release.
 - [ ] Submit the abstract by 09-25, then the PDF by 10-01.
 - [ ] Decide whether to use an institutional email address.
 - [ ] Confirm the Jecheon campus city if it needs correcting.
+- [ ] **Supply authors for two citations we could not verify.** `amemguard` and
+      `memincept` are cited from OpenReview forum IDs, and OpenReview blocks
+      automated access (HTTP 403, challenge required), so their author lists and
+      exact titles are unconfirmed and they render without authors. Every other
+      citation was checked against its primary source. Open
+      <https://openreview.net/forum?id=udqe7UZUZ6> and
+      <https://openreview.net/forum?id=1YNrlSSRsk> in a browser and fill in
+      `paper/refs.bib`, or drop the two references.
 
 ## Desk-rejection triggers, checked
 
@@ -48,6 +56,9 @@ exceeded caps. The two we control are verified:
 | Author names on page 1 (single-blind) | present |
 | PVLDB reference-format / CC / ISSN / availability blocks | all four render |
 | Build | 0 errors, 0 undefined references or citations |
+| Fonts | all embedded, no Type 3 |
+| Figure alt text | `\Description` on all three figures |
+| Bibliography | authors verified against primary sources, except the two above |
 
 ## Artifact, verified from a clean clone
 

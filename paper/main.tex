@@ -445,6 +445,7 @@ Exact at $k{=}1$             & 0.630 & 0.595 & 0.442 \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/categories.pdf}
+\Description{Grouped bar chart of exact accuracy by lifecycle category for Mem0, LangMem and Graphiti. Mem0 and LangMem are high on transaction-scoped queries and moderate on valid time; Graphiti is near zero on valid time and expiry. Error bars are widest on expiry, which rests on sixteen cases.}
 \caption{Per-category exact accuracy over the matched cells. Expiry rests on 16
 cases for both systems, so its interval admits accuracies up to $0.19$; the
 valid-time gap is the only category difference that is well separated.}
@@ -485,6 +486,7 @@ is left to the caller.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/budget.pdf}
+\Description{Line chart of exact accuracy against retrieval budget k from one to five. Mem0 and LangMem are nearly flat across budgets; Graphiti starts close to them at k equals one and falls steeply as k grows, reaching zero on valid time at k equals five.}
 \caption{Exact accuracy versus retrieval budget $k$ on matched cells. The
 all-or-nothing conjunct in our scorer makes Graphiti's measured deficit grow
 with $k$; at $k{=}1$ the two systems are indistinguishable on valid time. Budget
@@ -539,6 +541,7 @@ non-restating instruction (Figure~\ref{fig:residual}).
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/residual.pdf}
+\Description{Bar chart of residual occurrences of a purged value per store, split by whether a query path can reach that store. Under a natural-language deletion instruction every system retains the value in reachable stores; under each system's native deletion API the reachable stores fall to zero and only audit logs and entity summaries retain it.}
 \caption{Where a purged payload survives, split by whether a query path can
 reach the store. Counts are substring occurrences over differently shaped stores
 and are not comparable in magnitude across systems; the reachability split is
