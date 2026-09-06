@@ -34,14 +34,20 @@ README and `REPRODUCING.md`, frozen snapshot at the `pvldb-eab-v1` release.
 - [ ] Submit the abstract by 09-25, then the PDF by 10-01.
 - [ ] Decide whether to use an institutional email address.
 - [ ] Confirm the Jecheon campus city if it needs correcting.
-- [ ] **Supply authors for two citations we could not verify.** `amemguard` and
-      `memincept` are cited from OpenReview forum IDs, and OpenReview blocks
-      automated access (HTTP 403, challenge required), so their author lists and
-      exact titles are unconfirmed and they render without authors. Every other
-      citation was checked against its primary source. Open
-      <https://openreview.net/forum?id=udqe7UZUZ6> and
-      <https://openreview.net/forum?id=1YNrlSSRsk> in a browser and fill in
-      `paper/refs.bib`, or drop the two references.
+## Bibliography, checked against primary sources (2026-09-06)
+
+Every reference now carries authors. Six entries were corrected against their
+primary source, and four of those had *paraphrased rather than quoted* titles —
+`minja` had the arXiv v1 title where v4 now reads differently, and `springdrift`
+and `memlineage` were shortened. Hindsight was cited as a GitHub repository when
+it is an ACL 2026 system demonstration with seven authors.
+
+`memincept` was **removed**. Cited from OpenReview forum `1YNrlSSRsk`, its title
+matched nothing on DBLP, arXiv, or a domain-restricted search, and OpenReview
+returns a 403 challenge to automated requests, so neither authors nor title could
+be confirmed. It supported one clause of related work that A-MemGuard and MINJA
+already cover. Restore it if you can open the forum in a browser; the record is
+kept in `studies.csv` as `withdrawn_unverifiable`.
 
 ## Desk-rejection triggers, checked
 
