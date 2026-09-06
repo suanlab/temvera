@@ -143,7 +143,7 @@ Two settings are review-version choices to revisit at camera-ready:
 empty, which deliberately suppresses the artifact-availability block — it should
 carry the artifact URL once the work is no longer anonymous.
 
-The submission builds clean at **7 pages against the 12-page EA&B limit**, with
+The submission builds clean at **8 pages against the 12-page EA&B limit**, with
 no undefined references or citations, and `pdftotext` finds no author,
 institution, or project name anywhere in the output.
 

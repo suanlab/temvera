@@ -1,8 +1,11 @@
 # Responsible NLP Research checklist — draft answers
 
-ARR requires this checklist at submission. Answers below are drafted from what
-the artifact actually contains; verify each before submitting, and update any
-that change.
+> **Superseded (2026-09-06). Not required for this submission.** This was
+> drafted when ARR was the target; decision D-014 moved the paper to PVLDB's
+> Experiment, Analysis & Benchmark track, which asks for no such checklist. It
+> is kept because its answers are an accurate description of the artifact and
+> are reusable, not because anything here must be filed. The live requirements
+> are in [../docs/submission-checklist.md](../docs/submission-checklist.md).
 
 ## A. Limitations and risks
 

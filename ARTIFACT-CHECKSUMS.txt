@@ -1,18 +1,22 @@
-# Deterministic artifact package for the PVLDB EA&B submission.
-#
-# The archive is byte-reproducible: building it twice from the same tree yields
-# the same bytes, so this checksum is a claim you can falsify rather than a
-# record of one build. Regenerate and compare with:
-#
-#   temvera artifact-package . /tmp/temvera-artifact.tar.gz
-#   sha256sum /tmp/temvera-artifact.tar.gz
-#
-# Verify the archive's own internal manifest with:
-#
-#   temvera verify-artifact-package /tmp/temvera-artifact.tar.gz
-#
-# Contents: source, tests, docs, fixtures, experiment configs and every accepted
-# sealed run. Excluded by design: data/raw (third-party corpora we download
-# rather than redistribute) and compiled bytecode.
+# Artifact package integrity
 
-dd67fcec33f54b9d02ca3326927f4e01922197c09d37ecb7b3e4204ae8d40f9b  temvera-artifact.tar.gz
+The archive is byte-reproducible: building it twice from the same tree yields
+identical bytes. Verify that yourself, and verify the archive's own internal
+per-file manifest:
+
+    temvera artifact-package . /tmp/a.tar.gz
+    temvera artifact-package . /tmp/b.tar.gz
+    sha256sum /tmp/a.tar.gz /tmp/b.tar.gz        # must match each other
+    temvera verify-artifact-package /tmp/a.tar.gz
+
+No checksum is pinned here on purpose. The repository keeps moving, so a hash
+of "the current tree" invalidates itself on the next commit and then quietly
+misleads — which is exactly what happened to the previous version of this file.
+The pinned hash belongs to a frozen snapshot, so it lives in the release notes
+of the tagged submission artifact:
+
+    https://github.com/suanlab/temvera/releases
+
+Contents: source, tests, docs, fixtures, experiment configs and every accepted
+sealed run. Excluded by design: data/raw (third-party corpora we download rather
+than redistribute) and compiled bytecode.

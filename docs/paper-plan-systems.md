@@ -1,5 +1,13 @@
 # 시스템 논문 실행 계획 — Auditable Bitemporal Agent Memory
 
+> **Superseded (2026-09-06).** The venue line below is two decisions out of
+> date: D-013 moved the target to COLM, then D-014 moved it to PVLDB's
+> Experiment, Analysis & Benchmark track, which is where the paper is being
+> submitted. This document is kept for the experiment history it records; for
+> anything about the submission itself read
+> [vldb-eab-plan.md](vldb-eab-plan.md) and
+> [submission-checklist.md](submission-checklist.md).
+
 > 기준일: 2026-07-16 · 목표: **시스템 논문**, 자원 **API-only(GPU 없음)**,
 > 인간 연구 **protocol-only 유지(D-009)**.
 > **Target venue: COLM 2027** (2026-08-13 결정 D-013; ICLR에서 전환).
