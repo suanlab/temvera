@@ -17,7 +17,10 @@ Temporal Fields Are Not Temporal Correctness: Measuring Bitemporal and Deletion
 Semantics in Deployed Agent Memory [Experiment, Analysis & Benchmark]
 ```
 
-**Abstract**: `paper/abstract.txt`, plain text, no LaTeX or citation markers.
+**Abstract**: `paper/abstract.txt` — 5 paragraphs, 2,754 characters, 407 words.
+Plain text; the only non-ASCII characters are five em dashes (U+2014). Generated
+by `scripts/make_abstract.py` from the paper source, and `tests/test_abstract.py`
+fails if the two drift apart, so it cannot go stale the way it did once already.
 
 **Author**: Suan Lee, School of Computer Science, Semyung University, Jecheon,
 South Korea. Contact address is currently personal; substitute an institutional
