@@ -17,6 +17,13 @@
 %% Availability block; leaving it empty suppresses that block entirely.
 \renewcommand\vldbavailabilityurl{https://github.com/suanlab/temvera}
 
+% Long typewriter identifiers do not hyphenate and push past the column edge.
+% \allowbreak permits a break after a hyphen that is already there, rather than
+% inventing one that would be misread as part of the identifier. Written out per
+% identifier: a macro that walks the characters is easy to get subtly wrong, and
+% an earlier attempt silently swallowed the hyphens it was meant to break after.
+\newcommand{\embedmodel}{\texttt{text-\allowbreak embedding-\allowbreak 3-\allowbreak small}}
+\newcommand{\runeseven}{\texttt{longmemeval-\allowbreak e7-\allowbreak v2}}
 \usepackage{booktabs}
 \usepackage{graphicx}
 
@@ -213,7 +220,8 @@ Levels are defined above. Entries are what we observed in the shipped versions,
 not what documentation claims.}
 \label{tab:fragment}
 \small
-\begin{tabular}{lcccc}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
 Capability & Ref.\ impl. & Mem0 & LangMem & Graphiti \\
 \midrule
@@ -363,7 +371,7 @@ implementations of one specification, not external validation.
 \paragraph{Systems.} Internal baselines (append-only, full/recent context, BM25,
 last-write-wins) and the oracle; external systems Mem0 \texttt{0.1.118}, LangMem,
 Graphiti \texttt{0.29.2} on Neo4j~5.26, Cognee \texttt{1.4.2} and Hindsight, all
-with \texttt{gpt-4o-mini} at temperature~0 and \texttt{text-embedding-3-small}.
+with \texttt{gpt-4o-mini} at temperature~0 and \embedmodel.
 LangMem and Cognee require \texttt{openai} major versions incompatible with the
 pinned Mem0 and Graphiti, so they run in isolated interpreters behind a stdio
 protocol. Runs are sealed with
@@ -394,7 +402,8 @@ cells and are shown merged: returning the whole history is the same retrieval
 whether it is called append-only or full context, and on these histories BM25's
 top hit is always the most recent turn.}
 \label{tab:baselines}
-\begin{tabular}{lccc}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccc@{}}
 \toprule
 Configuration & exact & evidence recall & stale-use \\
 \midrule
@@ -804,10 +813,10 @@ database with a per-run database path.
 Runs are sealed with canonical config, environment, source-tree hash and
 per-file checksums, and verified by an aggregate checker. The frozen synthetic
 fixture is byte-reproducible and split-disjoint. Tests and lint pass on CPython
-3.11. The LongMemEval corpus itself is downloaded rather than redistributed;
-one sealed run (\texttt{longmemeval-e7-v2}) does ship a history database of
-LLM-extracted memories derived from it, which the corpus's MIT licence permits
-and which cannot be removed without breaking that run's checksums.
+3.11. The LongMemEval corpus itself is downloaded rather than redistributed.
+The \runeseven{} run does ship a history database of memories its
+extractor derived from that corpus, which the MIT licence permits and which
+cannot be removed without breaking the run's checksums.
 
 \section*{Limitations}
 
