@@ -33,7 +33,9 @@ README and `REPRODUCING.md`, frozen snapshot at the `pvldb-eab-v1` release.
 ## Only the author can do these
 
 - [ ] Register in CMT and **declare domain and PC conflicts** — unattested COIs
-      are a listed desk-rejection trigger.
+      are a listed desk-rejection trigger, and so are spurious ones. A draft
+      list, with the rules quoted and the gaps marked, is in
+      [coi-declaration.md](coi-declaration.md).
 - [ ] Submit the abstract by 09-25, then the PDF by 10-01.
 - [ ] Decide whether to use an institutional email address.
 - [ ] Confirm the Jecheon campus city if it needs correcting.
