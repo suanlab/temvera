@@ -8,6 +8,9 @@ dist/
 build/
 
 data/raw/
+# Working sheet for hand-labelling: embeds LongMemEval conversation text, which
+# we label from but do not redistribute. Only the labels we produce are tracked.
+data/lme-bitemporal-review.json
 data/interim/
 data/processed/
 experiments/runs/*

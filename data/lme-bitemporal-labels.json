@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "note": "Superseded values recovered by hand from LongMemEval knowledge-update instances. The benchmark ships only the updated value; these make an as-of query answerable. 'n/a' marks an instance with no recoverable prior value.",
+  "labels": {}
+}
