@@ -214,8 +214,8 @@ South Korea — suanlee@semyung.ac.kr.
 - [x] F15: all `.env` values and six key formats absent from all git history.
       An older tracked audit folder (`paper_audit/run_20261021_003403`) holds
       local absolute paths; keeping it public is the author's decision.
-- [ ] Abstract: two sentences narrowed (C02, C11) -- awaiting author approval
-      before a release.
+- [x] Abstract: two sentences narrowed (C02, C11); author approved (2026-10-29).
+- [x] Re-cut the release: tag `icde-eab-v13` supersedes `icde-eab-v12`.
 - [ ] F16 (separate Conclusion): not added; the body has no room left.
 - [ ] Open, needing people or API budget: human labels (kit ready), independent
       timing adjudication, H16-H18, more seeds, a temporal positive control.

@@ -33,7 +33,7 @@ pip install -e '.[dev,analysis]'
 
 temvera verify-artifacts experiments/accepted-runs.json experiments/runs  # 179 sealed runs
 python scripts/recompute_paper_numbers.py --check    # main-grid table and budget sweep
-python scripts/verify_paper_claims.py                # 595 printed figures vs. their runs
+python scripts/verify_paper_claims.py                # 602 printed figures vs. their runs
 pytest && ruff check .
 ```
 
@@ -48,7 +48,7 @@ daemon. The two paths are deliberately
 decoupled: you can confirm what we computed before deciding whether to re-run
 generation. [REPRODUCING.md](REPRODUCING.md) has the full protocol, and a frozen
 snapshot with checksums is attached to the
-[`icde-eab-v12` release](https://github.com/suanlab/temvera/releases/tag/icde-eab-v12).
+[`icde-eab-v13` release](https://github.com/suanlab/temvera/releases/tag/icde-eab-v13).
 
 ## Research thesis
 
