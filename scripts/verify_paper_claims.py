@@ -1207,15 +1207,15 @@ def _read_path_claims() -> list:
     A = "One rule on the read path is enough"
     return [
         Claim("5.4", "Cognee chunks valid-time hits with the rule", "184",
-              lambda: read_path("Cognee chunks", "exact"), 0.5, near="lifts valid-time accuracy\nfrom 0", after=A),
+              lambda: read_path("Cognee chunks", "exact"), 0.5, near="accuracy from 0 to\n", after=A),
         Claim("5.4", "valid-time questions", "195",
-              lambda: read_path("Cognee chunks", "questions"), 0.5, near="lifts valid-time accuracy\nfrom 0", after=A),
+              lambda: read_path("Cognee chunks", "questions"), 0.5, near="184 and 190 of", after=A),
         Claim("5.4", "Cognee chunks valid-time hits without the rule", "0",
-              lambda: read_path("Cognee chunks", "exact_unfiltered"), 0.5, near="lifts valid-time accuracy\nfrom", after=A),
+              lambda: read_path("Cognee chunks", "exact_unfiltered"), 0.5, near="lifts valid-time accuracy from", after=A),
         Claim("5.4", "Hindsight recall valid-time hits with the rule", "190",
-              lambda: read_path("Hindsight recall", "exact"), 0.5, near="for Cognee and to", after=A),
+              lambda: read_path("Hindsight recall", "exact"), 0.5, near="184 and", after=A),
         Claim("5.4", "Graphiti answers where the rule applies", "17",
-              lambda: read_path("Graphiti", "applicable"), 0.5, near="the rule applies to only", after=A),
+              lambda: read_path("Graphiti", "applicable"), 0.5, near="the rule applies to", after=A),
         Claim("5.4", "Graphiti valid-time hits with the rule", "6",
               lambda: read_path("Graphiti", "exact"), 0.5, near="answers and recovers", after=A),
     ]
@@ -2357,6 +2357,23 @@ def _adjacent_day_claims() -> list:
     ]
 
 
+def _positive_control_claims() -> list:
+    def h19():
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import analyze_h19
+
+        return analyze_h19
+    A = "A positive control, fitted to our"
+    return [
+        Claim("5.1", "positive control, grid questions answered (request scope)", "484",
+              lambda: float(h19().grid()["request_scope"]) if h19().grid()["questions"] == 484 else -1.0,
+              0.5, near="answers all", after=A),
+        Claim("5.1", "positive control, knew-then questions from the final store", "45",
+              lambda: float(h19().final_store()["strict"]) if h19().final_store()["questions"] == 45 else -1.0,
+              0.5, near="final store, all", after=A),
+    ]
+
+
 def _dropped(run: str, field: str = "dropped") -> float:
     return float(res("mem0-dropped-actions-logs-v1")[run][field])
 
@@ -2375,7 +2392,7 @@ def _dropped_claims() -> list:
     ]
 
 
-CLAIMS = CLAIMS + _grid_claims() + _scale_claims() + _real_claims() + _bounds_claims() + _corrections_claims() + _audit_claims() + _read_path_claims() + _releases_claims() + _coverage_claims() + _stats_claims() + _h9_claims() + _h9_real_claims() + _h12_claims() + _h8_claims() + _census_claims() + _deletion_claims() + _abstract_claims_v2() + _growth_claims() + [Claim("Lim", "largest store run, turns", "3{,}000", lambda: float(max(c['turns'] for c in res('scale-growth-mem0-v1')['checkpoints'])), 0.5, near="one history up to")] + _final_store_claims() + _claims_table_claims() + _h13_claims() + _contribution_census_claims() + _h15_claims() + _dropped_claims() + _hindsight_build_claims() + _adjacent_day_claims() + [Claim("7", "falsified preregistered predictions", "sixteen", falsified_predictions, 0.5, near="Within the thesis, \\textbf{")]
+CLAIMS = CLAIMS + _grid_claims() + _scale_claims() + _real_claims() + _bounds_claims() + _corrections_claims() + _audit_claims() + _read_path_claims() + _releases_claims() + _coverage_claims() + _stats_claims() + _h9_claims() + _h9_real_claims() + _h12_claims() + _h8_claims() + _census_claims() + _deletion_claims() + _abstract_claims_v2() + _growth_claims() + [Claim("Lim", "largest store run, turns", "3{,}000", lambda: float(max(c['turns'] for c in res('scale-growth-mem0-v1')['checkpoints'])), 0.5, near="one history up to")] + _final_store_claims() + _claims_table_claims() + _h13_claims() + _contribution_census_claims() + _h15_claims() + _dropped_claims() + _hindsight_build_claims() + _adjacent_day_claims() + _positive_control_claims() + [Claim("7", "falsified preregistered predictions", "sixteen", falsified_predictions, 0.5, near="Within the thesis, \\textbf{")]
 
 
 # Small counts the prose spells out; the printed word is still what is searched.

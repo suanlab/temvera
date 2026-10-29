@@ -494,7 +494,11 @@ not: returning the whole history recalls the evidence ($0.915$) but answers
 $0.272$ exactly, $0.255$ under high churn with $0.662$ stale-use;
 last-write-wins answers $0.603$ and the most recent turn $0.576$
 (cell-averaged; the full table is in the artifact). They are strawmen that show
-the harness discriminates, not competitors.
+the harness discriminates, not competitors. A positive control, fitted to our
+renderer, reads the rendered turns (not the events) into rows with both time
+axes and answers by both predicates, with no LLM: it answers all 484 grid
+questions and, from the final store, all 45 about past knowledge, so the input
+suffices and the scorer credits a store that uses both axes.
 
 \subsection{Two designs: consolidate, or retain without filtering}
 
@@ -848,19 +852,14 @@ answer all 228 transaction-scoped questions. The retaining store's 31 is not 0,
 as for the deployed retrievers, because BM25 sometimes leaves the older statement
 out of the top five; we had predicted at most 0.05.
 
-\textbf{One rule on the read path is enough here.} The retaining stores return
-the dates along with the values: Cognee's chunks are the stored turns, and
-Hindsight restates each fact with its validity. A read path that keeps only the
-dated statements about the queried subject and answers with the latest one not
-after the question's valid time --- one rule, fixed and committed before it was
-run, using no LLM and no knowledge of the answer --- lifts valid-time accuracy
-from 0 to 184 of 195 for Cognee and to 190 of 195 for Hindsight; the misses are
-statements the rule's pattern over-captures. Graphiti's facts carry no dates in
-their text, so the rule applies to only 17 of its 195 answers and recovers 6.
-The rule matches our rendering's sentence pattern, and Cognee's dates are the
-ones our rendering wrote, so it shows what the returned text supports, not a
-general-purpose filter; on benchmark text (\S\ref{sec:realdata}) we use the
-common reader instead.
+\textbf{One rule on the read path is enough here.} Cognee's chunks are the
+stored turns and Hindsight restates each fact with its validity, so their
+returned text is dated. Keeping only the dated statements about the queried
+subject and answering with the latest one not after the asked time --- one rule,
+committed before it was run, with no LLM --- lifts valid-time accuracy from 0 to
+184 and 190 of 195; Graphiti's facts carry no dates, so the rule applies to 17
+of its answers and recovers 6. It matches our rendering's sentence pattern, so
+it shows what the returned text supports, not a general-purpose filter.
 
 The reader configurations differ from the rest in whether an LLM synthesises the
 answer, so their exact columns show what one reader achieves, not a bound on what
@@ -1313,11 +1312,9 @@ reported at 0.207 overall under the original purge scope, is replaced by an
 isolated replication at 0.192 under the request's scope
 (\S\ref{sec:reader}).
 
-\textbf{A first scale sweep was withdrawn.} Its relabelling ran out of natural
-names and silently fell back to synthetic tokens as the store grew --- 19\%, 55\%
-and 66\% of values at 8, 32 and 128 entities --- which moved recall more than
-scale did and made Graphiti appear to improve; \S\ref{sec:scale} replays the same
-histories with only value identity changed.
+\textbf{A first scale sweep was withdrawn:} its relabelling silently fell back to synthetic tokens --- 19\%, 55\%
+and 66\% of values at 8, 32 and 128 entities --- and moved recall more than
+scale did; \S\ref{sec:scale} replays the same histories without that.
 
 \section{Reproducibility}
 

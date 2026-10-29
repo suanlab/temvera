@@ -216,7 +216,11 @@ South Korea — suanlee@semyung.ac.kr.
       local absolute paths; keeping it public is the author's decision.
 - [x] Abstract: two sentences narrowed (C02, C11); author approved (2026-10-29).
 - [x] Re-cut the release: tag `icde-eab-v13` supersedes `icde-eab-v12`.
+- [x] Re-cut the release: tag `icde-eab-v14` supersedes `icde-eab-v13` (positive control).
 - [ ] F16 (separate Conclusion): not added; the body has no room left.
+- [x] Temporal positive control (H19, all four predictions hold): 484/484 grid
+      questions, 45/45 knew-then from the final store; in the paper (Section
+      V-A) and ledger E-117.
 - [ ] Open, needing people or API budget: human labels (kit ready), independent
-      timing adjudication, H16-H18, more seeds, a temporal positive control.
+      timing adjudication, H16-H18, more seeds.
 

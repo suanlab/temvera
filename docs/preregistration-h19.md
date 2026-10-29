@@ -42,3 +42,17 @@ Analysis: `scripts/analyze_h19.py`, committed with this file.
   histories asked in one pass, it answers all 45 questions about what was known
   before a correction under the strict count, and every other question exactly.
 - **H19d -- nothing is skipped:** every rendered turn is parsed.
+
+## Outcomes (recorded 2026-10-29 KST; `scripts/analyze_h19.py`)
+
+| Prediction | Outcome |
+|---|---|
+| H19a: 484/484 on the main grid under the request's scope | **holds** -- 484/484 |
+| H19b: 455/484 under the original purge scope | **holds** -- 455/484 |
+| H19c: 45/45 knew-then questions from the final store, all others exact | **holds** -- 45/45 strict; 513/513 questions |
+| H19d: every turn parsed | **holds** -- 0 unparsed |
+
+The rendered text supports every answer the oracle expects, and the harness and
+scorer credit a store that applies both time axes. The control is fitted to our
+renderer's sentence patterns; it shows what the input allows, not what a
+deployed system could be expected to reach.
