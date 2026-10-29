@@ -217,6 +217,7 @@ South Korea — suanlee@semyung.ac.kr.
 - [x] Abstract: two sentences narrowed (C02, C11); author approved (2026-10-29).
 - [x] Re-cut the release: tag `icde-eab-v13` supersedes `icde-eab-v12`.
 - [x] Re-cut the release: tag `icde-eab-v14` supersedes `icde-eab-v13` (positive control).
+- [x] Re-cut the release: tag `icde-eab-v15` supersedes `icde-eab-v14` (manifest, font and link checks).
 - [ ] F16 (separate Conclusion): not added; the body has no room left.
 - [x] Temporal positive control (H19, all four predictions hold): 484/484 grid
       questions, 45/45 knew-then from the final store; in the paper (Section
