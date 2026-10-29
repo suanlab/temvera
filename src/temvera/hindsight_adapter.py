@@ -107,6 +107,28 @@ class HindsightSystem:
         except urllib.error.URLError as error:
             raise HindsightUnavailable(f"{self._base}: {error.reason}") from error
 
+    def daemon_version(self) -> str:
+        """The version the daemon itself reports, not the client's package."""
+        try:
+            with urllib.request.urlopen(f"{self._base}/version", timeout=self._timeout) as response:
+                return str(json.loads(response.read() or b"{}").get("api_version", "unknown"))
+        except (urllib.error.URLError, ValueError):
+            return "unknown"
+
+    def models_used(self, psql: str, instance: dict[str, Any]) -> list[str]:
+        """The LLMs the daemon actually called for this bank, from its own
+        request log: the configuration sent to the daemon does not set them."""
+        import subprocess
+
+        result = subprocess.run(
+            [psql, "-h", "127.0.0.1", "-p", str(instance["port"]), "-U", instance["username"],
+             "-d", instance["database"], "-At", "-c",
+             f"SELECT DISTINCT model FROM llm_requests WHERE bank_id = '{self._bank}'"],
+            capture_output=True, text=True, check=True,
+            env={**__import__("os").environ, "PGPASSWORD": instance["password"]},
+        )
+        return sorted(line for line in result.stdout.splitlines() if line)
+
     def _delete(self, path: str) -> None:
         request = urllib.request.Request(
             f"{self._base}/v1/default/banks/{self._bank}{path}", method="DELETE"
@@ -165,8 +187,19 @@ class HindsightSystem:
         return len(doomed)
 
     def reset(self) -> None:
-        """Drop the bank so each cell starts from an empty store."""
+        """Drop the bank so each cell starts from an empty store.
+
+        Deleting a bank that does not exist yet answers 404, which is not a
+        failure; any other error would leave an earlier cell's memories in
+        this one, so it stops the run.
+        """
+        before = len(self._errors)
         self._delete("")
+        new = self._errors[before:]
+        del self._errors[before:]
+        unexpected = [m for m in new if "HTTP 404" not in m]
+        if unexpected:
+            raise HindsightUnavailable(f"reset of bank {self._bank} failed: {unexpected[0]}")
 
     def ingest(self, turn: WorkloadTurn) -> None:
         self._post(

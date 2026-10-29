@@ -13,7 +13,7 @@ different Python`. Many systems still ship 3.10 as `python3`.
 python3 -V                    # must be >= 3.11
 python3.11 -m venv .venv      # name the interpreter explicitly if it is not
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[dev,analysis]'
 pytest
 ruff check .
 temvera verify-dataset data/fixtures/lifecycle-v0

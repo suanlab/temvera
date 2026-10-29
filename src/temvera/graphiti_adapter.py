@@ -123,8 +123,14 @@ class GraphitiSystem:
                     "MATCH (n) WHERE n.group_id = $g DETACH DELETE n",
                     g=self._group_id,
                 )
+                left = session.run(
+                    "MATCH (n) WHERE n.group_id = $g RETURN count(n) AS c",
+                    g=self._group_id,
+                ).single()["c"]
         finally:
             driver.close()
+        if left:
+            raise RuntimeError(f"Graphiti reset left {left} nodes in group {self._group_id}")
 
     def reset(self) -> None:
         from graphiti_core import Graphiti

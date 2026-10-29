@@ -52,7 +52,8 @@ suanlee@semyung.ac.kr}}
 Long-running agents accumulate facts that change, expire, and must sometimes be
 deleted. Answering \emph{what was true then}, and \emph{what the agent knew then},
 needs valid time and transaction time, and deletion must reach every store.
-Agent memory systems advertise both; we ask where in their pipelines it holds.
+The systems we measure expose different temporal and deletion facilities; we
+ask which layer of their pipelines delivers the behaviour.
 
 We replay deterministic lifecycle histories, scored by an oracle that a second
 implementation checks, into five open-source systems---Mem0, LangMem, Graphiti,
@@ -67,8 +68,9 @@ the history answer no valid-time question at their retrieval layer, yet one
 common reader answers 0.73 to 0.77 of them from the same text where it carries
 dates, and changing only the retention policy under a fixed retriever and
 reader reproduces the split. Once a correction is stored, the systems' own
-readers recover what was known before it far more often, by a strict count,
-than retrieval or a common reader does. Three systems ignore prose deletion requests; native APIs, given the
+reading pipelines are credited with what was known before it far more often,
+by a strict count and by two model annotators, than retrieval or a common
+reader. Three systems ignore prose deletion requests; native APIs, given the
 right records, leave no purged value in our probes' answers but leave copies in
 stores no query reads; and an unchecked search-and-delete caller erases up to
 28 of 36 people it was never asked about.
@@ -410,7 +412,8 @@ The scorer does not interpret negation. Evidence recall is $|E \cap \text{return
 the fraction of returned values drawn from $S$. \textbf{Because exactness
 quantifies over the whole returned set, it is a function of the retrieval budget
 $k$}; we set $k{=}5$ throughout and report a sweep over $k$ in
-Figure~\ref{fig:budget}. Rates are case-weighted with Wilson 95\% intervals, and
+Figure~\ref{fig:budget}. Rates are case-weighted with (descriptive) Wilson 95\%
+intervals, and
 abstention is computed only over cells that contain abstention cases. Two
 comparisons are cell-averaged instead, because they aggregate cells whose
 denominators differ --- the internal baselines of \S\ref{sec:results} and
@@ -445,7 +448,8 @@ libraries' defaults, as a user would deploy them (Table~\ref{tab:settings}).
 All use \texttt{gpt-4o-mini} (\texttt{gpt-4o} only where \S\ref{sec:results}
 says so). The Hindsight runs did not record their version, but the daemon that
 served them, started once before them, applied the 96 schema migrations of
-\texttt{hindsight-api 0.9.1} and of no other release, so they ran 0.9.1. LangMem and
+\texttt{hindsight-api 0.9.1}, a history no other release from 0.8.6 to 0.9.2
+matches; no executable fingerprint was recorded. LangMem and
 Cognee require \texttt{openai} major versions incompatible with the pinned Mem0
 and Graphiti, so they run in isolated interpreters behind a stdio protocol. Runs
 are sealed with canonical config, environment, source hash and per-file
@@ -1020,7 +1024,10 @@ effect and made to quote the sentences they rely on, which we check against the
 sessions, agree on a non-\textsc{unknown} timing label for none of the 60
 pairs (one answers \textsc{unknown} for all 60). Thus no pair meets this
 model-agreement criterion; this does not prove that the text is uninformative.
-The valid-time results measure agreement with the persistence assumption. Scoring is the grid's: an answer is exact if it
+The valid-time results measure agreement with the persistence assumption. Two
+pairs fall on consecutive days (in \texttt{c6853660} the asked noon precedes the
+earlier session); without both, no retrieval layer's count changes and the two
+readers' fall from 40 and 17 to 38 and 16 of 58. Scoring is the grid's: an answer is exact if it
 states the expected value on token boundaries and does not state the
 superseded one. The first question is asked before the revision exists, so it
 has nothing to filter and serves as a control; the full conversation itself
@@ -1168,7 +1175,8 @@ whose answer is the original value. Counting an answer correct only if it gives
 that value and not the correction, which was unknown at $T$, Mem0 and LangMem
 answer 0, the retrieval layers of Cognee, Hindsight and Graphiti 0, 4 and 9,
 and the readers of Hindsight and Cognee 25 and 41. The stored text keeps the
-date each turn was recorded, which a reader can use; no system has a
+date each turn was recorded, which a reader can use, but the comparison does not
+separate a reader from the context it receives; no system has a
 transaction-time predicate (Table~\ref{tab:fragment},
 C2). A plain reader over the top five does not do the same: the common reader of
 \S\ref{sec:reader} gives the original value, not the correction, for 8 of 45 from
@@ -1322,13 +1330,9 @@ with canonical config, environment, source-tree hash and per-file checksums, and
 verified by an aggregate checker. The frozen synthetic
 fixture is byte-reproducible and split-disjoint. Tests and lint pass on CPython
 3.11. The LongMemEval corpus itself is downloaded rather than redistributed.
-Four kinds of sealed output do carry its text, which the MIT licence permits and
-which cannot be removed without breaking the runs' checksums: the
-\runeseven{} run's history database of extracted memories, the benchmark
-runs' transcripts, which record retrieved passages verbatim, the timing
-labels' quoted sentences, and three Mem0 runs' console logs. The labels we
-derived are released; the 7 excluded pairs are listed by question ID, with
-their reasons.
+Sealed outputs that carry its text keep its MIT licence; the artifact lists
+each with the licence. The labels we derived are released; the 7 excluded pairs
+are listed by question ID, with their reasons.
 
 \section*{Limitations}
 
@@ -1347,7 +1351,8 @@ for three systems on one history up to 3{,}000 turns, and load only for the one
 served over HTTP. No person
 judged the answers; the annotators of \S\ref{sec:corrections} are models, and the asserted-value judge is checked against the exact
 scorer, a second judge and answers built to a known verdict, and it is not valid
-for answers about what was known before a correction. The real-data valid-time
+for answers about what was known before a correction. Annotators right on
+constructed answers need not be right on natural ones. The real-data valid-time
 gold assumes values persist between sessions; our two-model protocol
 confirms no pair, and independent timing adjudication remains absent. The literature review is single-reviewer. Purge claims cover declared
 stores and tested failure points, not backups, OS caches or provider-side
@@ -1358,13 +1363,12 @@ reader given its own context.
 
 \section*{Ethics Statement}
 
-This work uses synthetic histories and an MIT-licensed public benchmark.
-Stores ran locally; external model APIs processed benchmark and synthetic
-text. No new user data was collected and no human subjects were recruited. It reports defects in the systems measured, and one
-consequence we state plainly: an assistant asked in conversation to forget
-something may not do so, and one that deletes what a search returns may erase
-other people's data --- a privacy risk for deployments that treat conversational
-deletion requests as effective.
+We used synthetic histories and an MIT-licensed public benchmark; stores ran
+locally, external model APIs processed the text, and no user data or human
+subjects were involved. One consequence of the defects we report: an assistant
+asked in conversation to forget may not, and one that deletes what a search
+returns may erase other people's data --- a privacy risk wherever
+conversational deletion requests are trusted.
 
 \section*{Acknowledgment}
 

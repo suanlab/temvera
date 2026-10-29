@@ -1948,7 +1948,7 @@ def _abstract_claims_v2() -> list:
         Claim("abs", "systems ignoring prose", "Three",
               lambda: float(sum(all(deletion(s, c, "leaked") == deletion(s, c, "purged")
                                     for c in ("prose-1", "prose-2", "prose-3")) for s in _DEL_SYSTEMS)),
-              0.5, near="common reader does.", after=A),
+              0.5, near="common\nreader.", after=A),
         Claim("abs", "most never-named people erased", "28",
               lambda: max(deletion(s, "api-caller", "kept_total") - deletion(s, "api-caller", "kept_present")
                           for s in _DEL_SYSTEMS), 0.5, near="erases up to", after=A),
@@ -2320,6 +2320,43 @@ def _hindsight_build_claims() -> list:
                   near="applied the", after="The Hindsight runs did not record their version")]
 
 
+# Pairs whose sessions fall on consecutive days, so no whole day lies between
+# them (CHECK.md F07). Session times are not shipped, so the set is named here;
+# tests/test_lme_bitemporal.py checks it against the corpus where downloaded.
+NO_WHOLE_DAY = ("9ea5eabc", "c6853660")
+
+
+def _vt_without_adjacent(system: str, field: str = "exact") -> float:
+    rows = []
+    for run in _lme_runs(system):
+        rows += [json.loads(line) for line in (RUNS / run / "transcript.jsonl").read_text().splitlines()]
+    keep = [r for r in rows if r["category"] == "valid_time" and r["question_id"] not in NO_WHOLE_DAY]
+    return float(len(keep)) if field == "n" else float(sum(r[field] for r in keep))
+
+
+def _adjacent_day_claims() -> list:
+    A = "Two\npairs fall on consecutive days"
+    retrieval = ("Mem0", "LangMem", "Graphiti", "Cognee chunks", "Hindsight recall")
+    return [
+        Claim("5.real", "pairs without a whole day between sessions", "Two",
+              lambda: float(len(NO_WHOLE_DAY)), 0.5,
+              near="The valid-time results measure agreement with the persistence assumption."),
+        Claim("5.real", "retrieval-layer counts unchanged without them", "no",
+              lambda: float(sum(lme(x, "valid_time") != _vt_without_adjacent(x) for x in retrieval)), 0.5,
+              near="both,", after=A),
+        Claim("5.real", "Cognee reader valid time, all 60", "40", lambda: lme("Cognee graph", "valid_time"), 0.5,
+              near="fall from", after=A),
+        Claim("5.real", "Hindsight reader valid time, all 60", "17", lambda: lme("Hindsight reflect", "valid_time"),
+              0.5, near="fall from 40 and", after=A),
+        Claim("5.real", "Cognee reader valid time without them", "38",
+              lambda: _vt_without_adjacent("Cognee graph"), 0.5, near="17 to", after=A),
+        Claim("5.real", "Hindsight reader valid time without them", "16",
+              lambda: _vt_without_adjacent("Hindsight reflect"), 0.5, near="38 and", after=A),
+        Claim("5.real", "valid-time questions without them", "58",
+              lambda: _vt_without_adjacent("Mem0", "n"), 0.5, near="16 of", after=A),
+    ]
+
+
 def _dropped(run: str, field: str = "dropped") -> float:
     return float(res("mem0-dropped-actions-logs-v1")[run][field])
 
@@ -2338,11 +2375,11 @@ def _dropped_claims() -> list:
     ]
 
 
-CLAIMS = CLAIMS + _grid_claims() + _scale_claims() + _real_claims() + _bounds_claims() + _corrections_claims() + _audit_claims() + _read_path_claims() + _releases_claims() + _coverage_claims() + _stats_claims() + _h9_claims() + _h9_real_claims() + _h12_claims() + _h8_claims() + _census_claims() + _deletion_claims() + _abstract_claims_v2() + _growth_claims() + [Claim("Lim", "largest store run, turns", "3{,}000", lambda: float(max(c['turns'] for c in res('scale-growth-mem0-v1')['checkpoints'])), 0.5, near="one history up to")] + _final_store_claims() + _claims_table_claims() + _h13_claims() + _contribution_census_claims() + _h15_claims() + _dropped_claims() + _hindsight_build_claims() + [Claim("7", "falsified preregistered predictions", "sixteen", falsified_predictions, 0.5, near="Within the thesis, \\textbf{")]
+CLAIMS = CLAIMS + _grid_claims() + _scale_claims() + _real_claims() + _bounds_claims() + _corrections_claims() + _audit_claims() + _read_path_claims() + _releases_claims() + _coverage_claims() + _stats_claims() + _h9_claims() + _h9_real_claims() + _h12_claims() + _h8_claims() + _census_claims() + _deletion_claims() + _abstract_claims_v2() + _growth_claims() + [Claim("Lim", "largest store run, turns", "3{,}000", lambda: float(max(c['turns'] for c in res('scale-growth-mem0-v1')['checkpoints'])), 0.5, near="one history up to")] + _final_store_claims() + _claims_table_claims() + _h13_claims() + _contribution_census_claims() + _h15_claims() + _dropped_claims() + _hindsight_build_claims() + _adjacent_day_claims() + [Claim("7", "falsified preregistered predictions", "sixteen", falsified_predictions, 0.5, near="Within the thesis, \\textbf{")]
 
 
 # Small counts the prose spells out; the printed word is still what is searched.
-_WORDS = {"Three": 3, "nothing": 0, "Ten": 10, "no": 0, "none": 0, "One": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+_WORDS = {"Two": 2, "Three": 3, "nothing": 0, "Ten": 10, "no": 0, "none": 0, "One": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
           "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
           "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16}
 

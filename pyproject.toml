@@ -26,6 +26,9 @@ dev = [
   "ruff>=0.9,<0.17",
 ]
 crypto = ["cryptography>=42.0"]
+# Figures: pinned exactly, because the PDFs are checked byte for byte against
+# the shipped ones and a different matplotlib writes different bytes.
+analysis = ["matplotlib==3.11.1", "numpy==2.2.6"]
 learned = ["fastembed>=0.8,<1", "numpy>=1.21,<2.3"]
 
 [tool.hatch.build.targets.wheel]
@@ -38,8 +41,8 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 88
 target-version = "py311"
-# Paper-audit working copies hold their own tooling and a full copy of the tree.
-extend-exclude = ["paper_audit"]
+# Audit working folders hold their own tooling (and, for paper_audit, a full copy of the tree).
+extend-exclude = ["paper_audit", "check_audit"]
 
 [tool.ruff.lint]
 # Declared rather than inherited, so `ruff check .` gives the same answer on any

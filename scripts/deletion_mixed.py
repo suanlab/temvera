@@ -178,6 +178,10 @@ def main(system: str, output: str) -> int:
                         records.append({"seed": seed, **measure(driver, unit, caller, turns, facts)})
                     finally:
                         driver.close()
+    failed = [r for r in records if r["worker_errors"]]
+    if failed:
+        raise SystemExit(f"refusing to seal: worker errors in {len(failed)} stores, "
+                         f"e.g. {failed[0].get('worker_error_messages', [])[:1]}")
     out.mkdir(parents=True)
     with (out / "transcript.jsonl").open("w", encoding="utf-8") as handle:
         for record in records:

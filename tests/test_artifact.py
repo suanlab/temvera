@@ -13,7 +13,7 @@ def _fixture(root: Path) -> None:
     from temvera.artifact import ROOT_DIRECTORIES, ROOT_FILES
 
     for name in ROOT_FILES:
-        (root / name).write_text(name, encoding="utf-8")
+        (root / name).write_text("{}\n" if name.endswith(".json") else name, encoding="utf-8")
     for directory in ROOT_DIRECTORIES:
         path = root / directory
         path.mkdir(parents=True)
@@ -41,7 +41,7 @@ def test_artifact_archive_is_deterministic_and_detects_tamper(tmp_path) -> None:
     assert verify_artifact_archive(first)
     with tarfile.open(first, "r:gz") as archive:
         manifest = json.load(archive.extractfile("ARTIFACT-MANIFEST.json"))
-    assert manifest["redistribution_status"] == "permitted_under_apache_2_0"
+    assert manifest["redistribution_status"] == "apache_2_0_except_listed_third_party"
 
 
 def test_artifact_verification_detects_content_tampering(tmp_path) -> None:

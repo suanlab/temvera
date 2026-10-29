@@ -22,6 +22,8 @@ ROOT_FILES = (
     "LICENSE",
     "README.md",
     "REPRODUCING.md",
+    "THIRD_PARTY.json",
+    "THIRD_PARTY_NOTICES.md",
     "pyproject.toml",
 )
 # `scripts` and `paper` were missing until icde-eab-v3, so earlier archives
@@ -34,6 +36,27 @@ ROOT_DIRECTORIES = (
 # determinism across interpreters.
 EXCLUDED_PARTS = ("__pycache__", ".pytest_cache", ".ruff_cache")
 EXCLUDED_PREFIXES = ("data/raw",)
+
+
+def _third_party(root: Path, file_hashes: dict[str, str]) -> dict[str, Any]:
+    """Each third-party source with its licence and the packaged files that
+    carry it; a listed path that is not packaged is an error."""
+    listing = root / "THIRD_PARTY.json"
+    if not listing.is_file():
+        return {}
+    sources = {k: v for k, v in json.loads(listing.read_text(encoding="utf-8")).items()
+               if isinstance(v, dict)}
+    out = {}
+    for name, entry in sorted(sources.items()):
+        files = sorted(f for f in file_hashes
+                       if any(f == p or (p.endswith("/") and f.startswith(p)) for p in entry["paths"]))
+        missing = [p for p in entry["paths"]
+                   if not any(f == p or (p.endswith("/") and f.startswith(p)) for f in file_hashes)]
+        if missing:
+            raise ValueError(f"{name}: listed but not packaged: {missing[:3]}")
+        out[name] = {"license": entry["license"], "copyright": entry["copyright"],
+                     "source": entry["source"], "files": len(files)}
+    return out
 
 
 def create_artifact_archive(root: Path, output: Path) -> dict[str, Any]:
@@ -50,6 +73,8 @@ def create_artifact_archive(root: Path, output: Path) -> dict[str, Any]:
     for directory in ROOT_DIRECTORIES:
         paths.extend(_files(root / directory))
     paths.append(accepted_manifest)
+    if (root / "experiments" / "run-status.json").is_file():
+        paths.append(root / "experiments" / "run-status.json")
     for run_id in accepted:
         paths.extend(_files(runs_root / run_id))
     # Single-file results (e.g. the synonym comparison) are not run directories,
@@ -73,9 +98,13 @@ def create_artifact_archive(root: Path, output: Path) -> dict[str, Any]:
         str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in files
     }
+    third_party = _third_party(root, file_hashes)
     manifest: dict[str, Any] = {
         "schema_version": 1,
-        "redistribution_status": "permitted_under_apache_2_0",
+        # Apache-2.0 covers repository-authored material only; content derived
+        # from a third-party dataset keeps that dataset's licence.
+        "redistribution_status": "apache_2_0_except_listed_third_party",
+        "third_party": third_party,
         "accepted_runs": accepted,
         "files": file_hashes,
     }

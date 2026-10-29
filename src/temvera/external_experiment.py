@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import os
 import random
+from pathlib import Path
 from typing import Any, Callable
 
 from .external_harness import MemorySystem, OracleMemorySystem, score_answer
@@ -590,9 +591,11 @@ def run_hindsight_comparison(config: dict[str, Any]) -> dict[str, Any]:
         return system
 
     result = run_external_comparison(config, factory, system_name="hindsight")
+    observed = hindsight_receipt(config, made)
     result["backbone"] = {
         "system": "hindsight",
-        "hindsight_version": made[0].version if made else "unknown",
+        "hindsight_version": made[0].daemon_version() if made else "unknown",
+        "observed_llm_models": observed,
         "store": "local daemon with embedded PostgreSQL (no Docker)",
         "read_mode": read_mode,
         # Hindsight's budget is qualitative, so it is not the k used elsewhere.
@@ -605,6 +608,32 @@ def run_hindsight_comparison(config: dict[str, Any]) -> dict[str, Any]:
         ),
     }
     return result
+
+
+def hindsight_receipt(config: dict[str, Any], systems: list) -> list[str] | str:
+    """Which LLMs the daemon used, checked against the config's ``model``.
+
+    The daemon's model is set where it is started, not by this config, so a
+    config could name one model while the daemon ran another. The daemon logs
+    every LLM request with its model; with ``HINDSIGHT_PSQL`` and
+    ``HINDSIGHT_PG_INSTANCE`` set, the run reads that log and stops on any model
+    other than the configured one. Without them the run stops too, unless the
+    config says ``"model_check": "skip"``, which the receipt then records.
+    """
+    import json as _json
+
+    psql, instance = os.environ.get("HINDSIGHT_PSQL"), os.environ.get("HINDSIGHT_PG_INSTANCE")
+    if not (psql and instance):
+        if config.get("model_check") == "skip":
+            return "not checked (model_check: skip)"
+        raise SystemExit("set HINDSIGHT_PSQL and HINDSIGHT_PG_INSTANCE to check the daemon's model, "
+                         'or set "model_check": "skip" in the config')
+    pg = _json.loads(Path(instance).read_text(encoding="utf-8"))
+    used = sorted({m for system in systems for m in system.models_used(psql, pg)})
+    expected = config.get("model")
+    if expected and any(m != expected for m in used):
+        raise SystemExit(f"Hindsight daemon used {used}, config says {expected}")
+    return used
 
 
 def projected_ingests(config: dict[str, Any]) -> dict[str, int]:

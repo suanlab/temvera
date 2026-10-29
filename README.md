@@ -9,11 +9,14 @@ an evolving data-management problem rather than a flat vector store.
 ## Paper artifact (ICDE 2027, Experiment, Analysis, and Benchmark)
 
 *Temporal Fields Are Not Temporal Correctness: Measuring Bitemporal and Deletion
-Semantics in Deployed Agent Memory.*
+Semantics in Deployed Agent Memory.* **This section is the current entry point
+for the submission**; the sections below it describe the wider research project
+the paper grew out of.
 
-Every number the paper reports is an aggregation over sealed per-case
-transcripts, so **the whole paper can be checked without an API key, a database
-server, or a dataset download**:
+Every number the paper prints is recomputed from sealed per-case transcripts,
+so **the paper's numbers can be checked without an API key, a database server,
+or a dataset download**. The tables themselves are hand-written TeX; what is
+checked is every number in them and in the prose:
 
 **Requires CPython 3.11 or newer.** Check before anything else — on an older
 interpreter `pip` spends fifteen minutes backtracking through dependency
@@ -26,10 +29,10 @@ python3 -V          # must be >= 3.11; if not, use python3.11 below
 ```bash
 git clone https://github.com/suanlab/temvera && cd temvera
 python3.11 -m venv .venv && source .venv/bin/activate
-pip install -e '.[dev]'
+pip install -e '.[dev,analysis]'
 
 temvera verify-artifacts experiments/accepted-runs.json experiments/runs  # 179 sealed runs
-python scripts/recompute_paper_numbers.py --check    # rebuild every table
+python scripts/recompute_paper_numbers.py --check    # main-grid table and budget sweep
 python scripts/verify_paper_claims.py                # 595 printed figures vs. their runs
 pytest && ruff check .
 ```
@@ -77,7 +80,7 @@ Start with [docs/index.md](docs/index.md), then read the
 [research program](docs/research-program.md) and
 [roadmap](docs/roadmap.md).
 
-## Current status
+## Current status (research project; for the paper see above)
 
 Local WP1–WP4 mechanism studies are implemented. Prior-art breadth,
 identical-budget external-system reproduction, human evaluation, licensing,
@@ -89,7 +92,7 @@ fixtures remain hypotheses.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e '.[dev]'
+pip install -e '.[dev,analysis]'
 pytest
 ```
 
@@ -126,6 +129,9 @@ trademark clearance or reservation.
 
 ## License
 
-Repository-authored code, documentation, fully synthetic fixtures, and accepted
-local experiment outputs are licensed under [Apache-2.0](LICENSE). Third-party
-artifacts are governed by their own licenses and are not redistributed here.
+Repository-authored code, documentation, fully synthetic fixtures, and the
+experiment outputs we wrote are licensed under [Apache-2.0](LICENSE). Some
+sealed runs and the LongMemEval labels carry text derived from LongMemEval,
+which keeps its MIT licence; [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+reproduces it and `THIRD_PARTY.json` lists every path it covers. The LongMemEval
+corpus itself is downloaded, not redistributed.

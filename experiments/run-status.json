@@ -1,0 +1,10 @@
+{
+  "note": "Every accepted run is sealed and verifies; this says which may be cited for what. A run not listed here is citable. A historical run stays accepted as evidence of what happened and may be cited only for the purpose given.",
+  "historical": {
+    "external-cognee-chunks-grid-v1": "Superseded by external-cognee-chunks-grid-v3: 40 unexplained worker errors and a shared metadata database (E-081). Cited only as the figure it once gave (Section VI).",
+    "external-graphiti-grid-v1": "Graphiti before the shipped hybrid retrieval. Cited only in the fairness comparison with external-graphiti-hybrid-v1.",
+    "external-mem0-grid-v1": "Mem0 with a shared history database. Cited only in the fairness comparison with external-mem0-grid-v2.",
+    "longmemeval-s-v1": "Its distractor-pressure comparison was retracted (E-066). Its console log supports the dropped-update count of mem0-dropped-actions-logs-v1.",
+    "scale-cost-mem0-v1": "The earlier Mem0-only cost run, superseded by scale-growth-mem0-v1 (H14)."
+  }
+}

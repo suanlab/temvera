@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import json
 import platform
 import subprocess
@@ -144,9 +145,28 @@ def seal_run(
             "platform": platform.platform(),
             "python": sys.version,
             "source_sha256": hash_source_tree(root),
+            **provenance(root.parent),
         },
     )
     _write_json(run_dir / "checksums.json", checksums(run_dir))
+
+
+def provenance(project: Path) -> dict[str, Any]:
+    """What else a run depended on beyond ``src``: the scripts that drive most
+    experiments, whether the tree was clean, a hash of any uncommitted change,
+    and the installed distributions. Older runs lack these fields; nothing that
+    verifies a run requires them."""
+    scripts = project / "scripts"
+    diff = subprocess.run(("git", "diff", "HEAD"), cwd=project, capture_output=True)
+    packages = sorted(f"{d.metadata['Name']}=={d.version}"
+                      for d in importlib.metadata.distributions() if d.metadata["Name"])
+    return {
+        "scripts_sha256": hash_source_tree(scripts) if scripts.is_dir() else None,
+        "git_dirty": bool(diff.stdout) if diff.returncode == 0 else None,
+        "git_diff_sha256": hashlib.sha256(diff.stdout).hexdigest()
+        if diff.returncode == 0 and diff.stdout else None,
+        "packages": packages,
+    }
 
 
 def verify_run(run_dir: Path) -> bool:

@@ -1,5 +1,11 @@
 # ICDE 2027 — research track, round 2, EAB paper
 
+> **How to read this file.** Sections are dated and appended in order, so earlier
+> ones are historical: their numbers, release tags and claim counts were true
+> when written and have since been superseded. The newest section is at the end;
+> the current artifact is the latest `icde-eab-v*` release.
+
+
 Decision D-015. Requirements quoted from the ICDE 2027 call and submission
 guidelines as read on 2026-10-02.
 
@@ -184,3 +190,33 @@ South Korea — suanlee@semyung.ac.kr.
       2026-10-25); stated in the paper's Limitations, the preregistrations and
       ledger E-115. `private/run-pending.sh` would run them unchanged.
 - [ ] Open: independent human labels; five-seed precision.
+
+## Added 2026-10-29 (pre-submission audit in `CHECK.md`)
+
+- [x] F03: a run with infrastructure errors is refused a seal (`require_clean`,
+      and the H16/H17 scripts); resets of Mem0, Graphiti and Hindsight must
+      leave the store verifiably empty; historical runs listed in
+      `experiments/run-status.json` and kept out of main tables and figures.
+      Failure-injection tests in `tests/test_failure_gates.py`.
+- [x] F05: Hindsight runs record the daemon's own version and the LLMs it
+      actually called (from its request log), and stop on a mismatch.
+- [x] F07: `c6853660` and `9ea5eabc` have no whole day between sessions;
+      sensitivity reported in the paper (40/17 -> 38/16 of 58);
+      `contained_day` for future protocols. Ledger E-116.
+- [x] F09: `analysis` extra pins matplotlib; fresh-venv figures byte-identical.
+- [x] F10: `THIRD_PARTY_NOTICES.md`, `THIRD_PARTY.json`, archive manifest lists
+      LongMemEval-derived paths under MIT; README licence text corrected.
+- [x] F11/F17: README entry point and command scope; this file's history noted.
+- [x] F12/F13: casewise tests labelled exploratory; Wilson intervals called
+      descriptive; Hindsight version stated as a migration-history match with
+      no executable fingerprint.
+- [x] F14: seals record scripts hash, dirty-tree flag and diff hash, packages.
+- [x] F15: all `.env` values and six key formats absent from all git history.
+      An older tracked audit folder (`paper_audit/run_20261021_003403`) holds
+      local absolute paths; keeping it public is the author's decision.
+- [ ] Abstract: two sentences narrowed (C02, C11) -- awaiting author approval
+      before a release.
+- [ ] F16 (separate Conclusion): not added; the body has no room left.
+- [ ] Open, needing people or API budget: human labels (kit ready), independent
+      timing adjudication, H16-H18, more seeds, a temporal positive control.
+

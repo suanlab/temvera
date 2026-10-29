@@ -37,8 +37,23 @@ from .threats import (
 )
 
 
+def require_clean(result: dict, config: dict) -> None:
+    """Refuse to keep a run whose system reported infrastructure errors.
+
+    A failed ingest reads as a lost memory, a failed delete as a kept one, and a
+    failed request as an empty answer, so such a run measures the failure, not
+    the system. Only a config that says so (``allow_worker_errors``), for a run
+    meant to study those errors, may be sealed with them.
+    """
+    errors = int((result.get("backbone") or {}).get("worker_errors", 0) or 0)
+    if errors and not config.get("allow_worker_errors"):
+        messages = (result.get("backbone") or {}).get("worker_error_messages", [])[:3]
+        raise SystemExit(f"refusing to seal: {errors} worker errors, e.g. {messages}")
+
+
 def _write_external_run(output, config, result, command_name, arguments) -> None:
     """Write results + transcript for an external comparison run and seal it."""
+    require_clean(result, config)
     transcript = result.pop("transcript")
     output.mkdir(parents=True)
     (output / "results.json").write_text(

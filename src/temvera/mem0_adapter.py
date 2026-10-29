@@ -171,11 +171,20 @@ class Mem0System:
         return getattr(mem0, "__version__", "unknown")
 
     def reset(self) -> None:
+        """Empty this user's memories, and check that it worked.
+
+        ``delete_all`` raises on a store that has nothing to delete, which is
+        not a failure; any other failure would leave an earlier run's memories
+        in this one, so the store must read back empty either way.
+        """
         try:
             self._memory.delete_all(user_id=self._user_id)
-        except Exception:
-            # A fresh store has nothing to delete; ignore.
+        except Exception:  # noqa: BLE001 - judged by the postcondition below
             pass
+        rows = self._memory.get_all(user_id=self._user_id)
+        rows = rows.get("results", rows) if isinstance(rows, dict) else rows
+        if rows:
+            raise RuntimeError(f"Mem0 reset left {len(rows)} memories for {self._user_id}")
 
     def ingest(self, turn: WorkloadTurn) -> None:
         result = _with_retries(

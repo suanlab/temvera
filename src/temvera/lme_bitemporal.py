@@ -23,7 +23,7 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -255,12 +255,34 @@ def as_of_day(earlier: datetime, later: datetime) -> datetime | None:
 
     None when both sessions fall on one day: a date-granular question cannot
     then separate the two values, so no valid-time question is asked.
+
+    Kept as the sealed runs used it. On consecutive days it asks about the
+    earlier session's own day at noon, which can precede that session: for
+    ``c6853660`` the earlier session is at 16:24. New protocols use
+    :func:`contained_day`.
     """
     first, second = earlier.date(), later.date()
     if first >= second:
         return None
     day = first + (second - first) // 2
     return datetime(day.year, day.month, day.day, 12)
+
+
+def contained_day(earlier: datetime, later: datetime) -> datetime | None:
+    """The middle calendar day lying wholly between two sessions, at noon.
+
+    A question about a day is answered for that whole day, so the day must
+    begin after the earlier session and end before the later one. None when no
+    such day exists (sessions on the same or consecutive days), so the pair
+    gets no valid-time question.
+    """
+    first, last = earlier.date() + timedelta(days=1), later.date() - timedelta(days=1)
+    if first > last:
+        return None
+    day = first + (last - first) // 2
+    at = datetime(day.year, day.month, day.day, 12, tzinfo=earlier.tzinfo)
+    assert earlier < at < later
+    return at
 
 
 def queries_for(pair: UpdatePair, label: dict[str, Any]) -> list[BitemporalQuery]:

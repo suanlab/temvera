@@ -18,7 +18,7 @@ Read `AGENTS.md` first — it is the binding working agreement. Then `docs/index
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e '.[dev]'      # dev extra pulls in pytest, ruff, cryptography
+pip install -e '.[dev,analysis]'   # dev: pytest, ruff, cryptography; analysis: pinned matplotlib
 
 pytest                        # full deterministic suite (addopts = -q)
 pytest tests/test_oracle.py   # single file  (note: not every module has a matching test file)

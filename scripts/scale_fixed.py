@@ -519,6 +519,11 @@ def _run(args) -> int:
                 finally:
                     store.close()
                 print(json.dumps({"condition": condition, "done": True}), flush=True)
+    failed = [r for result in results for r in result["rows"] if r["error"]]
+    if failed:
+        # An errored request scores as a wrong or empty answer; such a run
+        # measures the failure, not the store, and is not kept.
+        raise SystemExit(f"refusing to seal: {len(failed)} requests failed, e.g. {failed[0]['error']}")
     out.mkdir(parents=True)
     with (out / "transcript.jsonl").open("w", encoding="utf-8") as handle:
         for result in results:

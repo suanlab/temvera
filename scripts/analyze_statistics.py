@@ -12,6 +12,11 @@ offline, adds what an experimental reviewer asks for:
   the one claim of *no* difference: Mem0 and Graphiti at k=1;
 * Fisher's exact test for the correction result, whose groups are not paired.
 
+The casewise McNemar, Holm and Fisher p-values treat cases as independent,
+which they are not (cases share histories, histories share seeds). They are
+reported as exploratory only; the paper's inference is the sign-flip test over
+histories, with the seed-level test beside it.
+
     python scripts/analyze_statistics.py
 """
 
@@ -233,6 +238,8 @@ def analyse() -> dict:
 
 def main() -> int:
     report = analyse()
+    print("note: casewise McNemar/Holm/Fisher p-values ignore history clustering and are "
+          "exploratory; inference uses the history- and seed-level permutation tests")
     for key, value in report["rates"].items():
         print(f"{key:58s} {value['exact']:4d}/{value['n']:<4d} {value['rate']:.3f} "
               f"cluster [{value['cluster_low']:.3f}, {value['cluster_high']:.3f}]")

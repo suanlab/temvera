@@ -277,3 +277,43 @@ def test_labels_and_exclusions_partition_the_candidate_pairs():
 
         pairs = {pair.question_id for pair in update_pairs(json.loads(raw.read_text()))}
         assert pairs == ids | set(labels)
+
+
+def test_contained_day_lies_wholly_between_the_sessions() -> None:
+    from datetime import datetime
+
+    from temvera.lme_bitemporal import as_of_day, contained_day
+
+    # c6853660: consecutive days, earlier session in the afternoon.
+    earlier, later = datetime(2023, 5, 28, 16, 24), datetime(2023, 5, 29, 10, 35)
+    assert as_of_day(earlier, later) < earlier  # the legacy rule's defect
+    assert contained_day(earlier, later) is None
+    assert contained_day(datetime(2023, 5, 28, 23, 0), datetime(2023, 5, 28, 23, 30)) is None
+    at = contained_day(datetime(2023, 1, 30, 23, 0), datetime(2023, 2, 2, 1, 0))
+    assert at == datetime(2023, 1, 31, 12) or at == datetime(2023, 2, 1, 12)
+    year = contained_day(datetime(2022, 12, 30, 9), datetime(2023, 1, 3, 9))
+    assert datetime(2022, 12, 31) <= year < datetime(2023, 1, 2)
+
+
+def test_the_verifier_names_exactly_the_pairs_with_no_whole_day() -> None:
+    import json
+    import sys
+    from pathlib import Path
+
+    import pytest
+
+    root = Path(__file__).resolve().parents[1]
+    raw = root / "data" / "raw" / "longmemeval_oracle.json"
+    if not raw.exists():
+        pytest.skip("the LongMemEval corpus is downloaded, not shipped")
+    from temvera.lme_bitemporal import as_of_day, contained_day, update_pairs
+
+    sys.path.insert(0, str(root / "scripts"))
+    import verify_paper_claims
+
+    labels = json.loads((root / "data" / "lme-bitemporal-labels.json").read_text())["labels"]
+    pairs = {p.question_id: p for p in update_pairs(json.loads(raw.read_text()))}
+    asked = [q for q in labels if as_of_day(pairs[q].earlier.recorded_at, pairs[q].later.recorded_at)]
+    adjacent = sorted(q for q in asked
+                      if contained_day(pairs[q].earlier.recorded_at, pairs[q].later.recorded_at) is None)
+    assert tuple(adjacent) == verify_paper_claims.NO_WHOLE_DAY
