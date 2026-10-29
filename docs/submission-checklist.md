@@ -224,3 +224,16 @@ South Korea — suanlee@semyung.ac.kr.
 - [ ] Open, needing people or API budget: human labels (kit ready), independent
       timing adjudication, H16-H18, more seeds.
 
+## Added 2026-10-30 (offline checks from `CHECK.md` section J)
+
+- [x] All 14 PDF pages inspected as rendered: no overflow or overlap; body,
+      Limitations and Ethics end on page 12.
+- [x] All 17 fonts embedded; the small-caps section-sign font substitution in
+      two table captions removed (no font warnings); PDF metadata set.
+- [x] Links: all 6 URLs return 200, all 29 arXiv IDs resolve, all 6 DOIs are
+      registered at doi.org (publishers block automated fetches).
+- [x] `docs/table-figure-manifest.json`: every table and figure mapped to runs,
+      code and aggregation, with a staleness test.
+- [ ] Still open: human labels; H16-H18 (API budget); CMT profile, COI and
+      final upload (author).
+

@@ -1,0 +1,229 @@
+{
+  "floats": [
+    {
+      "aggregation": "qualitative",
+      "caption_opening": "What closely related studies evaluate, read from each work's full text and, where released, its code (October 2026). \\checkmark: evaluated;",
+      "checked_claims_inside": 0,
+      "code": "none: read from each work's full text and released code",
+      "label": "tab:related",
+      "runs": [],
+      "sources": [
+        "data/literature/"
+      ]
+    },
+    {
+      "aggregation": "qualitative levels; counts are case counts",
+      "caption_opening": "Support for six capabilities of the query and deletion contract. Levels are defined above. Entries are what we observed in the shipped versi",
+      "checked_claims_inside": 0,
+      "code": "scripts/store_census.py; capability audit of the installed distributions",
+      "label": "tab:fragment",
+      "runs": [
+        "store-census-v1"
+      ]
+    },
+    {
+      "aggregation": "case-weighted",
+      "caption_opening": "Documented temporal claim against measured \\texttt{valid\\_time}: exact at the retrieval layer, and read by the common reader of \\textup{\\S}\\",
+      "checked_claims_inside": 10,
+      "code": "temvera.reanalysis.category_counts; scripts/llm_rescore.py (reader)",
+      "label": "tab:claims",
+      "runs": [
+        "external-graphiti-hybrid-v1",
+        "external-hindsight-recall-v1",
+        "external-cognee-chunks-grid-v3",
+        "external-mem0-grid-v2",
+        "external-langmem-v1",
+        "h9-reader-graphiti-v1",
+        "h9-reader-hindsight-recall-v1",
+        "h9-reader-cognee-chunks-v1",
+        "h9-reader-mem0-v1",
+        "h9-reader-langmem-v1"
+      ],
+      "sources": [
+        "data/literature/system-claims-2026-08-20.json"
+      ]
+    },
+    {
+      "aggregation": "settings, no numbers computed",
+      "caption_opening": "Settings of the measured systems. Temperatures are for extraction and, where an LLM writes the answer, reading; ``default'' leaves the provi",
+      "checked_claims_inside": 0,
+      "code": "configs under experiments/configs/; run config.json",
+      "label": "tab:settings",
+      "runs": [
+        "external-mem0-grid-v2",
+        "external-langmem-v1",
+        "external-graphiti-hybrid-v1",
+        "external-cognee-chunks-grid-v3",
+        "external-cognee-grid-v1",
+        "external-hindsight-recall-v1",
+        "external-hindsight-reflect-v1"
+      ]
+    },
+    {
+      "aggregation": "case-weighted rates; recall and stale-use cell-averaged as sealed",
+      "caption_opening": "Exact accuracy by lifecycle category over the matched 20-cell grid, 484 cases per system. LangMem is included because a two-system taxonomy",
+      "checked_claims_inside": 15,
+      "code": "temvera.reanalysis.category_counts; scripts/analyze_purge_scope.py (purge, overall)",
+      "label": "tab:external",
+      "runs": [
+        "external-mem0-grid-v2",
+        "external-langmem-v1",
+        "external-graphiti-hybrid-v1"
+      ]
+    },
+    {
+      "aggregation": "case-weighted with Wilson 95% intervals",
+      "caption_opening": "Per-category exact accuracy over the matched cells, all seven configurations. Expiry rests on 16 cases per system, so even a score of zero a",
+      "checked_claims_inside": 2,
+      "code": "scripts/make_figures.py:figure_categories",
+      "label": "fig:categories",
+      "runs": [
+        "external-mem0-grid-v2",
+        "external-langmem-v1",
+        "external-graphiti-hybrid-v1",
+        "external-cognee-chunks-grid-v3",
+        "external-cognee-grid-v1",
+        "external-hindsight-recall-v1",
+        "external-hindsight-reflect-v1"
+      ]
+    },
+    {
+      "aggregation": "case-weighted",
+      "caption_opening": "Exact accuracy versus retrieval budget $k$ on matched cells. The all-or-nothing conjunct in our scorer makes Graphiti's measured deficit gro",
+      "checked_claims_inside": 0,
+      "code": "scripts/make_figures.py:figure_budget (analyze_purge_scope.overall per k)",
+      "label": "fig:budget",
+      "runs": [
+        "external-mem0-grid-v2",
+        "external-langmem-v1",
+        "external-graphiti-hybrid-v1"
+      ]
+    },
+    {
+      "aggregation": "counts of people (of 24 purged, 36 never purged) and histories (of 9)",
+      "caption_opening": "Deletion in five systems over ten histories: purged people (of 24) whose value still appears in the answer, by condition; never-purged peopl",
+      "checked_claims_inside": 35,
+      "code": "temvera.deletion_study.summarize",
+      "label": "tab:deletion",
+      "runs": [
+        "deletion-study-mem0-v1",
+        "deletion-study-langmem-v1",
+        "deletion-study-graphiti-v1",
+        "deletion-study-cognee-v1",
+        "deletion-study-hindsight-v1",
+        "deletion-verified-mem0-v1",
+        "deletion-verified-langmem-v1",
+        "deletion-verified-graphiti-v1",
+        "deletion-verified-cognee-v1",
+        "deletion-verified-hindsight-v1",
+        "deletion-langmem-deletes-v1"
+      ]
+    },
+    {
+      "aggregation": "qualitative",
+      "caption_opening": "Finest unit each deletion API can name, read from the distribution. None of these low-level calls accepts a subject--attribute content predi",
+      "checked_claims_inside": 0,
+      "code": "none: read from the installed distributions",
+      "label": "tab:deletion-api",
+      "runs": []
+    },
+    {
+      "aggregation": "case-weighted",
+      "caption_opening": "Five systems, and two of them read both ways. ``Exact'' is the grid's scorer on what the configuration returned. Each retrieval-layer row is",
+      "checked_claims_inside": 28,
+      "code": "temvera.reanalysis; scripts/analyze_purge_scope.py; scripts/llm_rescore.py",
+      "label": "tab:reader",
+      "runs": [
+        "external-mem0-grid-v2",
+        "external-langmem-v1",
+        "external-graphiti-hybrid-v1",
+        "external-cognee-chunks-grid-v3",
+        "external-cognee-grid-v1",
+        "external-hindsight-recall-v1",
+        "external-hindsight-reflect-v1",
+        "h9-reader-mem0-v1",
+        "h9-reader-langmem-v1",
+        "h9-reader-graphiti-v1",
+        "h9-reader-cognee-chunks-v1",
+        "h9-reader-hindsight-recall-v1",
+        "h9-judge-gpt4o-cognee-graph-v1",
+        "h9-judge-gpt4o-hindsight-reflect-v1"
+      ]
+    },
+    {
+      "aggregation": "per checkpoint; p95 over 40-80 questions",
+      "caption_opening": "One store growing to 3{,}000 turns (Mem0 0.1.118, Graphiti 0.29.2, Hindsight 0.9.1; \\texttt{gpt-4o-mini}). API dollars per ingested turn and",
+      "checked_claims_inside": 22,
+      "code": "scripts/analyze_scale_cost.py",
+      "label": "tab:growth",
+      "runs": [
+        "scale-growth-mem0-v1",
+        "scale-growth-graphiti-v1",
+        "scale-growth-hindsight-v1"
+      ]
+    },
+    {
+      "aggregation": "case-weighted, Wilson 95%",
+      "caption_opening": "Scale, under the controlled workload. Case-weighted rates with Wilson 95\\% intervals for the comparisons the text draws. Recall is the share",
+      "checked_claims_inside": 24,
+      "code": "scripts/verify_paper_claims.py:scale_rate",
+      "label": "tab:scale",
+      "runs": [
+        "scale-sweep-mem0-e8-v2",
+        "scale-sweep-mem0-e32-v2",
+        "scale-sweep-mem0-e128-s7-v3",
+        "scale-sweep-mem0-e128-s17-v3",
+        "scale-sweep-mem0-e128-s42-v3",
+        "scale-sweep-graphiti-e8-v2",
+        "scale-sweep-graphiti-e32-v2",
+        "scale-sweep-graphiti-e128-v2"
+      ]
+    },
+    {
+      "aggregation": "counts of 62 pairs (60 for valid time)",
+      "caption_opening": "Benchmark conversations: 62 LongMemEval knowledge-update supersessions (43 on which two extractors agreed, 19 adjudicated), a fresh store fo",
+      "checked_claims_inside": 36,
+      "code": "temvera.lme_bitemporal; run summaries summed over the two label sets",
+      "label": "tab:realdata",
+      "runs": [
+        "lme-bitemporal-mem0-agreement-v1",
+        "lme-bitemporal-mem0-adjudicated-v1",
+        "lme-bitemporal-langmem-agreement-v1",
+        "lme-bitemporal-langmem-adjudicated-v1",
+        "lme-bitemporal-graphiti-agreement-v1",
+        "lme-bitemporal-graphiti-adjudicated-v1",
+        "lme-bitemporal-cognee-chunks-agreement-v3",
+        "lme-bitemporal-cognee-chunks-adjudicated-v1",
+        "lme-bitemporal-hindsight-recall-agreement-v2",
+        "lme-bitemporal-hindsight-recall-adjudicated-v1",
+        "lme-bitemporal-cognee-graph-agreement-v3",
+        "lme-bitemporal-cognee-graph-adjudicated-v1",
+        "lme-bitemporal-hindsight-reflect-agreement-v2",
+        "lme-bitemporal-hindsight-reflect-adjudicated-v1"
+      ]
+    },
+    {
+      "aggregation": "case-weighted",
+      "caption_opening": "The main grid on the measured and the current release of each system (LangMem's measured release is current). Case-weighted exact accuracy o",
+      "checked_claims_inside": 25,
+      "code": "temvera.reanalysis.category_counts; scripts/analyze_purge_scope.py",
+      "label": "tab:releases",
+      "runs": [
+        "external-mem0-grid-latest-v1",
+        "external-graphiti-hybrid-latest-v1",
+        "external-cognee-chunks-grid-latest-v1",
+        "external-cognee-grid-latest-v1",
+        "external-hindsight-recall-latest-v1",
+        "external-hindsight-reflect-latest-v1",
+        "external-mem0-grid-v2",
+        "external-langmem-v1",
+        "external-graphiti-hybrid-v1",
+        "external-cognee-chunks-grid-v3",
+        "external-cognee-grid-v1",
+        "external-hindsight-recall-v1",
+        "external-hindsight-reflect-v1"
+      ]
+    }
+  ],
+  "note": "Tables are hand-written TeX; every number in them is checked by scripts/verify_paper_claims.py. Claims anchored in prose about a table are not counted here."
+}

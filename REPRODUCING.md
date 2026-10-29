@@ -86,6 +86,12 @@ separate key -- and `python scripts/score_annotation_kit.py <dir> [<dir2>]`
 scores the filled sheets against the controls, the strict count and the H15
 model consensus.
 
+`docs/table-figure-manifest.json` maps every table and figure of the paper to
+the sealed runs it rests on, the code that computes it, its aggregation, and the
+number of checked claims inside it; `python scripts/table_figure_manifest.py
+--write docs/table-figure-manifest.json` regenerates it, and a test fails if the
+shipped copy is stale.
+
 Figures are regenerated from the same sealed runs with
 `python scripts/make_figures.py`, and are byte-reproducible: a regenerated
 figure should be identical to the shipped one.
