@@ -1930,7 +1930,7 @@ def _abstract_claims_v2() -> list:
     retrieval = ("external-graphiti-hybrid-v1", "external-cognee-chunks-grid-v3",
                  "external-hindsight-recall-v1")
     return [
-        Claim("abs", "failed preregistered predictions", "sixteen", falsified_predictions, 0.5,
+        Claim("abs", "failed preregistered predictions", "nineteen", falsified_predictions, 0.5,
               near="ran;", after=A),
         Claim("abs", "Mem0 valid_time (micro)", "0.364",
               lambda: micro("external-mem0-grid-v2", "valid_time", cells()), near="(Mem0:", after=A),
@@ -2374,6 +2374,66 @@ def _positive_control_claims() -> list:
     ]
 
 
+def _h17(system: str, key: str, field: str) -> float:
+    return float(res(f"h17-deletion-mixed-{system}-v1")["summary"][key][field])
+
+
+def _h18(path: str, field: str = "credited") -> float:
+    return float(res("h18-native-context-hindsight-v1")["summary"][path][field])
+
+
+def _h18_context_units() -> float:
+    rows = tr("h18-native-context-hindsight-v1")
+    native = [r["context_units"] for r in rows if r["path"] == "common_native"]
+    return sum(native) / len(native)
+
+
+def _h18_names_correction() -> float:
+    rows = [r for r in tr("h18-native-context-hindsight-v1") if r["path"] == "common_native"]
+    return float(sum(not r["credited"] and any(w.casefold() in r["answer"].casefold() for w in r["wrong_values"])
+                     for r in rows))
+
+
+def _mixed_unit_claims() -> list:
+    D = "When one unit mixes what must go with what must stay"
+    C = "but it is the reader that uses it"
+    return [
+        Claim("5.3", "Hindsight co-located kept, both callers (max)", "0",
+              lambda: max(_h17("hindsight", f"{u}|{c}", "colocated_kept")
+                          for u in ("attributes", "people") for c in ("api-oracle", "api-verified")), 0.5,
+              near="deleted fact (", after=D),
+        Claim("5.3", "Hindsight co-located answered before", "30",
+              lambda: _h17("hindsight", "attributes|api-verified", "colocated_before"), 0.5,
+              near="deleted fact (0 of", after=D),
+        Claim("5.3", "Mem0 other person's fact kept, checked caller", "26",
+              lambda: _h17("mem0", "people|api-verified", "colocated_kept"), 0.5, near="same turn (", after=D),
+        Claim("5.3", "Mem0 other person's fact answered before", "26",
+              lambda: _h17("mem0", "people|api-verified", "colocated_before"), 0.5, near="same turn (26 of", after=D),
+        Claim("5.3", "Mem0 own other attribute kept, checked caller", "0",
+              lambda: _h17("mem0", "attributes|api-verified", "colocated_kept"), 0.5, near="other attribute (", after=D),
+        Claim("5.3", "Mem0 own other attribute answered before", "29",
+              lambda: _h17("mem0", "attributes|api-verified", "colocated_before"), 0.5,
+              near="other attribute (0 of", after=D),
+        Claim("5.3", "shared value kept under value deletion (max)", "0",
+              lambda: max(_h17(x, "shared|api-oracle", "colocated_kept") for x in ("mem0", "hindsight")), 0.5,
+              near="shares the value (", after=D),
+        Claim("5.3", "shared value answered before", "30",
+              lambda: _h17("mem0", "shared|api-oracle", "colocated_before"), 0.5, near="shares the value (0 of", after=D),
+        Claim("5.3", "shared value kept under name check (min)", "30",
+              lambda: min(_h17(x, "shared|api-verified", "colocated_kept") for x in ("mem0", "hindsight")), 0.5,
+              near="the name keeps all", after=D),
+        Claim("5.corr", "memory units reflect reports using (mean)", "53",
+              _h18_context_units, 0.5, near="given the", after=C),
+        Claim("5.corr", "common reader names the correction, native context", "44",
+              _h18_names_correction, 0.5, near="correction in", after=C),
+        Claim("5.corr", "questions", "45", lambda: _h18("common_native", "n"), 0.5, near="correction in 44 of", after=C),
+        Claim("5.corr", "common reader right on native context", "once",
+              lambda: _h18("common_native"), 0.5, near="and is right", after=C),
+        Claim("5.corr", "own reader credited again", "29", lambda: _h18("own_reader"), 0.5,
+              near="right once, while that reader is again\nright", after=C),
+    ]
+
+
 def _dropped(run: str, field: str = "dropped") -> float:
     return float(res("mem0-dropped-actions-logs-v1")[run][field])
 
@@ -2392,11 +2452,11 @@ def _dropped_claims() -> list:
     ]
 
 
-CLAIMS = CLAIMS + _grid_claims() + _scale_claims() + _real_claims() + _bounds_claims() + _corrections_claims() + _audit_claims() + _read_path_claims() + _releases_claims() + _coverage_claims() + _stats_claims() + _h9_claims() + _h9_real_claims() + _h12_claims() + _h8_claims() + _census_claims() + _deletion_claims() + _abstract_claims_v2() + _growth_claims() + [Claim("Lim", "largest store run, turns", "3{,}000", lambda: float(max(c['turns'] for c in res('scale-growth-mem0-v1')['checkpoints'])), 0.5, near="one history up to")] + _final_store_claims() + _claims_table_claims() + _h13_claims() + _contribution_census_claims() + _h15_claims() + _dropped_claims() + _hindsight_build_claims() + _adjacent_day_claims() + _positive_control_claims() + [Claim("7", "falsified preregistered predictions", "sixteen", falsified_predictions, 0.5, near="Within the thesis, \\textbf{")]
+CLAIMS = CLAIMS + _grid_claims() + _scale_claims() + _real_claims() + _bounds_claims() + _corrections_claims() + _audit_claims() + _read_path_claims() + _releases_claims() + _coverage_claims() + _stats_claims() + _h9_claims() + _h9_real_claims() + _h12_claims() + _h8_claims() + _census_claims() + _deletion_claims() + _abstract_claims_v2() + _growth_claims() + [Claim("Lim", "largest store run, turns", "3{,}000", lambda: float(max(c['turns'] for c in res('scale-growth-mem0-v1')['checkpoints'])), 0.5, near="one history up to")] + _final_store_claims() + _claims_table_claims() + _h13_claims() + _contribution_census_claims() + _h15_claims() + _dropped_claims() + _hindsight_build_claims() + _adjacent_day_claims() + _positive_control_claims() + _mixed_unit_claims() + [Claim("7", "falsified preregistered predictions", "nineteen", falsified_predictions, 0.5, near="Within the thesis, \\textbf{")]
 
 
 # Small counts the prose spells out; the printed word is still what is searched.
-_WORDS = {"Two": 2, "Three": 3, "nothing": 0, "Ten": 10, "no": 0, "none": 0, "One": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+_WORDS = {"nineteen": 19, "once": 1, "Two": 2, "Three": 3, "nothing": 0, "Ten": 10, "no": 0, "none": 0, "One": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
           "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
           "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16}
 

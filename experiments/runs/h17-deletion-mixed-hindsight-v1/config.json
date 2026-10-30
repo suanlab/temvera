@@ -1,0 +1,1 @@
+{"benchmark":"temvera-h17-deletion-mixed-hindsight-v1","callers":["api-oracle","api-verified"],"embed_model":"text-embedding-3-small","model":"gpt-4o-mini","people":12,"seeds":[11,12,13,14,15],"system":"hindsight","units":["attributes","people","shared"]}

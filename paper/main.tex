@@ -60,7 +60,7 @@ implementation checks, into five open-source systems---Mem0, LangMem, Graphiti,
 Cognee and Hindsight---and measure separately what a store retains, what its
 retrieval selects for the asked time, what an answer asserts, and what deletion
 removes. The later follow-up studies committed their predictions before they
-ran; sixteen failed, and we report them. The layers disagree. Stores that
+ran; nineteen failed, and we report them. The layers disagree. Stores that
 overwrite superseded values keep almost none of them and answer historical
 questions only up to a ceiling the history fixes (Mem0: 0.364 against 0.385),
 and Mem0 applies a correction about the past to the present. On the main grid, stores that keep
@@ -720,9 +720,16 @@ too. Of the 36 never-purged people, Mem0 still answers 8, Graphiti 18, LangMem
 19, Cognee 33 and Hindsight 36. A caller that deletes only the returned units
 naming the person removes every purged value as well and keeps all 36 in Mem0,
 Graphiti, Cognee and Hindsight, and 33 in LangMem (30 under the oracle caller;
-these are separately ingested stores, so the gap is not the caller's). The over-deletion is the caller's, not the API's granularity, but only
-because in these histories one unit holds one person's statement; units that
-mix people or attributes are untested.
+these are separately ingested stores, so the gap is not the caller's).
+\textbf{When one unit mixes what must go with what must stay}, granularity
+returns. In five further histories, asked before and after the deletion on one
+store, Hindsight, which deletes documents, loses every fact that shares one with
+the deleted fact (0 of 30) under either caller. Mem0 keeps another person's
+fact stated in the same turn (26 of 26) but, under the checked caller, also the
+person's other attribute (0 of 29 kept): both memories name the person, and the
+caller checks the name, not the attribute. Deleting by value instead removes
+another person's fact that shares the value (0 of 30 kept in both); checking
+the name keeps all 30.
 
 \textbf{Deletion and past-time questions need one semantics.} After a purge,
 what should ``What was $X$'s home city in January?'' return? Erasure can be a
@@ -736,36 +743,16 @@ purge questions expected a value the request had asked to delete
 (\S\ref{sec:reader}). We report both readings and use the request's own scope
 here.
 
-\textbf{The API requires caller-side selection.} The API surface locates the
-record-selection responsibility; it does not by itself explain whether an
-extractor acts on a prose request.
-We inspected the installed distributions rather than their documentation:
-
-\begin{table}[t]
-\centering
-\caption{Finest unit each deletion API can name, read from the distribution.
-None of these low-level calls accepts a subject--attribute content predicate;
-a caller must resolve the request to record handles.}
-\label{tab:deletion-api}
-\small
-\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{4.6cm}@{}}
-\toprule
-System & Finest nameable unit \\
-\midrule
-Mem0      & one memory id (\texttt{delete}), or a whole user/agent/run scope \\
-Graphiti  & one episode, i.e.\ one ingested turn \\
-Cognee    & one data item (\texttt{forget}; \texttt{delete} is soft by default), one dataset, or everything the user owns \\
-LangMem   & one memory key; its memory manager's own deletions ship disabled (\texttt{enable\_deletes=False}) \\
-Hindsight & one document (one retained input), or the whole bank \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-These APIs require the caller to map a subject and attribute to record
-handles. Cognee's documented \texttt{forget}, for example, takes a
-\texttt{data\_id}, a dataset or \texttt{everything}; the caller must first
-identify the items holding the fact. Selection and deletion are distinct
-responsibilities, just as retention and filtering are.
+\textbf{The API requires caller-side selection.} Read from the installed
+distributions, each deletion call names a record handle or a whole scope: one
+memory id or a user/agent/run (Mem0), one episode, i.e.\ one ingested turn
+(Graphiti), one data item, dataset or everything (Cognee's \texttt{forget};
+\texttt{delete} is soft by default), one memory key, with its manager's own
+deletions disabled (LangMem), one document or the whole bank (Hindsight). None
+accepts a subject--attribute predicate, so a caller must map the request to
+handles first; selection and deletion are distinct responsibilities, just as
+retention and filtering are. This locates the responsibility; it does not
+explain whether an extractor acts on a prose request.
 
 \subsection{Is the information lost, or merely unfiltered?}
 \label{sec:reader}
@@ -1174,8 +1161,10 @@ whose answer is the original value. Counting an answer correct only if it gives
 that value and not the correction, which was unknown at $T$, Mem0 and LangMem
 answer 0, the retrieval layers of Cognee, Hindsight and Graphiti 0, 4 and 9,
 and the readers of Hindsight and Cognee 25 and 41. The stored text keeps the
-date each turn was recorded, which a reader can use, but the comparison does not
-separate a reader from the context it receives; no system has a
+date each turn was recorded, but it is the reader that uses it: given the 53
+memories Hindsight's reader reports using, the common reader names the later
+correction in 44 of 45 cases and is right once, while that reader is again
+right 29 times. No system has a
 transaction-time predicate (Table~\ref{tab:fragment},
 C2). A plain reader over the top five does not do the same: the common reader of
 \S\ref{sec:reader} gives the original value, not the correction, for 8 of 45 from
@@ -1277,15 +1266,17 @@ so the defect does not bias Mem0's aggregate in one known direction.
 \section{Negative Results and Corrections}\label{sec:negative}
 
 Negative results about our reference implementation alone stay in the
-artifact. Within the thesis, \textbf{sixteen preregistered predictions
+artifact. Within the thesis, \textbf{nineteen preregistered predictions
 failed}; each is reported where it was tested and listed with its outcome in the
 artifact's preregistrations. Those that change a reading: a common reader did
 not recover 0.80 of valid time from the retaining stores (\S\ref{sec:reader});
 Mem0's current release no longer consolidates (\S\ref{sec:releases}); two
 systems did not ignore every prose deletion (\S\ref{sec:deletion}); systems'
-own readers could say what was known before a correction, and the judge could
-not referee it (\S\ref{sec:corrections}); and Graphiti's write cost fell as its
-store grew (\S\ref{sec:cost}).
+own readers could say what was known before a correction, the judge could not
+referee it, and Hindsight's context alone did not let a common reader
+(\S\ref{sec:corrections}); a checked caller also removed a person's other
+attribute (\S\ref{sec:deletion}); and Graphiti's write cost fell as its store
+grew (\S\ref{sec:cost}).
 
 \textbf{Three of our own claims did not survive this revision.} We had reported
 that Hindsight's reader recovers valid time far less often than Cognee's; it
@@ -1353,10 +1344,9 @@ constructed answers need not be right on natural ones. The real-data valid-time
 gold assumes values persist between sessions; our two-model protocol
 confirms no pair, and independent timing adjudication remains absent. The literature review is single-reviewer. Purge claims cover declared
 stores and tested failure points, not backups, OS caches or provider-side
-copies. Three further studies are preregistered with their harnesses in the
-artifact but were not run, for lack of API budget: store size and revision load
-separated, deletion over units that mix people or attributes, and Hindsight's
-reader given its own context.
+copies. One further study, store size and revision load separated, is
+preregistered with its harness in the artifact but was not run, for lack of API
+budget.
 
 \section*{Ethics Statement}
 

@@ -69,3 +69,20 @@ first committed the harness gained the failure gates of the pre-submission audit
 (a run with infrastructure errors is refused a seal; a reset must leave the
 store empty). A smoke run on a history the study does not use precedes the
 study run and is written outside `experiments/`; its output is plumbing only.
+
+## Outcomes (recorded 2026-10-31 KST; `scripts/analyze_h18.py`)
+
+| Prediction | Outcome |
+|---|---|
+| H18a: the own reader is credited on at least 20 of 45 | **holds** -- 29 (strict count 23), as in H15 |
+| H18b: the common reader over reflect's own context is within 5 of the own reader | **falsified** -- 1 of 45 |
+| H18c: the common reader over recall's top five is credited on at most 12 | **holds** -- 7 |
+| H18d: reflect's context lifts the common reader by at least 10 over recall's | **falsified** -- 1 against 7 |
+
+Reading, as the preregistration set out: H18d failing means the context
+explains nothing and the reader does. Given the 53 memory units reflect reports
+using (on average), the common reader answers the later correction in 44 of 45
+cases: the context holds both values, and only a reader that reasons about when
+each was recorded picks the one known by the asked date. Hindsight's advantage
+on these questions is its reader, not the context it assembles. Cognee's reader
+exposes no comparable context and stays a pipeline comparison.

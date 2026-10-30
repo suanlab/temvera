@@ -252,3 +252,14 @@ South Korea — suanlee@semyung.ac.kr.
 - [x] AI disclosure states the sections with AI-generated content, as ICDE's
       submission guidelines require (author approved 2026-10-30).
 
+## Added 2026-10-31 (H17 and H18 run)
+
+- [x] H17 (mixed-unit deletion) and H18 (reader vs context) run on a new key and
+      a fresh Hindsight 0.9.1 daemon, after dated addenda; outcomes recorded
+      (H17c, H18b, H18d falsified: nineteen failed predictions in all). In the
+      paper (Sections V-C, V-I, VI, Limitations); ledger E-118, E-119.
+- [x] Table VII (deletion API units) folded into prose to keep the 12-page body.
+- [ ] Abstract: "sixteen" -> "nineteen" failed predictions -- awaiting author
+      approval before the 11/10 release.
+- [ ] Rotate the new OpenAI key (pasted in chat on 2026-10-31).
+

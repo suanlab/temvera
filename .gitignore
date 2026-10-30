@@ -111,6 +111,9 @@ experiments/runs/*
 !experiments/runs/external-hindsight-recall-latest-v1/
 !experiments/runs/external-hindsight-reflect-latest-v1/
 !experiments/runs/controlled-policy-v1/
+!experiments/runs/h17-deletion-mixed-mem0-v1/
+!experiments/runs/h17-deletion-mixed-hindsight-v1/
+!experiments/runs/h18-native-context-hindsight-v1/
 !experiments/runs/positive-control-grid-v1/
 !experiments/runs/positive-control-final-store-v1/
 !experiments/runs/hindsight-build-evidence-v1/

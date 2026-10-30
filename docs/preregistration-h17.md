@@ -79,3 +79,22 @@ first committed the harness gained the failure gates of the pre-submission audit
 (a run with infrastructure errors is refused a seal; a reset must leave the
 store empty). A smoke run on a history the study does not use precedes the
 study run and is written outside `experiments/`; its output is plumbing only.
+
+## Outcomes (recorded 2026-10-31 KST; `scripts/analyze_h17.py`)
+
+| Prediction | Outcome |
+|---|---|
+| H17a: checked caller leaves a deleted value in at most 10% of answers | **holds** -- Mem0 0 of 90, Hindsight 0 of 90 (in `shared` counting a returned unit that also names the person; counting the bare value, which the other person shares, 23 and 17 of 30) |
+| H17b: Hindsight keeps at most 20% of co-located facts under the checked caller | **holds** -- 0 of 30 in `attributes`, 0 of 30 in `people` (and 0 under the oracle caller too) |
+| H17c: Mem0 keeps at least 80% of co-located facts under the checked caller | **falsified** -- 26 of 26 in `people`, but 0 of 29 in `attributes` |
+| H17d: value matching keeps at most 20% of a shared value's other owner | **holds** -- 0 of 30 for both systems |
+| H17e: name checking keeps at least 80% of them | **holds** -- 30 of 30 for both |
+| H17f: unrelated facts survive the checked caller (>= 90%) | **holds** -- 58/58 (Mem0), 60/60 (Hindsight) |
+
+Why H17c failed (from the transcripts): Mem0 stores a person's two attributes as
+two memories, each naming the person. A search for "X's home city" returns
+both, and a caller that deletes the returned units naming X deletes the
+employer as well. The value-matching oracle caller keeps all 27, so the store's
+granularity is fine-grained enough; the checked caller's predicate (the name,
+not the attribute) is too coarse. Hindsight deletes whole documents and loses
+whatever shares one with the deleted fact under either caller.

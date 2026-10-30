@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "attributes|api-oracle": {
+      "colocated_before": 27,
+      "colocated_kept": 27,
+      "other_before": 55,
+      "other_kept": 55,
+      "purge": 30,
+      "purge_answered_before": 27,
+      "purge_left_after": 0,
+      "purge_left_after_named": 0
+    },
+    "attributes|api-verified": {
+      "colocated_before": 29,
+      "colocated_kept": 0,
+      "other_before": 58,
+      "other_kept": 58,
+      "purge": 30,
+      "purge_answered_before": 29,
+      "purge_left_after": 1,
+      "purge_left_after_named": 0
+    },
+    "people|api-oracle": {
+      "colocated_before": 27,
+      "colocated_kept": 27,
+      "other_before": 0,
+      "other_kept": 0,
+      "purge": 30,
+      "purge_answered_before": 27,
+      "purge_left_after": 0,
+      "purge_left_after_named": 0
+    },
+    "people|api-verified": {
+      "colocated_before": 26,
+      "colocated_kept": 26,
+      "other_before": 0,
+      "other_kept": 0,
+      "purge": 30,
+      "purge_answered_before": 26,
+      "purge_left_after": 0,
+      "purge_left_after_named": 0
+    },
+    "shared|api-oracle": {
+      "colocated_before": 30,
+      "colocated_kept": 0,
+      "other_before": 0,
+      "other_kept": 0,
+      "purge": 30,
+      "purge_answered_before": 30,
+      "purge_left_after": 0,
+      "purge_left_after_named": 0
+    },
+    "shared|api-verified": {
+      "colocated_before": 30,
+      "colocated_kept": 30,
+      "other_before": 0,
+      "other_kept": 0,
+      "purge": 30,
+      "purge_answered_before": 29,
+      "purge_left_after": 23,
+      "purge_left_after_named": 0
+    }
+  },
+  "system": "mem0"
+}

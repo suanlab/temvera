@@ -1,0 +1,19 @@
+{
+  "summary": {
+    "common_native": {
+      "credited": 1,
+      "n": 45,
+      "strict": 1
+    },
+    "common_recall": {
+      "credited": 7,
+      "n": 45,
+      "strict": 7
+    },
+    "own_reader": {
+      "credited": 29,
+      "n": 45,
+      "strict": 23
+    }
+  }
+}

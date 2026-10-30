@@ -58,8 +58,6 @@ MAP = {
                      + [f"deletion-verified-{s}-v1" for s in SYSTEMS] + ["deletion-langmem-deletes-v1"],
                      "code": "temvera.deletion_study.summarize",
                      "aggregation": "counts of people (of 24 purged, 36 never purged) and histories (of 9)"},
-    "tab:deletion-api": {"runs": [], "code": "none: read from the installed distributions",
-                         "aggregation": "qualitative"},
     "tab:reader": {"runs": GRID + ["h9-reader-mem0-v1", "h9-reader-langmem-v1", "h9-reader-graphiti-v1",
                                    "h9-reader-cognee-chunks-v1", "h9-reader-hindsight-recall-v1",
                                    "h9-judge-gpt4o-cognee-graph-v1", "h9-judge-gpt4o-hindsight-reflect-v1"],
