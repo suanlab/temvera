@@ -238,3 +238,15 @@ South Korea — suanlee@semyung.ac.kr.
 - [ ] Still open: human labels; H16-H18 (API budget); CMT profile, COI and
       final upload (author).
 
+## Decided 2026-10-30 (author)
+
+- Human labels: two colleagues, independent and without AI tools, using the
+  blinded kits; results due **2026-11-08**, then scored with
+  `scripts/score_annotation_kit.py` and reported as human judgements.
+- API budget: about $15 for H18 and H17 only (H16 stays not run). Launch with
+  `private/run-h17-h18.sh` once the limit allows requests; each preregistration
+  gets an addendum recording the run date before its result is read.
+- The old tracked paper-audit folder is untracked (kept locally, in history).
+- Final freeze: **2026-11-10** -- integrate whatever has arrived, cut one final
+  release, then submit (deadline 2026-11-12 10:00 KST).
+
