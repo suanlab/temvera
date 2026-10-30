@@ -247,3 +247,7 @@ openapi_letta.json
 
 # Local notes kept out of the public repository (e.g. rebuttal preparation).
 private/
+
+# Audit working folders: local records, not part of the repository or artifact.
+/paper_audit/
+/check_audit/
