@@ -249,4 +249,6 @@ South Korea — suanlee@semyung.ac.kr.
 - The old tracked paper-audit folder is untracked (kept locally, in history).
 - Final freeze: **2026-11-10** -- integrate whatever has arrived, cut one final
   release, then submit (deadline 2026-11-12 10:00 KST).
+- [x] AI disclosure states the sections with AI-generated content, as ICDE's
+      submission guidelines require (author approved 2026-10-30).
 
