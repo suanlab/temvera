@@ -56,3 +56,16 @@ in for `gpt-4o-mini` without changing what is measured. It was not run, and no
 output of it exists or will be reported from a partial run. The preregistration
 and its harness stay in the artifact so the study can be run exactly as written;
 if it is, these predictions apply unchanged.
+
+## Addendum (2026-10-31, before any study run): status changed to run
+
+The author approved a small API budget for H17 and H18 on 2026-10-30, so the
+"not run" status above is superseded; the predictions apply unchanged. The runs
+use a new OpenAI key of a different organisation (same models: `gpt-4o-mini`,
+`text-embedding-3-small`, and `gpt-4o-2024-08-06` for H18's annotator) and a
+freshly started Hindsight 0.9.1 daemon with its own embedded PostgreSQL (port
+8931), not the earlier main daemon, whose key is exhausted. Since this file was
+first committed the harness gained the failure gates of the pre-submission audit
+(a run with infrastructure errors is refused a seal; a reset must leave the
+store empty). A smoke run on a history the study does not use precedes the
+study run and is written outside `experiments/`; its output is plumbing only.
