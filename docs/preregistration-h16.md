@@ -135,3 +135,12 @@ addendum) and the failure gates of the pre-submission audit: a run with any
 failed request is refused a seal. A smoke run on the history the study does not
 use (seed index 9) checks the plumbing first and is written outside
 `experiments/`.
+
+## Addendum (2026-10-31 19:35 KST, before any result was read): halted again, not run
+
+About an hour into the second attempt the new key's organisation ran out of
+credits (`credit_balance_exhausted`). The harness stopped the three Hindsight
+runs on the error, as designed, and the Mem0 processes were stopped by hand.
+Nothing was sealed and no output of this attempt is used. H16 is therefore
+again **not run**; the paper's statement that it was not run stands, and the
+predictions apply unchanged if it is ever run.

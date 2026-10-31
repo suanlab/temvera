@@ -262,4 +262,7 @@ South Korea — suanlee@semyung.ac.kr.
 - [x] Abstract: "sixteen" -> "nineteen" failed predictions -- author approved
       2026-10-31; released with the 11/10 final release.
 - [ ] Rotate the new OpenAI key (pasted in chat on 2026-10-31).
+- [x] H16 second attempt (author-approved, 2026-10-31) halted after about an
+      hour when the new key's organisation ran out of credits; nothing sealed;
+      H16 stays not run, as the paper says.
 
