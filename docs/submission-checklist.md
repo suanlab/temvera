@@ -266,4 +266,7 @@ South Korea — suanlee@semyung.ac.kr.
       hour when the new key's organisation ran out of credits; nothing sealed;
       H16 stays not run, as the paper says.
 - [x] H16 closed as not run by author decision (2026-10-31).
+- [x] Re-cut the release: tag `icde-eab-v16` supersedes `icde-eab-v15` (H17, H18,
+      approved abstract and AI disclosure). It is the final version unless human
+      labels arrive by 11/8, in which case a final release on 11/10 adds them.
 
