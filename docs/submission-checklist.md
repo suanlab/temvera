@@ -259,7 +259,7 @@ South Korea — suanlee@semyung.ac.kr.
       (H17c, H18b, H18d falsified: nineteen failed predictions in all). In the
       paper (Sections V-C, V-I, VI, Limitations); ledger E-118, E-119.
 - [x] Table VII (deletion API units) folded into prose to keep the 12-page body.
-- [ ] Abstract: "sixteen" -> "nineteen" failed predictions -- awaiting author
-      approval before the 11/10 release.
+- [x] Abstract: "sixteen" -> "nineteen" failed predictions -- author approved
+      2026-10-31; released with the 11/10 final release.
 - [ ] Rotate the new OpenAI key (pasted in chat on 2026-10-31).
 
