@@ -265,4 +265,5 @@ South Korea — suanlee@semyung.ac.kr.
 - [x] H16 second attempt (author-approved, 2026-10-31) halted after about an
       hour when the new key's organisation ran out of credits; nothing sealed;
       H16 stays not run, as the paper says.
+- [x] H16 closed as not run by author decision (2026-10-31).
 

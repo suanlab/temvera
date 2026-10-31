@@ -144,3 +144,8 @@ runs on the error, as designed, and the Mem0 processes were stopped by hand.
 Nothing was sealed and no output of this attempt is used. H16 is therefore
 again **not run**; the paper's statement that it was not run stands, and the
 predictions apply unchanged if it is ever run.
+
+## Closed (2026-10-31): not run
+
+By the author's decision, H16 is closed as not run. No result of it exists or is
+claimed; the paper reports it as preregistered but not run.
