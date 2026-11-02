@@ -6,6 +6,10 @@ authors:
     given-names: "Suan"
     affiliation: "School of Computer Science, Semyung University"
     email: "suanlee@semyung.ac.kr"
+  - family-names: "Lee"
+    given-names: "Wookey"
+    affiliation: "Inha University"
+    email: "trinity@inha.ac.kr"
 type: software
 version: 0.0.1
 date-released: 2026-07-15

@@ -14,7 +14,7 @@
   pdftitle={[Experiment, Analysis, and Benchmark] Temporal Fields Are Not Temporal
     Correctness: Measuring Bitemporal and Deletion Semantics in Deployed Agent
     Memory},
-  pdfauthor={Suan Lee},
+  pdfauthor={Suan Lee and Wookey Lee},
   pdfsubject={ICDE 2027 Experiment, Analysis, and Benchmark paper},
   pdfkeywords={agent memory, bitemporal data, transaction time, data deletion,
     experimental analysis, benchmarking, reproducibility},
@@ -41,7 +41,12 @@ Measuring Bitemporal and Deletion Semantics\\ in Deployed Agent Memory}
 \IEEEauthorblockA{School of Computer Science\\
 Semyung University\\
 Jecheon, South Korea\\
-suanlee@semyung.ac.kr}}
+suanlee@semyung.ac.kr}
+\and
+\IEEEauthorblockN{Wookey Lee}
+\IEEEauthorblockA{Inha University\\
+Incheon, Republic of Korea\\
+trinity@inha.ac.kr}}
 
 \begin{document}
 
@@ -991,7 +996,7 @@ extractors (\texttt{gpt-4o-mini} and \texttt{gpt-4o}) each proposed the
 attribute and its earlier and later value for all 69 non-abstention instances,
 and a value counted only if it appeared verbatim in its own session. They
 agreed on 43 pairs. The other 26 we adjudicated: the AI system proposed a label
-or an exclusion for each, quoting the session text, and the author decided,
+or an exclusion for each, quoting the session text, and the first author decided,
 labelling 19 and excluding 7 whose sessions state no superseded value, state
 two, or describe coexisting items rather than a revision. That leaves 62 of the
 69 pairs. The 19 adjudicated pairs ran after the 43, against directional
@@ -1337,7 +1342,7 @@ complete erasure.
 The grid's histories are synthetic with hand-specified operation profiles, so
 contradiction density is approximated by operation mix and revision count rather
 than sampled from real usage; the benchmark check covers 62 of 69 candidate
-supersessions, 19 of them labelled by the author from AI-proposed labels. Five external systems in seven configurations
+supersessions, 19 of them labelled by the first author from AI-proposed labels. Five external systems in seven configurations
 run on \texttt{gpt-4o-mini} and were re-run on \texttt{gpt-4o}, one provider's
 models only; LLM extraction is not bit-reproducible, LangMem and Hindsight do not
 run at temperature~0, and Hindsight's reader is not stable across runs. The
@@ -1378,14 +1383,14 @@ Anthropic's Claude, used through the Claude Code agent. It generated much of the
 experiment harness and the analysis and plotting code that produces every table
 and figure (Figures 1--2 are plots drawn by that code from sealed runs, not
 generated images), and it drafted the text of every section --- the abstract,
-Sections I--VIII, the Limitations and the Ethics statement --- which the author
+Sections I--VIII, the Limitations and the Ethics statement --- which the first author
 reviewed and revised; it was used to search the literature
 and verify citations against their primary sources, and to audit the reported
-numbers against the sealed runs. The author and the AI system designed the
+numbers against the sealed runs. The first author and the AI system designed the
 analyses and experiments together, and the AI system ran them; it also
 proposed, with quoted evidence, the labels for the 26 disputed LongMemEval
-pairs, each of which the author decided. The author directed the research, approved its
-design, made the venue decisions, and takes full responsibility for the content.
+pairs, each of which the first author decided. The first author directed the research, approved its
+design and made the venue decisions; the authors take full responsibility for the content.
 Every reported figure is recomputed from sealed runs by scripts released with
 the artifact. OpenAI's Codex assisted a later audit of the full manuscript,
 public sources and local calculations, and revised the corresponding prose,
