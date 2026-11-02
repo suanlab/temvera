@@ -218,7 +218,7 @@ South Korea — suanlee@semyung.ac.kr.
 - [x] Re-cut the release: tag `icde-eab-v13` supersedes `icde-eab-v12`.
 - [x] Re-cut the release: tag `icde-eab-v14` supersedes `icde-eab-v13` (positive control).
 - [x] Re-cut the release: tag `icde-eab-v15` supersedes `icde-eab-v14` (manifest, font and link checks).
-- [ ] F16 (separate Conclusion): not added; the body has no room left.
+- [x] F16: a short Conclusion (Section VIII) fills the end of page 12 (2026-11-03).
 - [x] Temporal positive control (H19, all four predictions hold): 484/484 grid
       questions, 45/45 knew-then from the final store; in the paper (Section
       V-A) and ledger E-117.

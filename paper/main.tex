@@ -1322,6 +1322,16 @@ Sealed outputs that carry its text keep its MIT licence; the artifact lists
 each with the licence. The labels we derived are released; the 7 excluded pairs
 are listed by question ID, with their reasons.
 
+\section{Conclusion}
+
+Measured layer by layer, the releases fail in different places: consolidating
+stores lose history, retaining stores keep it but do not filter it by time, and
+a deletion API removes only what its caller selects while copies survive where
+no query reads. Builders should ask the final store what it knew, read every
+store after a delete, and check subject and attribute before deleting what a
+search returns. None of this establishes correctness at production scale or
+complete erasure.
+
 \section*{Limitations}
 
 The grid's histories are synthetic with hand-specified operation profiles, so
@@ -1368,7 +1378,7 @@ Anthropic's Claude, used through the Claude Code agent. It generated much of the
 experiment harness and the analysis and plotting code that produces every table
 and figure (Figures 1--2 are plots drawn by that code from sealed runs, not
 generated images), and it drafted the text of every section --- the abstract,
-Sections I--VII, the Limitations and the Ethics statement --- which the author
+Sections I--VIII, the Limitations and the Ethics statement --- which the author
 reviewed and revised; it was used to search the literature
 and verify citations against their primary sources, and to audit the reported
 numbers against the sealed runs. The author and the AI system designed the
