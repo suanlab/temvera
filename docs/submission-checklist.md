@@ -273,4 +273,7 @@ South Korea — suanlee@semyung.ac.kr.
       approved 2026-11-03).
 - [x] Re-cut the release: tag `icde-eab-v17` supersedes `icde-eab-v16` (Conclusion
       fills page 12). It is the submission version unless human labels arrive.
+- [x] Second author added (Wookey Lee, Inha University); disclosure statements
+      name the first author, and the authors take responsibility (author
+      approved 2026-11-03). v17 carries the Conclusion and the second author.
 
