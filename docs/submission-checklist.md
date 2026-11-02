@@ -269,4 +269,8 @@ South Korea — suanlee@semyung.ac.kr.
 - [x] Re-cut the release: tag `icde-eab-v16` supersedes `icde-eab-v15` (H17, H18,
       approved abstract and AI disclosure). It is the final version unless human
       labels arrive by 11/8, in which case a final release on 11/10 adds them.
+- [x] AI disclosure section range extended to I-VIII for the Conclusion (author
+      approved 2026-11-03).
+- [x] Re-cut the release: tag `icde-eab-v17` supersedes `icde-eab-v16` (Conclusion
+      fills page 12). It is the submission version unless human labels arrive.
 
