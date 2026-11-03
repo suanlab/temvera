@@ -52,7 +52,7 @@ trinity@inha.ac.kr.
 
 - [x] AI-use acknowledgment confirmed (2026-10-05).
 - [ ] Register in CMT and declare conflicts.
-- [ ] Submit by 2026-11-11 17:00 PT.
+- [x] Submit by 2026-11-11 17:00 PT -- submitted 2026-11-03 (icde-eab-v18 PDF).
 
 ## Planned before submission (D-015's extra time)
 
@@ -282,3 +282,11 @@ trinity@inha.ac.kr.
       dropped; author request 2026-11-03), in the paper and CITATION.cff.
 - [x] Re-cut the release: tag `icde-eab-v18` supersedes `icde-eab-v17`
       (affiliation only). It is the submission version unless human labels arrive.
+
+## Added 2026-11-03 (submitted)
+
+- [x] Submitted to CMT (ICDE 2027 Research Second Round) on 2026-11-03 with the
+      PDF built from `icde-eab-v18`. The tag stays frozen; later commits are not
+      part of the submission.
+- [ ] Rotate both OpenAI keys (the earlier one and the one pasted on 2026-10-31).
+- [ ] Rebuttal 2027-01-08 to 01-15 (accept/reject only, no revision).
