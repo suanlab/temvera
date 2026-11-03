@@ -44,8 +44,9 @@ guidelines as read on 2026-10-02.
 **Abstract**: `paper/abstract.txt`, generated from the paper source by
 `scripts/make_abstract.py`; `tests/test_abstract.py` fails if they drift.
 
-**Author**: Suan Lee, School of Computer Science, Semyung University, Jecheon,
-South Korea — suanlee@semyung.ac.kr.
+**Authors**: Suan Lee, Semyung University, Jecheon, South Korea —
+suanlee@semyung.ac.kr; Wookey Lee, Inha University, Incheon, Republic of Korea —
+trinity@inha.ac.kr.
 
 ## Only the author can do these
 
