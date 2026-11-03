@@ -278,3 +278,7 @@ trinity@inha.ac.kr.
       name the first author, and the authors take responsibility (author
       approved 2026-11-03). v17 carries the Conclusion and the second author.
 
+- [x] First author's affiliation shortened to "Semyung University" (school line
+      dropped; author request 2026-11-03), in the paper and CITATION.cff.
+- [x] Re-cut the release: tag `icde-eab-v18` supersedes `icde-eab-v17`
+      (affiliation only). It is the submission version unless human labels arrive.
