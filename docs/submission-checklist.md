@@ -307,3 +307,5 @@ trinity@inha.ac.kr.
 - [ ] Re-upload the v19 PDF in CMT before 2026-11-12 10:00 KST.
 - [x] Re-cut the release: tag `icde-eab-v19` supersedes `icde-eab-v18` (the audit's
       section-1 fixes; abstract, AI disclosure and Ethics unchanged).
+- [x] Re-cut the release: tag `icde-eab-v20` supersedes `icde-eab-v19`
+      (README and REPRODUCING give the verifier's 621 claims; paper unchanged).
