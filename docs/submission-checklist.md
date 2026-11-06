@@ -305,3 +305,5 @@ trinity@inha.ac.kr.
 - [x] CMT Question 3: "capability analysis of three systems' stores and of all
       five systems' documented claims" (Table II covers three).
 - [ ] Re-upload the v19 PDF in CMT before 2026-11-12 10:00 KST.
+- [x] Re-cut the release: tag `icde-eab-v19` supersedes `icde-eab-v18` (the audit's
+      section-1 fixes; abstract, AI disclosure and Ethics unchanged).
