@@ -1502,7 +1502,7 @@ def _h9_claims() -> list:
     out = [Claim("Tab.reader", f"read valid_time: {run}", f"{h9_rate(run):.3f}",
                  lambda r=run: h9_rate(r), near=anchor, window=60, after=T)
            for anchor, run in rows]
-    S = "Read, the retaining stores recover most of it"
+    S = "Read, the retaining stores that return dates recover most of it"
     C = "Read, the consolidating stores do not"
     out += [
         Claim("5.4", "common reader: Cognee chunks", "142",
@@ -1525,6 +1525,9 @@ def _h9_claims() -> list:
         Claim("5.4", "Hindsight reader names right value", "195",
               lambda: reader_split("hindsight reflect", 0, "expected"), 0.5,
               near="names the right value in all", after=S),
+        Claim("5.4", "Hindsight reader states both values", "128",
+              lambda: reader_split("hindsight reflect", 0, "both"), 0.5,
+              near="and, in", after=S),
         Claim("5.4", "judge agrees with scorer", "1{,}202",
               lambda: float(judge_agrees_with_scorer()[0]), 0.5, near="exact scorer on", after=S),
         Claim("5.4", "answers the scorer accepts", "1{,}203",
@@ -1613,8 +1616,9 @@ def _h9_real_claims() -> list:
               0.005, near="dates answer"),
         Claim("intro", "Graphiti common reader", "0.11", lambda: h9_rate("h9-reader-graphiti-v1"), 0.005,
               near="undated facts"),
-        Claim("intro", "retaining stores read: highest", "1.00", lambda: _read_range()[1],
-              0.005, near="dates answer 0.73 to"),
+        Claim("intro", "common reader, retaining stores with dates: highest", "0.77",
+              lambda: max(h9_rate(r) for r in ("h9-reader-cognee-chunks-v1", "h9-reader-hindsight-recall-v1")),
+              0.005, near="dates answer 0.73 and"),
         Claim("5.real", "judged Cognee reader, LME", "29", lambda: lme_judged("Cognee"), 0.5,
               near="does not close it ("),
         Claim("5.real", "judged Hindsight reader, LME", "15", lambda: lme_judged("Hindsight"), 0.5,
@@ -1755,7 +1759,9 @@ def _h8_claims() -> list:
         Claim("5.2", "Hindsight reader gpt-4o valid time", "159",
               lambda: h8_count("hindsight-reflect", "gpt-4o", "valid_time"), 0.5, near="Hindsight's", after="reader answers 194"),
         Claim("5.2", "Hindsight reader mini valid time", "67",
-              lambda: h8_count("hindsight-reflect", "gpt-4o-mini", "valid_time"), 0.5, near="exactly where it answered", after=A),
+              lambda: h8_count("hindsight-reflect", "gpt-4o-mini", "valid_time"), 0.5, near="Hindsight's 159 (from", after=A),
+        Claim("5.2", "Cognee reader mini valid time", "192",
+              lambda: h8_count("cognee-graph", "gpt-4o-mini", "valid_time"), 0.5, near="194 exactly (from", after=A),
         Claim("5.2", "retrieval layers valid time in replicates", "0",
               lambda: float(max(max(rv(n)) for n in ("cognee-chunks", "hindsight-recall"))), 0.5,
               near="every retaining retrieval layer\nat", after=R),
@@ -2107,7 +2113,7 @@ def _pre_correction_read(name: str) -> float:
 
 
 def _h13_claims() -> list:
-    J = "Read, the retaining stores recover most of it"
+    J = "Read, the retaining stores that return dates recover most of it"
     G = "LongMemEval does not say when a change"
     P = "A plain reader does not recover it here"
     D = "Prose is ignored by three systems"
@@ -2428,9 +2434,11 @@ def _mixed_unit_claims() -> list:
               _h18_names_correction, 0.5, near="correction in", after=C),
         Claim("5.corr", "questions", "45", lambda: _h18("common_native", "n"), 0.5, near="correction in 44 of", after=C),
         Claim("5.corr", "common reader right on native context", "once",
-              lambda: _h18("common_native"), 0.5, near="and is right", after=C),
-        Claim("5.corr", "own reader credited again", "29", lambda: _h18("own_reader"), 0.5,
-              near="right once, while that reader is again\nright", after=C),
+              lambda: _h18("common_native"), 0.5, near="and is credited", after=C),
+        Claim("5.corr", "own reader credited on rerun", "29", lambda: _h18("own_reader"), 0.5,
+              near="reader, rerun, is credited", after=C),
+        Claim("5.corr", "own reader on rerun, strict count", "23", lambda: _h18("own_reader", "strict"), 0.5,
+              near="annotators below (", after=C),
     ]
 
 

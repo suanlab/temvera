@@ -290,3 +290,18 @@ trinity@inha.ac.kr.
       part of the submission.
 - [ ] Rotate both OpenAI keys (the earlier one and the one pasted on 2026-10-31).
 - [ ] Rebuttal 2027-01-08 to 01-15 (accept/reject only, no revision).
+
+## Added 2026-11-06 (full pre-deadline audit; v19)
+
+- [x] Full audit of the submitted v18: section reading, an independent proofread,
+      the 36 references against their primary sources, and an internal-consistency
+      pass. Findings are in the author's working notes; section 1 (21 items where a
+      sentence contradicted a table, another sentence or a source) is fixed in v19.
+- [x] "1.0 by construction" now names the generator's purge scope (Setup, Table V,
+      Figure 1 label); under the request's scope the reference implementation's
+      purge answers state an earlier value in 29 of 45 (ledger E-120).
+- [x] LangMem 0.0.30 and Cognee 1.4.2 are cited; the Hindsight entry points to
+      release 0.9.1, the version measured, not an older commit.
+- [x] CMT Question 3: "capability analysis of three systems' stores and of all
+      five systems' documented claims" (Table II covers three).
+- [ ] Re-upload the v19 PDF in CMT before 2026-11-12 10:00 KST.

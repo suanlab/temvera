@@ -105,7 +105,7 @@ def figure_categories(cells) -> None:
         ax.bar(xs, ys, width, label=name, color=colour)
         ax.errorbar(xs, ys, yerr=[lo, hi], fmt="none", ecolor="black", capsize=3, lw=1)
     ax.axhline(1.0, ls="--", lw=1, color="grey")
-    ax.text(3.45, 1.02, "oracle = 1.0 (by construction)", ha="right", fontsize=8, color="grey")
+    ax.text(3.45, 1.02, "oracle = 1.0 (generator's purge scope)", ha="right", fontsize=8, color="grey")
     ax.set_xticks(range(len(CATEGORIES)))
     ax.set_xticklabels([LABELS[c] for c in CATEGORIES], fontsize=9)
     ax.set_ylabel("exact accuracy")
