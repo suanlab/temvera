@@ -304,7 +304,7 @@ trinity@inha.ac.kr.
       release 0.9.1, the version measured, not an older commit.
 - [x] CMT Question 3: "capability analysis of three systems' stores and of all
       five systems' documented claims" (Table II covers three).
-- [ ] Re-upload the v19 PDF in CMT before 2026-11-12 10:00 KST.
+- [x] Re-uploaded in CMT: the PDF built from `icde-eab-v20` (2026-11-08; sha256 066aa56d...).
 - [x] Re-cut the release: tag `icde-eab-v19` supersedes `icde-eab-v18` (the audit's
       section-1 fixes; abstract, AI disclosure and Ethics unchanged).
 - [x] Re-cut the release: tag `icde-eab-v20` supersedes `icde-eab-v19`
