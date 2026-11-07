@@ -302,10 +302,12 @@ trinity@inha.ac.kr.
       purge answers state an earlier value in 29 of 45 (ledger E-120).
 - [x] LangMem 0.0.30 and Cognee 1.4.2 are cited; the Hindsight entry points to
       release 0.9.1, the version measured, not an older commit.
-- [x] CMT Question 3: "capability analysis of three systems' stores and of all
+- [x] CMT Question 3 (updated in CMT 2026-11-08): "capability analysis of three systems' stores and of all
       five systems' documented claims" (Table II covers three).
 - [x] Re-uploaded in CMT: the PDF built from `icde-eab-v20` (2026-11-08; sha256 066aa56d...).
 - [x] Re-cut the release: tag `icde-eab-v19` supersedes `icde-eab-v18` (the audit's
       section-1 fixes; abstract, AI disclosure and Ethics unchanged).
 - [x] Re-cut the release: tag `icde-eab-v20` supersedes `icde-eab-v19`
       (README and REPRODUCING give the verifier's 621 claims; paper unchanged).
+- [x] CMT Questions 3 and 8 updated (2026-11-08): Q3 names three systems' stores
+      and all five systems' documented claims; Q8 links `icde-eab-v20` and 621 claims.
